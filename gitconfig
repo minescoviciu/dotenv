@@ -1,0 +1,27 @@
+[pull]
+    rebase = true
+[user]
+    email = andreiminescu@gmail.com
+[core]
+    editor = nvim
+    pager = delta
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true    # use n and N to move between diff sections
+    light = false      # set to true if you're in a terminal w/ a light background color (e.g. the default macOS terminal)
+    side-by-side = true
+
+[merge]
+    conflictstyle = diff3
+
+[diff]
+    colorMoved = default
+
+[alias]
+    lg = !git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit | fzf --ansi | awk '{print $1}' | xargs git show
+    st = status -sb
+    co = checkout
+    cleanup = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
