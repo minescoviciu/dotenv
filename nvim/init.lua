@@ -33,7 +33,7 @@ require('lazy').setup({
   'tpope/vim-rhubarb',
 
   -- Detect tabstop and shiftwidth automatically
-  'tpope/vim-sleuth',
+  -- 'tpope/vim-sleuth',
 
   -- NOTE: This is where your plugins related to LSP can be installed.
   --  The configuration is done below. Search for lspconfig to find it below.
@@ -308,6 +308,11 @@ vim.o.wildmode = 'longest:full,full'
 vim.o.relativenumber = true
 vim.o.splitright = true
 
+vim.o.tabstop     =4
+vim.o.softtabstop =4
+vim.o.shiftwidth  =4
+vim.o.expandtab = true
+
 
 -- [[ Basic Keymaps ]]
 
@@ -356,13 +361,31 @@ vim.api.nvim_set_keymap('n', 'ga', [[<Plug>(EasyAlign)]], {})
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
+local telescope_actions = require('telescope.actions')
 require('telescope').setup {
-  defaults = {},
+  defaults = {
+    mappings = {
+      i = {
+        -- ["<C-n>"] = telescope_actions.cycle_previewers_next,
+        -- ["<C-m>"] = telescope_actions.cycle_previewers_prev,
+      },
+    },
+  },
+  pickers = {
+    git_commit = {
+      git_command = {
+        "git", "log",
+        "--pretty=oneline",
+        "--decorate=short",
+        "--", "."
+      }
+    }
+  },
   extensions = {
     file_browser = {
       theme = "ivy",
       -- disables netrw and use telescope-file-browser in its place
-      hijack_netrw = true,
+      -- hijack_netrw = true,
       mappings = {
         ["i"] = {
           -- your custom insert mode mappings
@@ -377,12 +400,12 @@ require('telescope').setup {
 
 -- Enable telescope fzf native, if installed
 pcall(require('telescope').load_extension, 'fzf')
-
+  
 require("telescope").load_extension "file_browser"
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
-vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { desc = '[ ] Find existing buffers' })
+vim.keymap.set('n', '<leader><space>', require('telescope.builtin').resume, { desc = '[ ] Resume last search' })
 vim.keymap.set('n', '<leader>/', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
@@ -391,15 +414,21 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
-vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
-vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
+vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files,   { desc = 'Search [G]it [F]iles' })
+vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files,  { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags,   { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
-vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep,   { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
-vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
+vim.keymap.set('n', '<leader>sb', require('telescope.builtin').buffers,     { desc = '[S]earch [B]uffers' })
 
 vim.keymap.set('n', '<leader>fb', ":Telescope file_browser path=%:p:h select_buffer=true<CR>", {desc = '[F]ile [B]rowser'})
+
+-- Add git mappings
+vim.keymap.set('n', '<A-g><A-b>',  ':Git blame --date=relative --color-by-age<CR>', {silent = true, desc = '[G]it blame'})
+vim.keymap.set('n', '<A-g><A-g>',  ':Git<CR>',                  {silent = true, desc = '[G]it status'})
+vim.keymap.set('n', '<A-g><A-s>',  require('git').git_commits,  {silent = true, desc = '[G]it [S]how'})
+vim.keymap.set('n', '<A-g><A-B>',  require('git').git_bcommits, {silent = true, desc = '[G]it [B]lame current buffer history of file'})
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`

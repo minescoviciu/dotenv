@@ -6,6 +6,7 @@ fi
 
 CWD=$(pwd)
 ln -s $CWD/nvim/init.lua ~/.config/nvim/init.lua
+ln -s $CWD/nvim/git.lua ~/.config/nvim/git.lua
 ln -s $CWD/tmux.conf ~/.tmux.conf
 ln -s $CWD/gitconfig ~/.gitconfig
 
