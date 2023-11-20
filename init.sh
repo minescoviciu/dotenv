@@ -1,12 +1,11 @@
 #!/bin/bash
 
-if [ ! -f "~/.config/nvim" ]; then
-    mkdir -p ~/.config/nvim
+if [ ! -f "~/.config" ]; then
+    mkdir -p ~/.config
 fi
 
 CWD=$(pwd)
-ln -s $CWD/nvim/init.lua ~/.config/nvim/init.lua
-ln -s $CWD/nvim/git.lua ~/.config/nvim/git.lua
+ln -s $CWD/nvim ~/.config/nvim
 ln -s $CWD/tmux.conf ~/.tmux.conf
 ln -s $CWD/gitconfig ~/.gitconfig
 
