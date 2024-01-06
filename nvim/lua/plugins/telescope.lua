@@ -20,6 +20,7 @@ table.insert(M,
             },
         },
         config = function ()
+            local actions = require('telescope.actions')
             require("telescope").setup({
                 defaults = {
                     mappings = {
@@ -37,21 +38,31 @@ table.insert(M,
                             "--decorate=short",
                             "--", "."
                         }
-                    }
+                    },
+                    live_grep = {
+                        mappings = {
+                            i = { ["<c-f>"] = actions.to_fuzzy_refine },
+                        },
+                    },
+                    buffers = {
+                        mappings = {
+                            i = { ["<c-d>"] = actions.delete_buffer + actions.move_selection_next},
+                        },
+                    },
                 },
                 extensions = {
                     file_browser = {
                         theme = "ivy",
                         -- disables netrw and use telescope-file-browser in its place
                         -- hijack_netrw = true,
-                        mappings = {
-                            ["i"] = {
-                                -- your custom insert mode mappings
-                            },
-                            ["n"] = {
-                                -- your custom normal mode mappings
-                            },
-                        },
+                        -- mappings = {
+                        --     ["i"] = {
+                        --         -- your custom insert mode mappings
+                        --     },
+                        --     ["n"] = {
+                        --         -- your custom normal mode mappings
+                        --     },
+                        -- },
                     },
                 },
             })
@@ -81,6 +92,7 @@ table.insert(M,
             vim.keymap.set('n', '<leader>sg', builtin.live_grep,   { desc = '[S]earch by [G]rep' })
             vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
             vim.keymap.set('n', '<leader>sb', builtin.buffers,     { desc = '[S]earch [B]uffers' })
+            vim.keymap.set('n', '<leader>sc', builtin.quickfix,    { desc = '[S]earch Qui[C]kFix' })
 
             vim.keymap.set('n', '<leader>fb', ":Telescope file_browser path=%:p:h select_buffer=true<CR>", {desc = '[F]ile [B]rowser'})
 
