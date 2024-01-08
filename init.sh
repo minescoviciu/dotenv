@@ -57,3 +57,10 @@ for binary in ${BINARIES[@]}; do
     chekc_if_install $binary
 done
 
+# TODO
+# Check if git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+# If not present install for tmux plugin manager
+#
+# Check fzf version >= 0.42
+# Check tmux >= 3.2a
+# Check nvim >= 9.4
