@@ -10,8 +10,8 @@ table.insert(config.hyperlink_rules, {
 
 config.font = wezterm.font("CaskaydiaCove Nerd Font")
 -- config.font = wezterm.font("Iosevka Nerd Font Mono")
---config.color_scheme = "Catppuccin Mocha"
-config.color_scheme = "Tokyo Night" -- Macchiato"
+config.color_scheme = "Catppuccin Mocha"
+--config.color_scheme = "Tokyo Night" -- Macchiato"
 
 config.native_macos_fullscreen_mode = true
 config.hide_tab_bar_if_only_one_tab = true
