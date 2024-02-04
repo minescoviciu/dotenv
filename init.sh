@@ -43,6 +43,9 @@ ln -s $CWD/gitconfig ~/.gitconfig && echo "Linked git config"
 ln -s $CWD/wezterm ~/.config && echo "Linked wezterm config"
 ln -s $CWD/kitty ~/.config && echo "Linked kitty config"
 ln -s $CWD/scripts ~/.config && echo "Linked scripts"
+if [ "$(uname)" == "Darwin" ]; then
+    ln -s $CWD/skhd ~/.config && echo "Linked skhdrc"
+fi
 
 echo "Downloading fzf scripts"
 for script in ${FZF_SCRIPTS[@]}; do
@@ -64,3 +67,5 @@ done
 # Check fzf version >= 0.42
 # Check tmux >= 3.2a
 # Check nvim >= 9.4
+# source /usr/share/bash-completion/completions/git
+
