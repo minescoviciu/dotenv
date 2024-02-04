@@ -86,6 +86,20 @@ M.setup = function ()
     vim.keymap.set('n', '<C-d>',    '<C-d>zz')
     vim.keymap.set('n', '<C-u>',    '<C-u>zz')
     vim.keymap.set('x', '<leader>', '\"_dP')
+
+    -- Paste without overwriting register
+    vim.keymap.set("v", "p", '"_dP')
+
+    -- Make Y behave like C or D
+    vim.keymap.set("n", "Y", "y$")
+
+    -- Copy file paths
+    vim.keymap.set("n", "<leader>cf", "<cmd>let @+ = expand(\"%\")<CR>", { desc = "Copy File Name" })
+    vim.keymap.set("n", "<leader>cp", "<cmd>let @+ = expand(\"%:p\")<CR>", { desc = "Copy File Path" })
+
+        -- Stay in indent mode
+    vim.keymap.set("v", "<", "<gv")
+    vim.keymap.set("v", ">", ">gv")
 end
 
 return M
