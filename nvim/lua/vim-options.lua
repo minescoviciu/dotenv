@@ -85,7 +85,6 @@ M.setup = function ()
     vim.keymap.set('n', 'U',        'Nzzzv')
     vim.keymap.set('n', '<C-d>',    '<C-d>zz')
     vim.keymap.set('n', '<C-u>',    '<C-u>zz')
-    vim.keymap.set('x', '<leader>', '\"_dP')
 
     -- Paste without overwriting register
     vim.keymap.set("v", "p", '"_dP')
@@ -94,8 +93,12 @@ M.setup = function ()
     vim.keymap.set("n", "Y", "y$")
 
     -- Copy file paths
-    vim.keymap.set("n", "<leader>cf", "<cmd>let @+ = expand(\"%\")<CR>", { desc = "Copy File Name" })
-    vim.keymap.set("n", "<leader>cp", "<cmd>let @+ = expand(\"%:p\")<CR>", { desc = "Copy File Path" })
+    vim.keymap.set("n", "<leader>cf", "<cmd>let @+ = expand(\"%\")<CR>", { desc = "[C]opy File Name" })
+    vim.keymap.set("n", "<leader>cp", "<cmd>let @+ = expand(\"%:p\")<CR>", { desc = "[C]opy File Path" })
+
+    -- Yank github link
+    vim.keymap.set("n", "<leader>cg", ":GBrowse!<CR>", {desc = "[C]opy [G]ithub URL"})
+    vim.keymap.set("x", "<leader>cg", ":GBrowse!<CR>", {desc = "[C]opy [G]ithub URL"})
 
     -- Stay in indent mode
     vim.keymap.set("v", "<", "<gv")
