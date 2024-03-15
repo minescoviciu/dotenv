@@ -49,12 +49,24 @@ table.insert(M,
                             i = { ["<c-d>"] = actions.delete_buffer + actions.move_selection_next},
                         },
                     },
+                    lsp_references = {
+                        layout_strategy = 'vertical',
+                        layout_config = {
+                            height = 0.8,
+                            width = 0.8,
+                            preview_height = 0.55,
+                            mirror = false,
+                        },
+                    },
                 },
                 extensions = {
                     file_browser = {
                         theme = "ivy",
+                        prompt_path = true,
+                        grouped = true,
+                        depth = 1,
                         -- disables netrw and use telescope-file-browser in its place
-                        -- hijack_netrw = true,
+                        hijack_netrw = true,
                         -- mappings = {
                         --     ["i"] = {
                         --         -- your custom insert mode mappings
@@ -94,6 +106,7 @@ table.insert(M,
             vim.keymap.set('n', '<leader>sb', builtin.buffers,     { desc = '[S]earch [B]uffers' })
             vim.keymap.set('n', '<leader>sc', builtin.quickfix,    { desc = '[S]earch Qui[C]kFix' })
 
+            vim.keymap.set('n', '<leader>sG', function() builtin.live_grep({grep_open_files=true}) end, { desc = '[S]earch [G]rep Open File' })
             vim.keymap.set('n', '<leader>fb', ":Telescope file_browser path=%:p:h select_buffer=true<CR>", {desc = '[F]ile [B]rowser'})
 
             -- Add git mappings

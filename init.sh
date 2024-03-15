@@ -40,6 +40,7 @@ CWD=$(pwd)
 ln -s $CWD/nvim ~/.config && echo "Linked nvim config"
 ln -s $CWD/tmux.conf ~/.tmux.conf && echo "Linked tmux config"
 ln -s $CWD/gitconfig ~/.gitconfig && echo "Linked git config"
+ln -s $CWD/yabai ~/.config && echo "Linked yabai config"
 ln -s $CWD/wezterm ~/.config && echo "Linked wezterm config"
 ln -s $CWD/kitty ~/.config && echo "Linked kitty config"
 ln -s $CWD/scripts ~/.config && echo "Linked scripts"
