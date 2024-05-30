@@ -105,6 +105,12 @@ M.setup = function ()
     -- Stay in indent mode
     vim.keymap.set("v", "<", "<gv")
     vim.keymap.set("v", ">", ">gv")
+
+    -- Maximizes the current window vertically and horizontally
+    vim.keymap.set('n', 'Zz', '<C-w>_<C-w>|', { noremap = true, desc = "[Z]oom in"})
+
+    -- Makes all windows equal size
+    vim.keymap.set('n', 'Zo', '<C-w>=', { noremap = true, desc = "[Z]oom [O]ut" })
 end
 
 return M
