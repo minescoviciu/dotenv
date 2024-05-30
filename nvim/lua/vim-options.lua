@@ -51,6 +51,7 @@ M.setup = function ()
     -- set the session options for auto-session
     vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
+    -- use treesitter for folding
     vim.wo.foldmethod = "expr"
     vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
     vim.wo.foldenable = false
@@ -88,6 +89,7 @@ M.setup = function ()
 
     -- Paste without overwriting register
     vim.keymap.set("v", "p", '"_dP')
+    vim.keymap.set("n", "c", '"_c')
 
     -- Make Y behave like C or D
     vim.keymap.set("n", "Y", "y$")
