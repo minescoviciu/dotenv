@@ -8,7 +8,8 @@ table.insert(config.hyperlink_rules, {
   format = 'https://example.com/$1',
 })
 
-config.font = wezterm.font("CaskaydiaCove Nerd Font")
+-- config.font = wezterm.font("CaskaydiaCove Nerd Font")
+config.font = wezterm.font("JetBrainsMono Nerd Font Mono")
 -- config.font = wezterm.font("Iosevka Nerd Font Mono")
 config.color_scheme = "Catppuccin Mocha"
 --config.color_scheme = "Tokyo Night" -- Macchiato"
