@@ -21,16 +21,24 @@ table.insert(M,
         },
         config = function ()
             local actions = require('telescope.actions')
+            local layout_actions = require('telescope.actions.layout')
             require("telescope").setup({
                 defaults = {
                     mappings = {
                         i = {
                             -- ["<C-n>"] = telescope_actions.cycle_previewers_next,
                             -- ["<C-m>"] = telescope_actions.cycle_previewers_prev,
+                            ["<M-p>"] = layout_actions.toggle_preview,
                         },
+                        n = {
+                            ["<M-p>"] = layout_actions.toggle_preview,
+                        }
                     },
                 },
                 pickers = {
+                    find_files = {
+                        hidden = true,
+                    },
                     git_commit = {
                         git_command = {
                             "git", "log",
