@@ -24,4 +24,10 @@ config.inactive_pane_hsb = {
     brightness = 0.5,
 }
 
+wezterm.on("user-var-changed", function(window, pane, name, value)
+    if name == "open-web" then
+        wezterm.open_with(value)
+    end
+end)
+
 return config

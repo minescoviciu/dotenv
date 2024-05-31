@@ -111,6 +111,20 @@ M.setup = function ()
 
     -- Makes all windows equal size
     vim.keymap.set('n', 'Zo', '<C-w>=', { noremap = true, desc = "[Z]oom [O]ut" })
+
+    vim.api.nvim_create_user_command(
+        'Browse',
+        function(opts)
+            local cmd = " __wezterm_open_web " .. opts.args
+            local old_flags = vim.o.shellcmdflag
+            vim.o.shellcmdflag = "-ic"
+            local result = vim.fn.systemlist(cmd)
+            io.stderr:write(result[#result])
+            vim.o.shellcmdflag = old_flags
+        end,
+        { nargs = 1, desc = "Open a URL with wezterm_open_web" }
+    )
+
 end
 
 return M
