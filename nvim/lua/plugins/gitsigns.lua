@@ -12,7 +12,14 @@ local M = {
             untracked    = { text = '┆' },
         },
         on_attach = function(bufnr)
-            vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk, { buffer = bufnr, desc = 'Preview git hunk' })
+            local gs = package.loaded.gitsigns
+            vim.keymap.set('n', '<leader>hp', gs.preview_hunk, { buffer = bufnr, desc = '[H]unk [P]review' })
+            vim.keymap.set('n', '<leader>hb', function() gs.blame_line({full=true}) end, { desc = '[H]unk [B]lame' })
+            vim.keymap.set('n', '<leader>hr', gs.reset_hunk, { desc = '[H]unk [R]eset' })
+            vim.keymap.set('n', '<leader>hs', gs.stage_hunk, { desc = '[H]unk [S]tage' })
+            vim.keymap.set('n', '<leader>hu', gs.undo_stage_hunk, { desc = '[H]unk [U]ndo last hunk' })
+            -- vim.keymap.set('n', '<leader>hd', gs.diffthis, { desc = '[H]unk [D]iff' })
+            -- vim.keymap.set('n', '<leader>hD', function() gs.diffthis('~') end, { desc = '[H]unk [D]iff with Base' })
 
             -- don't override the built-in and fugitive keymaps
             local gs = package.loaded.gitsigns
