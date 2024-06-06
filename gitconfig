@@ -4,14 +4,13 @@
     email = andreiminescu@gmail.com
 [core]
     editor = nvim
-    pager = delta
+    pager = delta --side-by-side
 
 [interactive]
     diffFilter = delta --color-only
 
 [delta]
     navigate = true    # use n and N to move between diff sections
-    side-by-side = true
     dark = true
     paging = always
     line-numbers = true
@@ -30,7 +29,7 @@
 
 [pretty]
     myline = format:%C(yellow)%h%Creset %C(auto)%D%Creset %Cblue%ar%Creset %s
-    details = format:commit %C(yellow bold)%H%C(reset) %C(auto)%D%C(reset)%nAuthor:    %an %C(bold green)<%ae>%C(reset)  %nCommitted: %C(blue)%ar%C(reset)%n%n%C(magenta)%s%C(reset)%n%n%b
+    details = format:Commit %C(yellow bold)%H%C(reset)%nRefs: %C(auto)%D%C(reset)%nAuthor:       %aN %C(bold green)<%aE>%C(reset)%nAuthorDate:   %C(blue)%ar%C(reset)%nCommiter:     %cN %C(bold green)<%cE>%C(reset)%nCommiterDate: %C(blue)%cr%C(reset)%n%n%C(magenta)%s%C(reset)%n%n%b
 
 [format]
     pretty = details
@@ -46,11 +45,15 @@
     st = status -sb
     co = checkout
     cleanup = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
-    ll =!"git log --color=always --format=myline | \
+    ll =!"git log --graph --color=always --format=myline | \
             fzf --ansi --no-sort --layout=reverse --tiebreak=index \
-                --preview \"f() { set -- \\$(echo -- \\$@ | grep -oE '[a-f0-9]{7,}'); [ \\$# -eq 0 ] || git show --color=always \\$1}; f {}\" \
+                --preview \"f() { set -- \\$(echo -- \\$@ | grep -oE '[a-f0-9]{7,}');local width=\\${FZF_PREVIEW_COLUMNS:-$COLUMNS}; [[ \\$width -gt 90 ]] && export DELTA_FEATURES=+side-by-side; echo \\$width; [ \\$# -eq 0 ] || git show --color=always \\$1 | delta -w \\${FZF_PREVIEW_COLUMNS:-$COLUMNS} ;}; f {}\" \
                 --bind=\"ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up,j:down,k:up,q:abort\"\
                 --bind=\"alt-j:preview-down,alt-k:preview-up\"\
-                --bind=\"ctrl-m:execute:\
-                        echo {} | grep -oE '[a-f0-9]{7,}' | head -1 | xargs -I % git show % \" \
-                --preview-window=right:60%;"
+                --preview-window=right:60% \
+                --preview-window=border-left \
+                "
+[maintenance]
+	repo = /home/dn/cheetah
+[rerere]
+	enabled = true
