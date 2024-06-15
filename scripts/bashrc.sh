@@ -6,6 +6,35 @@ export FZF_DEFAULT_OPTS=" \
 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
 --color=marker:#f5e0dc,fg+:#cdd6f4,prompt:#cba6f7,hl+:#f38ba8"
 
+# don't put duplicate lines in the history. See bash(1) for more options
+# ... or force ignoredups and ignorespace
+HISTCONTROL=ignoredups:ignorespace
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=2000
+HISTFILESIZE=2000
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# one tab complition 
+bind 'set show-all-if-ambiguous on'
+bind 'set completion-ignore-case on'
+
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias ls='ls --color=auto'
+alias ll='ls -laF'
+
+PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+
+eval "$(starship init bash)"
+
 __wezterm_set_user_var() {
   if hash base64 2>/dev/null ; then
     if [[ -z "${TMUX}" ]] ; then
@@ -26,6 +55,8 @@ __wezterm_send_notification() {
     fi
 
 }
+
+alias alert='__wezterm_send_notification Done'
 
 __wezterm_open_web() {
     __wezterm_set_user_var "open-web" "$1"
