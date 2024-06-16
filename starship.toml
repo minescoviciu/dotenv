@@ -1,0 +1,76 @@
+palette = "catppuccin_mocha"
+add_newline = true
+
+format = """
+$username\
+$sudo\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$cmd_duration\
+$character
+"""
+
+[directory]
+truncation_length = 5
+truncation_symbol = ''
+read_only = ' 🔒'
+style = "bold teal"
+format = "[$path]($style)[$read_only]($read_only_style) "
+
+[username]
+style_user = "bold dimmed blue"
+show_always = false
+format = "[$user]($style) "
+
+[sudo]
+format = "[$symbol]($style)"
+symbol = "👑"
+style = "bold red"
+disabled = false
+
+[git_branch]
+format = '[$symbol\[$branch\](:$remote_branch)]($style) '
+style = "pink"
+symbol = ""
+always_show_remote = false
+
+[git_commit]
+style = "bold flamingo"
+
+[cmd_duration]
+format = "[$duration]($style) "
+style = "yellow"
+
+[character]
+success_symbol = '[➜](bold green)'
+error_symbol = '[✗](bold red)'
+
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"

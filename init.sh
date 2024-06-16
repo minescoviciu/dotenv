@@ -32,6 +32,7 @@ ln -s $CWD/tmux.conf ~/.tmux.conf && echo "Linked tmux config"
 ln -s $CWD/gitconfig ~/.gitconfig && echo "Linked git config"
 ln -s $CWD/wezterm ~/.config && echo "Linked wezterm config"
 ln -s $CWD/scripts ~/.config && echo "Linked scripts"
+ln -s $CWD/starship.toml ~/.config && echo "Linked starship.toml"
 if [ "$(uname)" == "Darwin" ]; then
     ln -s $CWD/skhd ~/.config && echo "Linked skhdrc"
 fi
@@ -65,6 +66,10 @@ BINARIES=("nvim" "git" "tmux" "fzf" "delta")
 for binary in ${BINARIES[@]}; do
     chekc_if_install $binary
 done
+
+
+#install spaceship
+curl -sS https://starship.rs/install.sh | sh
 
 # TODO
 # Check if git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
