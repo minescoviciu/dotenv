@@ -74,6 +74,7 @@ return {
             -- rust_analyzer = {},
             -- tsserver = {},
             --[[ html = { filetypes = { 'html', 'twig', 'hbs'} }, ]]
+            rust_analyzer = {},
 
             lua_ls = {
                 Lua = {
