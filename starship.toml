@@ -1,5 +1,5 @@
 palette = "catppuccin_mocha"
-add_newline = true
+add_newline = false
 
 format = """
 $username\
@@ -8,6 +8,7 @@ $directory\
 $git_branch\
 $git_commit\
 $git_state\
+$python\
 $cmd_duration\
 $character
 """
@@ -23,6 +24,11 @@ format = "[$path]($style)[$read_only]($read_only_style) "
 style_user = "bold dimmed blue"
 show_always = false
 format = "[$user]($style) "
+
+[python]
+format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+symbol = '🐍 '
+pyenv_version_name = true
 
 [sudo]
 format = "[$symbol]($style)"
