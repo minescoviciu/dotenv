@@ -82,6 +82,17 @@ return {
                     telemetry = { enable = false },
                 },
             },
+            tsserver = {},
+            html = { filetypes = { 'html', 'javascriptreact', 'javascript.jsx', 'typescriptreact', 'typescript.tsx' } },
+            cssls = {},
+            tailwindcss = {},
+            eslint = {
+                filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
+                settings = {
+                    workingDirectory = { mode = "auto" },
+                    format = { enable = true },
+                },
+            },
         }
 
         -- Setup neovim lua configuration
