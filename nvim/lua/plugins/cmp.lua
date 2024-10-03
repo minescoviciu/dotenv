@@ -5,7 +5,7 @@ return {
         -- Snippet Engine & its associated nvim-cmp source
         'L3MON4D3/LuaSnip',
         'saadparwaiz1/cmp_luasnip',
-
+        'windwp/nvim-autopairs',
         -- Adds LSP completion capabilities
         'hrsh7th/cmp-nvim-lsp',
 
@@ -83,6 +83,11 @@ return {
             },
         })
 
+        local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+        cmp.event:on(
+            'confirm_done',
+            cmp_autopairs.on_confirm_done()
+        )
         -- cmp.event:on("menu_opened", function()
         --     cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
         -- end)
