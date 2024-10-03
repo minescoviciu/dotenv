@@ -123,6 +123,39 @@ table.insert(M,
             vim.keymap.set('n', '<A-g><A-g>',  ':Git<CR>',                  {silent = true, desc = '[G]it status'})
             vim.keymap.set('n', '<A-g><A-s>',  require('git').git_commits,  {silent = true, desc = '[G]it [S]how'})
             vim.keymap.set('n', '<A-g><A-B>',  require('git').git_bcommits, {silent = true, desc = '[G]it [B]lame current buffer history of file'})
+
+            local telescope = require('telescope')
+            local action_state = require('telescope.actions.state')
+
+            local function grep_in_subfolder()
+              builtin.find_files({
+                prompt_title = "Select folder for grep",
+                find_command = { "find", ".", "-type", "d" },
+                attach_mappings = function(prompt_bufnr, map)
+                  local function grep_selected_dir()
+                    local entry = action_state.get_selected_entry()
+                    if entry then
+                      actions.close(prompt_bufnr)
+                      local dir_path = entry.value
+                      if vim.fn.isdirectory(dir_path) == 1 then
+                        builtin.live_grep({ search_dirs = {dir_path} })
+                      else
+                        print("Selected path is not a directory")
+                      end
+                    end
+                  end
+
+                  map('i', '<CR>', grep_selected_dir)
+                  map('n', '<CR>', grep_selected_dir)
+
+                  return true
+                end
+              })
+            end
+
+            -- Add this to your keybindings section
+            vim.keymap.set('n', '<leader>dg', grep_in_subfolder, { desc = '[D]irectory files [G]rep' })
+
         end
     }
 )
