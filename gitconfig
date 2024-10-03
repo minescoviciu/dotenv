@@ -34,8 +34,8 @@
 [format]
     pretty = details
 
-[merge]
-    conflictstyle = diff3
+#[merge]
+#    conflictstyle = diff3
 
 [diff]
     #colorMoved = default
