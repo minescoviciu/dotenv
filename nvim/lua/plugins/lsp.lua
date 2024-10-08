@@ -72,7 +72,6 @@ return {
             -- gopls = {},
             pyright = {},
             -- rust_analyzer = {},
-            -- tsserver = {},
             --[[ html = { filetypes = { 'html', 'twig', 'hbs'} }, ]]
             rust_analyzer = {},
 
@@ -82,7 +81,6 @@ return {
                     telemetry = { enable = false },
                 },
             },
-            tsserver = {},
             html = { filetypes = { 'html', 'javascriptreact', 'javascript.jsx', 'typescriptreact', 'typescript.tsx' } },
             cssls = {},
             tailwindcss = {},
