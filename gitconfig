@@ -48,8 +48,9 @@
     ll =!"git log --graph --color=always --format=myline | \
             fzf --ansi --no-sort --layout=reverse --tiebreak=index \
                 --preview \"f() { set -- \\$(echo -- \\$@ | grep -oE '[a-f0-9]{7,}');local width=\\${FZF_PREVIEW_COLUMNS:-$COLUMNS}; [[ \\$width -gt 90 ]] && export DELTA_FEATURES=+side-by-side; echo \\$width; [ \\$# -eq 0 ] || git show --color=always \\$1 | delta -w \\${FZF_PREVIEW_COLUMNS:-$COLUMNS} ;}; f {}\" \
-                --bind=\"ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up,j:down,k:up,q:abort\"\
-                --bind=\"alt-j:preview-down,alt-k:preview-up\"\
+                --bind=\"ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up,ctrl-j:down,ctrl-k:up,ctrl-q:abort\"\
+                --bind=\"alt-j:preview-down,alt-k:preview-up,ctrl-p:toggle-preview\"\
+                --bind=\"enter:execute-silent(echo {} | grep -oE '[a-f0-9]{7,}' | printf '\\033]52;c;%s\\a' \\$(base64) )+become(echo {} | grep -oE '[a-f0-9]{7,}' | git show --name-only )\"\
                 --preview-window=right:60% \
                 --preview-window=border-left \
                 "

@@ -35,6 +35,16 @@ PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[0
 
 eval "$(starship init bash)"
 
+copy-clipboard() {
+    # Read input from argument or stdin
+    if [ -n "$1" ]; then
+        input="$1"
+    else
+        input=$(cat)
+    fi
+    printf "\033]52;c;$(printf "%s" "$input" | base64)\a"
+}
+
 __wezterm_set_user_var() {
   if hash base64 2>/dev/null ; then
     if [[ -z "${TMUX}" ]] ; then
