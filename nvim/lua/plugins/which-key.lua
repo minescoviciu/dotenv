@@ -22,6 +22,8 @@ return {
             { "<leader>w_", hidden = true },
             { "<leader>c", group = "[C]ode", icon = "" },
             { "<leader>c_", hidden = true },
+            { "<leader>x", group = "Conflicts" },
+            { "<leader>x_", hidden = true },
         })
     end,
     keys = {
