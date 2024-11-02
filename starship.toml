@@ -3,6 +3,7 @@ add_newline = false
 
 format = """
 $username\
+$hostname\
 $sudo\
 $directory\
 $git_branch\
@@ -20,10 +21,14 @@ read_only = ' 🔒'
 style = "bold teal"
 format = "[$path]($style)[$read_only]($read_only_style) "
 
+[hostname]
+format = '@[$ssh_symbol$hostname]($style) '
+ssh_symbol = ''
+
 [username]
 style_user = "bold dimmed blue"
 show_always = false
-format = "[$user]($style) "
+format = "[$user]($style)"
 
 [python]
 format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
