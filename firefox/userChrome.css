@@ -9,15 +9,18 @@
 @-moz-document url-prefix("chrome:") {
     #urlbar:is([breakout][breakout-extend], [breakout][usertyping][focused]) {
         /* Position in center of screen */
+        z-index: 2;
         position: fixed !important;
-        top: 30vh !important;
-        left: 50% !important;
-        transform: translateX(-50%) !important;
+        bottom: auto !important;
+        padding-left: 6px !important;
+        padding-right: 8px !important;
+        top: 25vh !important;
+        left: 18vw !important;
+        right: 18vw !important;
         font-size: 1.5em !important;
         --urlbar-container-height: 64px;
         --urlbar-height: 64px;
         width: min(64vw, 1200px) !important;
-        z-index: 2;
 
         #identity-icon-box {
             background: unset !important;
@@ -36,6 +39,10 @@
         /* Background styling */
         #urlbar-background {
             border-radius: 12px !important;
+        }
+
+        .urlbar-go-button {
+            margin: auto 0;
         }
 
         /* Backdrop overlay */
