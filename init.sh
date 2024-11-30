@@ -34,6 +34,7 @@ ln -s $CWD/wezterm ~/.config && echo "Linked wezterm config"
 ln -s $CWD/scripts ~/.config && echo "Linked scripts"
 ln -s $CWD/starship.toml ~/.config && echo "Linked starship.toml"
 ln -s $CWD/aerospace.toml ~/.aerospace.toml &&  echo "Linked aerospace.toml"
+ln -s $CWD/sketchybar ~/.config && echo "Linked sketchybar"
 
 for script_file in "$SCRIPTS_PATH"/*; do
   # Check if it is a regular file
