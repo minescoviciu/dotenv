@@ -16,6 +16,7 @@ config.color_scheme = "Catppuccin Mocha"
 
 config.native_macos_fullscreen_mode = true
 config.hide_tab_bar_if_only_one_tab = true
+config.window_decorations = "RESIZE"
 config.tab_bar_at_bottom = true
 config.font_size = 13.0
 config.audible_bell = "Disabled"
@@ -23,7 +24,12 @@ config.inactive_pane_hsb = {
     saturation = 1.0,
     brightness = 0.5,
 }
-
+config.window_padding = {
+  left = '0.1cell',
+  right = '0.1cell',
+  top = '0.3cell',
+  bottom = '0cell',
+}
 wezterm.on("user-var-changed", function(window, pane, name, value)
     if name == "open-web" then
         wezterm.open_with(value)
