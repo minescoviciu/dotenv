@@ -33,9 +33,7 @@ ln -s $CWD/gitconfig ~/.gitconfig && echo "Linked git config"
 ln -s $CWD/wezterm ~/.config && echo "Linked wezterm config"
 ln -s $CWD/scripts ~/.config && echo "Linked scripts"
 ln -s $CWD/starship.toml ~/.config && echo "Linked starship.toml"
-if [ "$(uname)" == "Darwin" ]; then
-    ln -s $CWD/skhd ~/.config && echo "Linked skhdrc"
-fi
+ln -s $CWD/aerospace.toml ~/.aerospace.toml &&  echo "Linked aerospace.toml"
 
 for script_file in "$SCRIPTS_PATH"/*; do
   # Check if it is a regular file
