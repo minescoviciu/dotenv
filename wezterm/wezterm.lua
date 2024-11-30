@@ -25,8 +25,8 @@ config.inactive_pane_hsb = {
     brightness = 0.5,
 }
 config.window_padding = {
-  left = '0.1cell',
-  right = '0.1cell',
+  left = '1cell',
+  right = '1cell',
   top = '0.3cell',
   bottom = '0cell',
 }
