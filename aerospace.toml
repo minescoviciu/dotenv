@@ -120,8 +120,8 @@ alt-shift-equal = 'resize smart +50'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
 alt-1 = 'workspace Home'
+alt-c = 'workspace Home'
 alt-a = 'workspace Mail' # In your config, you can drop workspace bindings that you don't need
-alt-c = 'workspace New_Home'
 alt-d = 'workspace Term'
 alt-f = 'workspace Zen'
 alt-s = 'workspace Chat'
@@ -129,8 +129,8 @@ alt-x = 'workspace Note'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 alt-shift-1 = 'move-node-to-workspace Home'
+alt-shift-c = 'move-node-to-workspace Home'
 alt-shift-a = 'move-node-to-workspace Mail'
-alt-shift-c = 'move-node-to-workspace New_Home'
 alt-shift-d = 'move-node-to-workspace Term'
 alt-shift-f = 'move-node-to-workspace Zen'
 alt-shift-s = 'move-node-to-workspace Chat'
