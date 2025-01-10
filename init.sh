@@ -36,6 +36,9 @@ ln -s $CWD/starship.toml ~/.config && echo "Linked starship.toml"
 ln -s $CWD/aerospace.toml ~/.aerospace.toml &&  echo "Linked aerospace.toml"
 ln -s $CWD/sketchybar ~/.config && echo "Linked sketchybar"
 
+rm -f ~/.config/lazygit/config.yml
+ln -s $CWD/lazygit.yaml ~/.config/lazygit/config.yml && echo "Linked lazygit"
+
 for script_file in "$SCRIPTS_PATH"/*; do
   # Check if it is a regular file
   if [ -f "$script_file" ]; then
