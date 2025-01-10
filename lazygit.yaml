@@ -392,7 +392,7 @@ os:
   open: ""
 
   # Command for opening a link. Should contain "{{link}}".
-  openLink: source ~/.config/scripts/bashrc.sh && __wezterm_open_web {{link}}
+  openLink: ~/.config/scripts/wezterm.py open {{link}}
 
   # EditCommand is the command for editing a file.
   # Deprecated: use Edit instead. Note that semantics are different:
@@ -414,7 +414,7 @@ os:
 
   # CopyToClipboardCmd is the command for copying to clipboard.
   # See https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md#custom-command-for-copying-to-and-pasting-from-clipboard
-  copyToClipboardCmd: "source ~/.config/scripts/bashrc.sh && copy-clipboard {{text}}"
+  copyToClipboardCmd: ~/.config/scripts/wezterm.py clipboard {{text}}
 
   # ReadFromClipboardCmd is the command for reading the clipboard.
   # See https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md#custom-command-for-copying-to-and-pasting-from-clipboard
