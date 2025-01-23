@@ -3,35 +3,45 @@
 import os
 import sys
 import base64
+import subprocess
+import time
+from datetime import datetime
 
+DEBUG = os.environ.get('DEBUG_WEZTERM') == '1'
+LOG_PATH = '/tmp/wezterm-logs'
+
+def log(msg):
+    if not DEBUG:
+        return
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+    try:
+        os.makedirs(LOG_PATH, exist_ok=True)
+        with open(f"{LOG_PATH}/debug.log", "a") as f:
+            f.write(f"{timestamp} {msg}\n")
+    except Exception as e:
+        print(f"Failed to write log: {e}", file=sys.stderr)
 
 def write_clipboard(tty_file, text):
-    """
-    Write OSC-52 escape sequences to copy text into clipboard.
-    Detect if we're inside tmux/screen based on environment variables.
-    """
+    """Write OSC-52 escape sequences to copy text into clipboard."""
+    log(f"Writing to clipboard, text length: {len(text)}")
     in_tmux = "TMUX" in os.environ
     term = os.environ.get("TERM", "")
     in_screen_or_tmux = term.startswith("screen") or term.startswith("tmux")
+    log(f"Terminal state: tmux={in_tmux}, term={term}")
 
-    # Encode the text as base64
     encoded = base64.b64encode(text.encode("utf-8")).decode("utf-8")
-
     if in_tmux or in_screen_or_tmux:
-        # tmux/screen version
-        tty_file.write(f"\x1bPtmux;\x1b\x1b]52;c;{encoded}\a\x1b\\")
+        sequence = f"\x1bPtmux;\x1b\x1b]52;c;{encoded}\a\x1b\\"
     else:
-        # Normal version
-        tty_file.write(f"\x1b]52;c;{encoded}\a")
-
+        sequence = f"\x1b]52;c;{encoded}\a"
+    
+    log(f"Writing sequence (length: {len(sequence)})")
+    tty_file.write(sequence)
     tty_file.flush()
 
-
 def send_notification(tty_file, message):
-    """
-    Write WezTerm's notify escape sequence.
-    We'll treat the argument as the "body", with a fixed title "Notification".
-    """
+    """Write WezTerm's notify escape sequence."""
+    log(f"Sending notification: {message}")
     title = "Notification"
     in_tmux = "TMUX" in os.environ
 
@@ -42,12 +52,9 @@ def send_notification(tty_file, message):
 
     tty_file.flush()
 
-
 def set_user_var(tty_file, value):
-    """
-    Write WezTerm's SetUserVar escape sequence (1337).
-    Using a default var name "MYVAR".
-    """
+    """Write WezTerm's SetUserVar escape sequence."""
+    log(f"Setting user var: {value}")
     var_name = "open-web"
     encoded_value = base64.b64encode(value.encode("utf-8")).decode("utf-8")
     in_tmux = "TMUX" in os.environ
@@ -59,98 +66,88 @@ def set_user_var(tty_file, value):
 
     tty_file.flush()
 
-
 def get_command_name(pid):
-    """
-    Return the command name of the process with the given PID
-    by reading /proc/<pid>/comm.
-    """
+    """Return the command name of the process with the given PID."""
+    log(f"Getting command name for PID: {pid}")
     try:
-        with open(f"/proc/{pid}/comm", "r") as f:
-            return f.read().strip()
-    except (FileNotFoundError, PermissionError):
+        cmd = ["ps", "-p", str(pid), "-o", "comm="]
+        result = subprocess.check_output(cmd, stderr=subprocess.DEVNULL).decode().strip()
+        log(f"Command for PID {pid}: {result}")
+        return result
+    except subprocess.SubprocessError as e:
+        log(f"Failed to get command for PID {pid}: {e}")
         return None
-
 
 def get_ppid(pid):
-    """
-    Return the PPid (parent PID) of the given PID by parsing /proc/<pid>/status.
-    """
-    path = f"/proc/{pid}/status"
+    """Return the parent PID of the given PID."""
+    log(f"Getting parent PID for: {pid}")
     try:
-        with open(path, "r") as f:
-            for line in f:
-                if line.startswith("PPid:"):
-                    parts = line.split()
-                    if len(parts) == 2:
-                        return int(parts[1])
-    except (FileNotFoundError, PermissionError):
-        pass
-    return None
-
+        cmd = ["ps", "-p", str(pid), "-o", "ppid="]
+        ppid = subprocess.check_output(cmd, stderr=subprocess.DEVNULL).decode().strip()
+        result = int(ppid)
+        log(f"Parent of PID {pid} is: {result}")
+        return result
+    except (subprocess.SubprocessError, ValueError) as e:
+        log(f"Failed to get parent PID for {pid}: {e}")
+        return None
 
 def get_tty_from_pid(pid):
-    """
-    Scan /proc/<pid>/fd/ for a descriptor that points to /dev/pts/* or /dev/tty.
-    Return the first matching path found, or None if not found.
-    """
-    fd_dir = f"/proc/{pid}/fd"
+    """Get TTY path for a given PID."""
+    log(f"Getting TTY for PID: {pid}")
     try:
-        for fd_name in os.listdir(fd_dir):
-            fd_path = os.path.join(fd_dir, fd_name)
-            try:
-                link_target = os.readlink(fd_path)
-                # Check if it looks like a TTY path
-                if link_target.startswith("/dev/pts/") or link_target == "/dev/tty":
-                    return link_target
-            except OSError:
-                # Could happen if there's no permission or the fd disappeared
-                pass
-    except (FileNotFoundError, PermissionError):
-        return None
+        cmd = ["ps", "-p", str(pid), "-o", "tty="]
+        tty = subprocess.check_output(cmd, stderr=subprocess.DEVNULL).decode().strip()
+        if tty and "?" not in tty:
+            result = f"/dev/{tty}"
+            log(f"TTY for PID {pid}: {result}")
+            return result
+        log(f"No TTY found for PID {pid}")
+    except subprocess.SubprocessError as e:
+        log(f"Failed to get TTY for PID {pid}: {e}")
     return None
-
 
 def find_parent_nvim_tty():
-    """
-    Walk up the process tree from this script's parent PID,
-    looking for a process named 'nvim'.
-    If found, return the TTY path that nvim is using, or None.
-    """
-    pid = os.getppid()  # Start with the immediate parent
+    """Find parent nvim process TTY."""
+    log("Searching for parent nvim TTY")
+    pid = os.getppid()
     while pid and pid > 1:
+        log(f"Checking PID: {pid}")
         cmd_name = get_command_name(pid)
         if cmd_name and "nvim" in cmd_name:
-            # Found an nvim process
             tty = get_tty_from_pid(pid)
             if tty:
+                log(f"Found nvim TTY: {tty}")
                 return tty
-        # Move up one level
         pid = get_ppid(pid)
+    log("No nvim TTY found")
     return None
 
-
 def get_target_tty():
-    """
-    If NVIM is set in the environment, try to find a parent 'nvim' process TTY.
-    Otherwise, return "/dev/tty".
-    """
+    """Get target TTY path."""
+    log("Getting target TTY")
     if "NVIM" in os.environ:
+        log("NVIM environment variable found")
         nvim_tty = find_parent_nvim_tty()
         if nvim_tty:
+            log(f"Using nvim TTY: {nvim_tty}")
             return nvim_tty
+    log("Using default TTY: /dev/tty")
     return "/dev/tty"
 
-
 def main():
+    start_time = time.time()
+    log("Script started")
+    
     if len(sys.argv) < 3:
         print(f"Usage: {sys.argv[0]} <clipboard|notify|open> <text>")
         sys.exit(1)
 
     operation = sys.argv[1]
     text = sys.argv[2]
+    log(f"Operation: {operation}, text length: {len(text)}")
 
     tty_path = get_target_tty()
+    log(f"Using TTY: {tty_path}")
 
     try:
         with open(tty_path, "w") as tty_file:
@@ -161,12 +158,16 @@ def main():
             elif operation == "open":
                 set_user_var(tty_file, text)
             else:
+                log(f"Unknown operation: {operation}")
                 print(f"Unknown operation: {operation}")
                 sys.exit(1)
     except Exception as e:
+        log(f"Error writing to {tty_path}: {e}")
         print(f"Error writing to {tty_path}: {e}")
         sys.exit(1)
 
+    end_time = time.time()
+    log(f"Script completed in {end_time - start_time:.3f}s")
 
 if __name__ == "__main__":
     main()
