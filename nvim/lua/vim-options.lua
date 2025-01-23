@@ -99,8 +99,12 @@ M.setup = function ()
     vim.keymap.set("n", "<leader>cp", "<cmd>let @+ = expand(\"%:p\")<CR>", { desc = "[C]opy File Path" })
 
     -- Yank github link
-    vim.keymap.set("n", "<leader>cg", ":GBrowse!<CR>", {desc = "[C]opy [G]ithub URL"})
-    vim.keymap.set("x", "<leader>cg", ":GBrowse!<CR>", {desc = "[C]opy [G]ithub URL"})
+    vim.keymap.set("n", "<leader>cg", ":GBrowse<CR>", {desc = "Open [G]ithub URL"})
+    vim.keymap.set("x", "<leader>cg", ":GBrowse<CR>", {desc = "Open [G]ithub URL"})
+
+    vim.keymap.set("n", "<leader>cG", ":GBrowse!<CR>", {desc = "[C]opy [G]ithub URL"})
+    vim.keymap.set("x", "<leader>cG", ":GBrowse!<CR>", {desc = "[C]opy [G]ithub URL"})
+
 
     -- Stay in indent mode
     vim.keymap.set("v", "<", "<gv")
@@ -112,15 +116,15 @@ M.setup = function ()
     -- Makes all windows equal size
     vim.keymap.set('n', 'Zo', '<C-w>=', { noremap = true, desc = "[Z]oom [O]ut" })
 
+    -- This command is used by fugitive to open in browser
     vim.api.nvim_create_user_command(
         'Browse',
         function(opts)
-            local cmd = " __wezterm_open_web " .. opts.args
-            local old_flags = vim.o.shellcmdflag
-            vim.o.shellcmdflag = "-ic"
-            local result = vim.fn.systemlist(cmd)
-            io.stderr:write(result[#result])
-            vim.o.shellcmdflag = old_flags
+            local cmd = string.format("NVIM=1 ~/.config/scripts/wezterm.py open %s", opts.args)
+            local out = vim.fn.system(cmd)
+            if not out then
+                vim.notify(out)
+            end
         end,
         { nargs = 1, desc = "Open a URL with wezterm_open_web" }
     )
