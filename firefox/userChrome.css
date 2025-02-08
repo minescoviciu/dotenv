@@ -6,6 +6,11 @@
     }
 }
 
+.tabbrowser-tab[pending="true"] {
+    filter: grayscale(1);
+    opacity: 0.5;
+}
+
 @-moz-document url-prefix("chrome:") {
     #urlbar:is([breakout][breakout-extend], [breakout][usertyping][focused]) {
         /* Position in center of screen */
