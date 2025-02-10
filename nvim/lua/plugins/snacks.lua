@@ -15,8 +15,25 @@ return {
     dashboard = { enabled = true },
     explorer = { 
       enabled = true,
+      replace_netrw = true,
     },
     picker = {
+      -- debug = {
+      --   scores = true, -- show scores in the list
+      --   leaks = true, -- show when pickers don't get garbage collected
+      --   explorer = true, -- show explorer debug info
+      --   files = true, -- show file debug info
+      --   grep = true, -- show file debug info
+      --   extmarks = true, -- show extmarks errors
+      -- },
+      formatters = {
+        file = {
+          filename_first = false, -- display filename before the file path
+          truncate = 120, -- truncate the file path to (roughly) this length
+          filename_only = false, -- only show the filename
+          icon_width = 2, -- width of the icon (in characters)
+        },
+      },
       sources = {
         files = {
           hidden = true,
@@ -26,11 +43,11 @@ return {
           follow_file = true,
           layout = {
             preview = {
-              main = true,
-              enabled = false,
+              enabled = true,
             },
             layout = {
-              position = "right"
+              position = "right",
+              width = 100,
             }
           },
         },
@@ -55,7 +72,7 @@ return {
       },
     },
     indent = { enabled = true },
-    input = { enabled = false, },
+    input = { enabled = true, },
     notifier = {
       enabled = true,
       timeout = 3000,
