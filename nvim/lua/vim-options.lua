@@ -38,7 +38,7 @@ M.setup = function ()
     vim.o.wildmode = 'longest:full,full'
     
     -- show relative line numbers
-    vim.o.relativenumber = true
+    vim.o.relativenumber = false
     -- put the vertical split on the right
     vim.o.splitright = true
 
