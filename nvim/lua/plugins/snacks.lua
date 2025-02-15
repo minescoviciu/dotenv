@@ -39,8 +39,11 @@ return {
           hidden = true,
         },
         explorer = {
+          tree = true,
           hidden = true,
           follow_file = true,
+          auto_close = true,
+          jump = { close = true },
           layout = {
             preview = {
               enabled = true,
