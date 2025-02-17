@@ -93,7 +93,7 @@ return {
   keys = {
     { "<leader><leader>", function() Snacks.picker.resume() end, desc = "Resume" },
     -- find
-    { "<leader>sf", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
+    { "<leader>sf", function() Snacks.picker.files() end, desc = "Smart Find Files" },
     { "<leader>sb", function() Snacks.picker.buffers() end, desc = "Buffers" },
     { "<leader>fb", function() Snacks.picker.explorer() end, desc = "Explorer" },
     -- { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
