@@ -129,6 +129,9 @@ M.setup = function ()
         { nargs = 1, desc = "Open a URL with wezterm_open_web" }
     )
 
+    vim.keymap.set('v', '<leader>fx', ":'<,'>!xmllint --format -<CR>", { desc = 'Format XML selection' })
+    vim.keymap.set('v', '<leader>fp', ":'<,'>!black -q -<CR>", { desc = 'Format Python selection' })
+    vim.keymap.set('v', '<leader>fj', ":'<,'>!jq -M .<CR>", { desc = 'Format JSON selection' })
 end
 
 return M
