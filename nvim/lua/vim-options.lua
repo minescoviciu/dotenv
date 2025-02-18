@@ -95,8 +95,9 @@ M.setup = function ()
     vim.keymap.set("n", "Y", "y$")
 
     -- Copy file paths
-    vim.keymap.set("n", "<leader>cf", "<cmd>let @+ = expand(\"%\")<CR>", { desc = "[C]opy File Name" })
     vim.keymap.set("n", "<leader>cp", "<cmd>let @+ = expand(\"%:p\")<CR>", { desc = "[C]opy File Path" })
+    vim.keymap.set("n", "<leader>cr", "<cmd>let @+ = expand(\"%\")<CR>", { desc = "[C]opy File Relative" })
+    vim.keymap.set("n", "<leader>cn", "<cmd>let @+ = expand(\"%:t\")<CR>", { desc = '[C]opy File Name' })
 
     -- Yank github link
     vim.keymap.set("n", "<leader>cg", ":GBrowse<CR>", {desc = "Open [G]ithub URL"})
