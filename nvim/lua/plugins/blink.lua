@@ -3,7 +3,13 @@ return {
   -- optional: provides snippets for the snippet source
   dependencies = {
     'rafamadriz/friendly-snippets',
-    "giuxtaposition/blink-cmp-copilot",
+    {
+      "fang2hou/blink-copilot",
+      opts = {
+        max_completions = 3,
+        max_attempts = 4,
+      }
+    },
   },
 
   -- use a release tag to download pre-built binaries
@@ -121,7 +127,7 @@ return {
       providers = {
         copilot = {
           name = "copilot",
-          module = "blink-cmp-copilot",
+          module = "blink-copilot",
           score_offset = 100,
           async = true,
           transform_items = function(_, items)
