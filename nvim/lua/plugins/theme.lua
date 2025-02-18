@@ -37,14 +37,10 @@ local catppuccin = {
             color_overrides = {},
             custom_highlights = {},
             integrations = {
-                cmp = true,
                 gitsigns = true,
-                nvimtree = true,
                 treesitter = true,
+                blink_cmp = true,
                 which_key = true,
-                telescope = {
-                    enabled = true,
-                },
                 indent_blankline = {
                     enabled = true,
                     scope_color = "lavender", -- catppuccin color (eg. `lavender`) Default: text
