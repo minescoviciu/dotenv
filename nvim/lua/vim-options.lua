@@ -83,7 +83,7 @@ M.setup = function ()
     vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
     vim.keymap.set('n', 'n',        'nzzzv')
-    vim.keymap.set('n', 'U',        'Nzzzv')
+    vim.keymap.set('n', 'N',        'Nzzzv')
     vim.keymap.set('n', '<C-d>',    '<C-d>zz')
     vim.keymap.set('n', '<C-u>',    '<C-u>zz')
 
