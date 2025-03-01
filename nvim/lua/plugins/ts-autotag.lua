@@ -1,6 +1,7 @@
 return {
   'windwp/nvim-ts-autotag',
   dependencies = 'nvim-treesitter/nvim-treesitter',
+  ft = { "html", "xml", "javascript", "javascriptreact", "typescriptreact", "svelte", "vue" },
   main = function()
     require('nvim-ts-autotag').setup({
       enable = true,
