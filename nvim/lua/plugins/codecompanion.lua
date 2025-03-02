@@ -10,6 +10,9 @@ return {
     },
     config = function(_, opts)
         require("codecompanion").setup({
+            opts = {
+                log_level = "INFO",
+            },
             adapters = {
                 copilot = require("codecompanion.adapters").extend("copilot", {
                     schema = {
