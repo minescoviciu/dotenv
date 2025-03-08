@@ -1,7 +1,7 @@
 return {
     'tpope/vim-fugitive',
     dependencies = { 'tpope/vim-rhubarb' },
-    lazy=false,
+    event = "VeryLazy",
     config = function()
         -- Set up mapping for Git blame buffer
         local group = vim.api.nvim_create_augroup('FugitiveCustom', { clear = true })

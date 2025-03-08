@@ -3,6 +3,7 @@ return {
     dependencies = {
         "nvim-lua/plenary.nvim",
     },
+    event = "VeryLazy",
     config = function()
         local null_ls = require("null-ls")
         
@@ -14,14 +15,5 @@ return {
             },
         })
 
-        vim.api.nvim_create_autocmd("BufWritePre", {
-            pattern = "*.py",
-            callback = function()
-                local line_count = vim.api.nvim_buf_line_count(0)
-                if line_count <= 1000 then
-                    vim.lsp.buf.format()
-                end
-            end,
-        })
     end
 }

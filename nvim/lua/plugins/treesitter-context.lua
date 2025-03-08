@@ -3,6 +3,7 @@ return {
     dependencies = {
         'nvim-treesitter/nvim-treesitter-textobjects',
     },
+    event = "VeryLazy",
     config = function()
         require('treesitter-context').setup({
             enable = true,

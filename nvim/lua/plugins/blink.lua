@@ -11,6 +11,7 @@ return {
       }
     },
   },
+  event = "VeryLazy",
 
   -- use a release tag to download pre-built binaries
   version = '*',

@@ -5,6 +5,7 @@ return {
         'nvim-treesitter/nvim-treesitter-textobjects',
     },
     build = ':TSUpdate',
+    event = "VeryLazy",
     config = function ()
 
         -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
