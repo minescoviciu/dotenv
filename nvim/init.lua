@@ -23,9 +23,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require('lazy').setup({
-  -- Git related plugins
-  'tpope/vim-rhubarb',
-
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
