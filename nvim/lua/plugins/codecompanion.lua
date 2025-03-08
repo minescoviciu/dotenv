@@ -6,7 +6,7 @@ return {
     },
     keys = {
         { "<leader>aa", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n" }, desc = "Toggle CodeCompanion Chat" },
-        { "<leader>aa", "<cmd>CodeCompanionChat<cr>",        mode = { "v" }, desc = "Toggle CodeCompanion Chat" },
+        { "<leader>ac", "<cmd>CodeCompanionChat<cr>", mode = { "n" }, desc = "CodeCompanion New Chat" },
     },
     config = function(_, opts)
         require("codecompanion").setup({
