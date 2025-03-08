@@ -2,8 +2,9 @@ return {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
     -- See `:help lualine.txt`
-    lazy = false,
-    opts = {
+    event = "VeryLazy",
+   config = function()
+    local opts = {
       options = {
         icons_enabled = true,
         -- theme = 'tokyonight',
@@ -18,7 +19,7 @@ return {
         lualine_b = { 'branch', 'diff' },
         lualine_c = { 'filename' },
         lualine_x = {},
-        lualine_y = { 'searchcount', 'progress' },
+        lualine_y = { 'searchcount', 'progress', require('codecompanion-lualine')},
         lualine_z = {
           { 'location', separator = { left = '', right = '' }, left_padding = 1 },
         },
@@ -31,5 +32,7 @@ return {
         lualine_y = {},
         lualine_z = {},
       },
-    },
+    }
+    require('lualine').setup(opts)
+  end
 }
