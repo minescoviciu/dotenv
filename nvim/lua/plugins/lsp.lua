@@ -5,24 +5,22 @@ return {
       -- Automatically install LSPs to stdpath for neovim
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
-
-      -- Useful status updates for LSP
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
-
-      -- Additional lua configuration, makes nvim stuff amazing!
-      'folke/neodev.nvim',
+        {
+            "folke/lazydev.nvim",
+            ft = "lua", -- only load on lua files
+            opts = {
+                library = {
+                    -- See the configuration section for more details
+                    -- Load luvit types when the `vim.uv` word is found
+                    { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+                },
+            },
+        },
     },
     config = function ()
 
         --  This function gets run when an LSP connects to a particular buffer.
         local on_attach = function(_, bufnr)
-            -- NOTE: Remember that lua is a real programming language, and as such it is possible
-            -- to define small helper and utility functions so you don't have to repeat yourself
-            -- many times.
-            --
-            -- In this case, we create a function that lets us more easily define mappings specific
-            -- for LSP related items. It sets the mode, buffer and description for us each time.
             local nmap = function(keys, func, desc)
                 if desc then
                     desc = 'LSP: ' .. desc
@@ -64,10 +62,7 @@ return {
             clangd = {},
             -- gopls = {},
             pyright = {},
-            -- rust_analyzer = {},
-            --[[ html = { filetypes = { 'html', 'twig', 'hbs'} }, ]]
             rust_analyzer = {},
-
             lua_ls = {
                 Lua = {
                     workspace = { checkThirdParty = false },
@@ -86,11 +81,8 @@ return {
             },
         }
 
-        -- Setup neovim lua configuration
-        require('neodev').setup()
-
         -- Ensure the servers above are installed
-        local mason_lspconfig = require 'mason-lspconfig'
+        local mason_lspconfig = require('mason-lspconfig')
 
         mason_lspconfig.setup {
             ensure_installed = vim.tbl_keys(servers),
