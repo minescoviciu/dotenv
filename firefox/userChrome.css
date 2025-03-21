@@ -11,57 +11,57 @@
     opacity: 0.5;
 }
 
-@-moz-document url-prefix("chrome:") {
-    #urlbar:is([breakout][breakout-extend], [breakout][usertyping][focused]) {
-        /* Position in center of screen */
-        z-index: 2;
-        position: fixed !important;
-        bottom: auto !important;
-        padding-left: 6px !important;
-        padding-right: 8px !important;
-        top: 25vh !important;
-        left: 18vw !important;
-        right: 18vw !important;
-        font-size: 1.5em !important;
-        --urlbar-container-height: 64px;
-        --urlbar-height: 64px;
-        width: min(64vw, 1200px) !important;
-
-        #identity-icon-box {
-            background: unset !important;
-            padding-right: 10px;
-        }
-        #identity-icon {
-            width: 22px !important;
-            height: 22px !important;
-        }
-        /* Container styling */
-        #urlbar-input-container {
-            height: 100% !important;
-            padding: 10px 16px !important;
-        }
-
-        /* Background styling */
-        #urlbar-background {
-            border-radius: 12px !important;
-        }
-
-        .urlbar-go-button {
-            margin: auto 0;
-        }
-
-        /* Backdrop overlay */
-        &:after {
-            content: "";
-            position: fixed;
-            pointer-events: none;
-            width: 100vw;
-            height: 100vh;
-            top: 0px;
-            left: 0px;
-            background-color: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(5px);
-            z-index: -1;
-        }
-    }
-}
+/* @-moz-document url-prefix("chrome:") { */
+/*     #urlbar:is([breakout][breakout-extend], [breakout][usertyping][focused]) { */
+/*         /* Position in center of screen */ */
+/*         z-index: 2; */
+/*         position: fixed !important; */
+/*         bottom: auto !important; */
+/*         padding-left: 6px !important; */
+/*         padding-right: 8px !important; */
+/*         top: 25vh !important; */
+/*         left: 18vw !important; */
+/*         right: 18vw !important; */
+/*         font-size: 1.5em !important; */
+/*         --urlbar-container-height: 64px; */
+/*         --urlbar-height: 64px; */
+/*         width: min(64vw, 1200px) !important; */
+/**/
+/*         #identity-icon-box { */
+/*             background: unset !important; */
+/*             padding-right: 10px; */
+/*         } */
+/*         #identity-icon { */
+/*             width: 22px !important; */
+/*             height: 22px !important; */
+/*         } */
+/*         /* Container styling */ */
+/*         #urlbar-input-container { */
+/*             height: 100% !important; */
+/*             padding: 10px 16px !important; */
+/*         } */
+/**/
+/*         /* Background styling */ */
+/*         #urlbar-background { */
+/*             border-radius: 12px !important; */
+/*         } */
+/**/
+/*         .urlbar-go-button { */
+/*             margin: auto 0; */
+/*         } */
+/**/
+/*         /* Backdrop overlay */ */
+/*         &:after { */
+/*             content: ""; */
+/*             position: fixed; */
+/*             pointer-events: none; */
+/*             width: 100vw; */
+/*             height: 100vh; */
+/*             top: 0px; */
+/*             left: 0px; */
+/*             background-color: rgba(0, 0, 0, 0.3); */
+/*             backdrop-filter: blur(5px); */
+/*             z-index: -1; */
+/*         } */
+/*     } */
+/* } */
