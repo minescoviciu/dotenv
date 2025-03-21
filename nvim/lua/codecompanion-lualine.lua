@@ -11,14 +11,12 @@ local req_status_icons = {
 }
 
 function M:start_spinner()
-    vim.notify("start_spinner")
     self.processing = true
     self.spinner_index = 1
     self.req_status = nil
 end
 
 function M:stop_spinner(request)
-    vim.notify("stop_spinner")
     local status = request.data.status
     if status == "success" then
         self.req_status = "success"
@@ -30,7 +28,6 @@ function M:stop_spinner(request)
     self.processing = false
     vim.defer_fn(function()
         self.req_status = nil
-        vim.notify("stop status")
     end, 3000)
 end
 
