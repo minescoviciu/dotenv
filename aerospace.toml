@@ -125,7 +125,7 @@ alt-a = 'workspace Mail' # In your config, you can drop workspace bindings that 
 alt-d = 'workspace Term'
 alt-f = 'workspace Zen'
 alt-s = 'workspace Chat'
-alt-x = 'workspace Note'
+alt-w = 'workspace Note'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 alt-shift-1 = 'move-node-to-workspace Home'
@@ -134,7 +134,7 @@ alt-shift-a = 'move-node-to-workspace Mail'
 alt-shift-d = 'move-node-to-workspace Term'
 alt-shift-f = 'move-node-to-workspace Zen'
 alt-shift-s = 'move-node-to-workspace Chat'
-alt-shift-x = 'move-node-to-workspace Note'
+alt-shift-w = 'move-node-to-workspace Note'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
