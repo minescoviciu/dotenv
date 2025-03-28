@@ -23,7 +23,7 @@ return {
                 auto_trigger = true,
                 debounce = 75,
                 keymap = {
-                    accept = "<tab>",
+                    -- accept = "<tab>",
                     accept_word = false,
                     accept_line = false,
                     next = "<M-]>",
@@ -45,6 +45,14 @@ return {
             copilot_node_command = 'node', -- Node.js version must be > 18.x
             server_opts_overrides = {},
         })
+        vim.keymap.set('i', '<Tab>', function()
+            if require('copilot.suggestion').is_visible() then
+                require('copilot.suggestion').accept()
+            else
+                -- Insert a normal Tab if no suggestion is visible
+                return "<Tab>"
+            end
+        end, { expr = true, desc = "Accept Copilot suggestion or normal Tab" })
     end
 }
 
