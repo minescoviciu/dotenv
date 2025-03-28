@@ -17,7 +17,13 @@ return {
           { 'mode', separator = { left = '', right = '' }, right_padding = 2 },
         },
         lualine_b = { 'branch', 'diff' },
-        lualine_c = { 'filename' },
+        lualine_c = {
+          {
+            'filename',
+            path = 1,
+            file_status = true
+          },
+        },
         lualine_x = {},
         lualine_y = { 'searchcount', 'progress', require('codecompanion-lualine')},
         lualine_z = {
