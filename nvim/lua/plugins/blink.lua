@@ -5,6 +5,7 @@ return {
     'rafamadriz/friendly-snippets',
     {
       "fang2hou/blink-copilot",
+      tag = "v1.3.7",
       opts = {
         max_completions = 3,
         max_attempts = 4,
