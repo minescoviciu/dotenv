@@ -91,16 +91,14 @@ check_disk_space() {
     local capacity=$(echo "$df_output" | awk '{print $5}')
     # Default threshold is 90% if DISK_THRESHOLD is not set
     local threshold=${DISK_THRESHOLD:-80}
-    disk_full=false
+    disk_full=''
     # Check if capacity is a number with % (valid filesystem)
     if [[ "$capacity" =~ ^[0-9]+%$ ]]; then
         # Remove the % sign and convert to number
         local current_usage=${capacity/\%/}
         if [ "$current_usage" -gt "$threshold" ]; then
-            disk_full=$'\uf0c7'
+            disk_full=" "$'\uf0c7'" "
         fi
-    else
-        disk_full=''
     fi
 }
 
@@ -135,4 +133,4 @@ format_pwd() {
 PROMPT_COMMAND="find_git_branch; find_git_dirty; check_disk_space; format_pwd; git_operation_status;"
 
 # PS1="\[${FLAMINGO}\]\${git_dirty}\[${RESET}\] \[${BLUE}\]\${formated_pwd}\[${RESET}\] \[${LAVENDER}\]\${git_branch}\[${RESET}\] \[${RED}\]\${disk_full}\[${RESET}\] > "
-PS1="\[$START_PROMPT\]\[${TEAL}\]\${formated_pwd}\[${RESET}\] \[${MAUVE}\]\${git_branch}\[${RESET}\]\[${YELLOW}\]\${git_state}\[${RESET}\]\[${PEACH}\]\${git_dirty}\[${RESET}\] \[${BLINK}${RED}\]\${disk_full}\[${RESET}\] \[${GREEN}\]${ARROW}\[${RESET}\]\[$START_PROMPT\]"
+PS1="\[$START_PROMPT\]\[${TEAL}\]\${formated_pwd}\[${RESET}\] \[${MAUVE}\]\${git_branch}\[${RESET}\]\[${YELLOW}\]\${git_state}\[${RESET}\]\[${PEACH}\]\${git_dirty}\[${RESET}\]\[${BLINK}${RED}\]\${disk_full}\[${RESET}\]\[${GREEN}\]${ARROW}\[${RESET}\]\[$START_PROMPT\]"
