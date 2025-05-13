@@ -1,4 +1,6 @@
 return {
+    cond=not vim.g.vscode,
+
     -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
     dependencies = {

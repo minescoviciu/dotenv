@@ -1,5 +1,6 @@
 -- highlight text under cursor
 return {
+    cond=not vim.g.vscode,
     'yamatsum/nvim-cursorline',
     event = "VeryLazy",
     opts = {

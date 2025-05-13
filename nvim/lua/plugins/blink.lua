@@ -1,4 +1,5 @@
 return {
+  cond=not vim.g.vscode,
   'saghen/blink.cmp',
   -- optional: provides snippets for the snippet source
   dependencies = {

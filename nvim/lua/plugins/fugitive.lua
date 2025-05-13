@@ -1,4 +1,5 @@
 return {
+    cond=not vim.g.vscode,
     'tpope/vim-fugitive',
     dependencies = { 'tpope/vim-rhubarb' },
     event = "VeryLazy",

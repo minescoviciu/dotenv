@@ -1,4 +1,5 @@
 return {
+    cond=not vim.g.vscode,
     "olimorris/codecompanion.nvim",
     dependencies = {
         "nvim-lua/plenary.nvim",

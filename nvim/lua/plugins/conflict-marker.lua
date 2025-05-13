@@ -1,5 +1,6 @@
 return {
     'rhysd/conflict-marker.vim',
+    cond=not vim.g.vscode,
     event = "VeryLazy",
     config = function()
         vim.g.conflict_marker_highlight_group = ''

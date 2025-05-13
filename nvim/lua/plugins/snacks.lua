@@ -1,4 +1,5 @@
 return {
+  cond=not vim.g.vscode,
   "folke/snacks.nvim",
   priority = 1000,
   lazy = false,

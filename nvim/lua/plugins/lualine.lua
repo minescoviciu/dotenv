@@ -1,4 +1,5 @@
 return {
+    cond=not vim.g.vscode,
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
     -- See `:help lualine.txt`

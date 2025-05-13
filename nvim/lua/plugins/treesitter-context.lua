@@ -1,4 +1,5 @@
 return {
+    cond=not vim.g.vscode,
     'nvim-treesitter/nvim-treesitter-context',
     dependencies = {
         'nvim-treesitter/nvim-treesitter-textobjects',

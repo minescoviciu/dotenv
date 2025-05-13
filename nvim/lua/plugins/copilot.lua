@@ -1,4 +1,5 @@
 return {
+    cond=not vim.g.vscode,
     "zbirenbaum/copilot.lua",
     event = "VeryLazy",
     config = function()

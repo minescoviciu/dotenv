@@ -35,9 +35,6 @@ require('lazy').setup({
       }
     }
   },
-
-  -- 'github/copilot.vim',
-  --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   { import = 'plugins' },
 }, {})
 
