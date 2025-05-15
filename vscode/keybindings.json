@@ -1,0 +1,72 @@
+// Place your key bindings in this file to override the defaults
+[
+    {
+        "key": "cmd+i",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.closeSidebar",
+                "workbench.action.moveSideBarLeft",
+                "composer.startComposerPrompt"
+            ]
+        },
+    },
+    {
+        "key": "cmd+b",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.closeSidebar",
+                "workbench.action.toggleAuxiliaryBar",
+            ]
+        },
+        "when": "sideBarVisible && auxiliaryBarVisible"
+    },
+    {
+        "key": "cmd+b",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.closeSidebar",
+            ]
+        },
+        "when": "sideBarVisible && !auxiliaryBarVisible"
+    },
+    {
+        "key": "cmd+b",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.toggleAuxiliaryBar",
+                "workbench.action.moveSideBarRight",
+                "workbench.action.toggleSidebarVisibility"
+            ]
+        },
+        "when": "!sideBarVisible && auxiliaryBarVisible"
+    },
+    {
+        "key": "cmd+b",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.moveSideBarRight",
+                "workbench.action.toggleSidebarVisibility",
+            ]
+        },
+        "when": "!sideBarVisible && !auxiliaryBarVisible"
+    },
+    {
+        "key": "cmd+i",
+        "command": "-composer.startComposerPrompt"
+    },
+    {
+        "key": "cmd+b",
+        "command": "-workbench.action.toggleSidebarVisibility"
+    },
+    {
+        "key": "cmd+i",
+        "command": "-composer.toggleAllVsSingleChatContext",
+        "when": "composerFocused && !editorTextFocus"
+    },
+]
+
