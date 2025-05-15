@@ -370,18 +370,18 @@ quitOnTopLevelReturn: false
 # Config relating to things outside of Lazygit like how files are opened, copying to clipboard, etc
 os:
   # Command for editing a file. Should contain "{{filename}}".
-  edit: ""
+  edit: "cursor --reuse-window -- {{filename}}"
 
   # Command for editing a file at a given line number. Should contain
   # "{{filename}}", and may optionally contain "{{line}}".
-  editAtLine: ""
+  editAtLine: "cursor --reuse-window --goto -- {{filename}}:{{line}}"
 
   # Same as EditAtLine, except that the command needs to wait until the
   # window is closed.
-  editAtLineAndWait: ""
+  editAtLineAndWait: "cursor --reuse-window --goto --wait -- {{filename}}:{{line}}"
 
   # For opening a directory in an editor
-  openDirInEditor: ""
+  openDirInEditor: "cursor -- {{dir}}"
 
   # A built-in preset that sets all of the above settings. Supported presets
   # are defined in the getPreset function in editor_presets.go.
@@ -431,7 +431,7 @@ disableStartupPopups: false
 notARepository: prompt
 
 # If true, display a confirmation when subprocess terminates. This allows you to view the output of the subprocess before returning to Lazygit.
-promptToReturnFromSubprocess: true
+promptToReturnFromSubprocess: false
 
 # Keybindings
 keybinding:

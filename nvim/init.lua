@@ -28,6 +28,7 @@ require('lazy').setup({
 
   -- "gc" to comment visual regions/lines
   { 'numToStr/Comment.nvim',
+    cond=not vim.g.vscode,
     opts = {
       toggler = {
         line = '<C-_>',

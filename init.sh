@@ -36,8 +36,14 @@ ln -s $CWD/starship.toml ~/.config && echo "Linked starship.toml"
 ln -s $CWD/aerospace.toml ~/.aerospace.toml &&  echo "Linked aerospace.toml"
 ln -s $CWD/sketchybar ~/.config && echo "Linked sketchybar"
 
+CURSOR_PATH="~/Library/Application Support/Cursor/User"
+rm -f $CURSOR_PATH/settings.json
+rm -f $CURSOR_PATH/keybindings.json
+ln -s $CWD/vscode/settings.json $CURSOR_PATH/settings.json && echo "Linked vscode settings"
+ln -s $CWD/vscode/keybindings.json $CURSOR_PATH/keybindings.json && echo "Linked vscode keybindings"
+
 rm -f ~/.config/lazygit/config.yml
-ln -s $CWD/lazygit.yaml ~/.config/lazygit/config.yml && echo "Linked lazygit"
+ln -s $CWD/lazygit.yaml ~/.config/config.yml && echo "Linked lazygit"
 
 for script_file in "$SCRIPTS_PATH"/*; do
   # Check if it is a regular file
@@ -72,6 +78,7 @@ done
 
 #install spaceship
 curl -sS https://starship.rs/install.sh | sh
+
 
 # TODO
 # Check if git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm

@@ -36,6 +36,6 @@
     "redhat.telemetry.enabled": false,
     "workbench.navigationControl.enabled": false,
     "workbench.layoutControl.enabled": false,
+    "lazygit-vscode.configPath": "~/.config/lazygit.yaml",
     "workbench.sideBar.location": "right",
 }
-

@@ -11,6 +11,7 @@
             ]
         },
     },
+    // side bar
     {
         "key": "cmd+b",
         "command": "runCommands",
@@ -55,6 +56,88 @@
         },
         "when": "!sideBarVisible && !auxiliaryBarVisible"
     },
+    // search
+    {
+        "key": "shift+cmd+f",
+        "command": "workbench.action.findInFiles",
+        "when": "sideBarVisible"
+    },
+    {
+        "key": "shift+cmd+f",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.toggleAuxiliaryBar",
+                "workbench.action.moveSideBarRight",
+                "workbench.action.findInFiles"
+            ]
+        },
+        "when": "!sideBarVisible && auxiliaryBarVisible"
+    },
+    {
+        "key": "shift+cmd+f",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.moveSideBarRight",
+                "workbench.action.findInFiles"
+            ]
+        },
+        "when": "!sideBarVisible && !auxiliaryBarVisible"
+    },
+    
+    // test
+    //  {
+    //      "key": "cmd+d",
+    //      "command": "workbench.action.quickOpen",
+    //  },
+
+    // Simulate the ctrl+d, ctrl+u, etc
+    {
+        "key": "ctrl+b",
+        "command": "runCommands",
+        "args": {
+          "commands": [
+            { "command": "vscode-neovim.send", "args": "<C-b>" },
+            { "command": "editorScroll", "args": { "to": "up", "by": "page" } }
+          ]
+        },
+        "when": "editorTextFocus"
+      },
+      {
+        "key": "ctrl+u",
+        "command": "runCommands",
+        "args": {
+          "commands": [
+            { "command": "vscode-neovim.send", "args": "<C-u>" },
+            { "command": "editorScroll", "args": { "to": "up", "by": "halfPage" } }
+          ]
+        },
+        "when": "editorTextFocus"
+      },
+      {
+        "key": "ctrl+d",
+        "command": "runCommands",
+        "args": {
+          "commands": [
+            { "command": "vscode-neovim.send", "args": "<C-d>" },
+            { "command": "editorScroll", "args": { "to": "down", "by": "halfPage" } }
+          ]
+        },
+        "when": "editorTextFocus"
+      },
+      {
+        "key": "ctrl+f",
+        "command": "runCommands",
+        "args": {
+          "commands": [
+            { "command": "vscode-neovim.send", "args": "<C-f>" },
+            { "command": "editorScroll", "args": { "to": "down", "by": "page" } }
+          ]
+        },
+        "when": "editorTextFocus"
+      },
+
     {
         "key": "cmd+i",
         "command": "-composer.startComposerPrompt"
@@ -68,5 +151,12 @@
         "command": "-composer.toggleAllVsSingleChatContext",
         "when": "composerFocused && !editorTextFocus"
     },
+    {
+        "key": "shift+cmd+f",
+        "command": "-workbench.action.findInFiles"
+    },
+    {
+        "key": "shift+cmd+l",
+        "command": "-lazygit-vscode.toggle"
+    },
 ]
-
