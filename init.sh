@@ -36,7 +36,7 @@ ln -s $CWD/starship.toml ~/.config && echo "Linked starship.toml"
 ln -s $CWD/aerospace.toml ~/.aerospace.toml &&  echo "Linked aerospace.toml"
 ln -s $CWD/sketchybar ~/.config && echo "Linked sketchybar"
 
-CURSOR_PATH="~/Library/Application Support/Cursor/User"
+CURSOR_PATH="~/Library/Application\ Support/Cursor/User"
 rm -f $CURSOR_PATH/settings.json
 rm -f $CURSOR_PATH/keybindings.json
 ln -s $CWD/vscode/settings.json $CURSOR_PATH/settings.json && echo "Linked vscode settings"
