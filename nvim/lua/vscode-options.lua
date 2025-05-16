@@ -24,6 +24,7 @@ M.setup = function()
     vim.notify = vscode.notify
     -- Add normal mode mapping for opening git panel
     vim.keymap.set('n', '<leader>sg', function()
+        vscode.call('workbench.action.moveSideBarRight')
         vscode.call('workbench.action.findInFiles')
     end, { noremap = true, silent = true, desc = "Search grep", expr = true })
 
