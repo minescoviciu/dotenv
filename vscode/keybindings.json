@@ -159,4 +159,8 @@
         "key": "shift+cmd+l",
         "command": "-lazygit-vscode.toggle"
     },
+    {
+        "key": "cmd+e",
+        "command": "-actions.findWithSelection"
+    },
 ]
