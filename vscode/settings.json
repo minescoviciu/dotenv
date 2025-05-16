@@ -40,42 +40,16 @@
     "terminal.integrated.fontSize": 15,
     "window.zoomPerWindow": false,
     "window.zoomLevel": 1,
-    "workbench.sideBar.location": "right",
     "window.newWindowProfile": "Default",
     "workbench.iconTheme": "catppuccin-mocha",
     "terminal.integrated.profiles.osx": {
-        "bash": {
-            "path": "bash",
-            "args": [
-                "-l"
-            ],
-            "icon": "terminal-bash"
-        },
-        "zsh": {
-            "path": "zsh",
-            "args": [
-                "-l"
-            ]
-        },
-        "fish": {
-            "path": "fish",
-            "args": [
-                "-l"
-            ]
-        },
-        "tmux": {
-            "path": "tmux",
-            "icon": "terminal-tmux"
-        },
-        "pwsh": {
-            "path": "pwsh",
-            "icon": "terminal-powershell"
-        },
         "mine": {
             "path": "/bin/bash",
             "args": [
                 "-l"
-            ]
+            ],
+            "icon": "terminal-tmux"
         }
     },
+    "workbench.sideBar.location": "right",
 }
