@@ -84,6 +84,14 @@ M.setup = function()
     vim.api.nvim_create_user_command('Format', function()
         vscode.call('editor.action.formatDocument')
     end, {})
+    
+    vim.keymap.set('v', '<leader>r', function()
+        vscode.call('')
+    end, { noremap = true, silent = true, desc = "Rename symbol", expr = true })
+
+    vim.keymap.set('v', '<leader>rt', function()
+        vscode.call('workbench.action.tasks.runTask')
+    end, { noremap = true, silent = true, desc = "Run task with selection", expr = true })
 end
 
 return M
