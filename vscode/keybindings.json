@@ -86,12 +86,6 @@
         "when": "!sideBarVisible && !auxiliaryBarVisible"
     },
     
-    // test
-    //  {
-    //      "key": "cmd+d",
-    //      "command": "workbench.action.quickOpen",
-    //  },
-
     // Simulate the ctrl+d, ctrl+u, etc
     {
         "key": "ctrl+b",
@@ -163,4 +157,141 @@
         "key": "cmd+e",
         "command": "-actions.findWithSelection"
     },
+    
+
+    // test
+    //  {
+    //      "key": "cmd+d",
+    //      "command": "search.action.focusSearchList",
+    //  },
+
+    // Search shortcuts
+     {
+        "key": "escape",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.closeSidebar",
+                "vscode-neovim.escape",
+            ]
+        },
+        "when": "searchViewletVisible"
+    },
+    {
+        "key": "enter",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "list.select",
+                "vscode-neovim.escape",
+                "workbench.action.closeSidebar",
+            ]
+        },
+        "when": "hasSearchResult && focusedView == 'workbench.view.search' && inputFocus"
+    },
+    {
+        "key": "up",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                // "search.action.focusPreviousSearchResult",
+                "search.action.focusSearchList",
+                "list.focusUp",
+                "workbench.action.findInFiles"
+                
+            ]
+        },
+        // "when": "hasSearchResult && searchViewletVisible"
+        "when": "hasSearchResult && focusedView == 'workbench.view.search' && inputFocus"
+    },
+    {
+        "key": "down",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "search.action.focusSearchList",
+                "list.focusDown",
+                "workbench.action.findInFiles"
+            ]
+        },
+        "when": "hasSearchResult && focusedView == 'workbench.view.search' && inputFocus"
+    },
+    {
+        "key": "ctrl+u",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                    "scrollLineUp",
+                    "scrollLineUp",
+                    "scrollLineUp",
+                    "scrollLineUp",
+                    "scrollLineUp",
+            ]
+        },
+        "when": "hasSearchResult && focusedView == 'workbench.view.search' && inputFocus"
+    },
+    {
+        "key": "ctrl+d",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                    "scrollLineDown",
+                    "scrollLineDown",
+                    "scrollLineDown",
+                    "scrollLineDown",
+                    "scrollLineDown",
+            ]
+        },
+        "when": "hasSearchResult && focusedView == 'workbench.view.search' && inputFocus"
+    },
+    
+    {
+        "key": "cmd+j",
+        "command": "history.showNext",
+        "when": "historyNavigationForwardsEnabled && historyNavigationWidgetFocus && !isComposing && !suggestWidgetVisible"
+    },
+    {
+        "key": "cmd+k",
+        "command": "history.showPrevious",
+        "when": "historyNavigationBackwardsEnabled && historyNavigationWidgetFocus && !isComposing && !suggestWidgetVisible"
+    },
+
+    {
+        "key": "f4",
+        "command": "-search.action.focusNextSearchResult",
+        "when": "hasSearchResult || inSearchEditor"
+    },
+    {
+        "key": "shift+f4",
+        "command": "-search.action.focusPreviousSearchResult",
+        "when": "hasSearchResult || inSearchEditor"
+    },
+    {
+        "key": "down",
+        "command": "-history.showNext",
+        "when": "historyNavigationForwardsEnabled && historyNavigationWidgetFocus && !isComposing && !suggestWidgetVisible"
+    },
+    {
+        "key": "up",
+        "command": "-history.showPrevious",
+        "when": "historyNavigationBackwardsEnabled && historyNavigationWidgetFocus && !isComposing && !suggestWidgetVisible"
+    },
+    
+
+    // ctrl ^
+    {
+        "key": "ctrl+6",
+        "command": "-workbench.action.openEditorAtIndex6"
+    },
+    {
+        "key": "ctrl+6",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup",
+                "list.select"
+            ]
+        },
+        "when": "!activeEditorGroupEmpty"
+    }
 ]

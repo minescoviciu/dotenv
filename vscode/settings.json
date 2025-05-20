@@ -30,8 +30,6 @@
     "editor.renderWhitespace": "all",
     "vscode-neovim.compositeKeys": {
     },
-    "workbench.activityBar.location": "top",
-    "workbench.editor.enablePreview": false,
     "redhat.telemetry.enabled": false,
     "workbench.navigationControl.enabled": false,
     "workbench.layoutControl.enabled": false,
@@ -51,5 +49,15 @@
             "icon": "terminal-tmux"
         }
     },
+    "find-it-faster.general.batTheme": "Catppuccin Mocha",
+    "find-it-faster.general.restoreFocusTerminal": true,
+    "find-it-faster.general.showMaximizedTerminal": true,
+    "find-it-faster.general.useGitIgnoreExcludes": false,
+    "search.quickAccess.preserveInput": true,
+    "search.smartCase": true,
+    "search.useIgnoreFiles": false,
+    "workbench.activityBar.location": "hidden",
     "workbench.sideBar.location": "right",
+    "editor.find.seedSearchStringFromSelection": "never",
+    "search.searchEditor.reusePriorSearchConfiguration": true,
 }

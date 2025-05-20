@@ -35,6 +35,7 @@ M.setup = function()
             args = {
                 query = selection,
                 triggerSearch = true,
+                matchWholeWord = true,
             }
         })
     end, { noremap = true, silent = true, desc = "Search selection", expr = true })
@@ -47,11 +48,11 @@ M.setup = function()
             args = {
                 query = word,
                 triggerSearch = true,
+                matchWholeWord = true,
                 -- replace: { 'type': 'string' },
                 -- preserveCase: { 'type': 'boolean' },
                 -- filesToInclude: { 'type': 'string' },
                 -- filesToExclude: { 'type': 'string' },
-                -- isRegex: { 'type': 'boolean' },
                 -- isCaseSensitive: { 'type': 'boolean' },
                 -- matchWholeWord: { 'type': 'boolean' },
                 -- useExcludeSettingsAndIgnoreFiles: { 'type': 'boolean' },
@@ -59,6 +60,10 @@ M.setup = function()
             }
         })
     end, { noremap = true, silent = true, desc = "Search word", expr = true })
+
+    vim.keymap.set('n', '<leader>sf', function()
+        vscode.call('workbench.action.quickOpen')
+    end, { noremap = true, silent = true, desc = "Search opened buffers", expr = true })
 
     vim.keymap.set('n', '<leader>sb', function()
         vscode.call('workbench.action.quickOpen', {
