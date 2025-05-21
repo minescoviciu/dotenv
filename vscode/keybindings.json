@@ -160,12 +160,11 @@
     
 
     // test
-    //  {
-    //      "key": "cmd+d",
-    //      "command": "search.action.focusSearchList",
-    //  },
+     {
+         "key": "cmd+d",
+         "command": "list.find",
+     },
 
-    // Search shortcuts
      {
         "key": "escape",
         "command": "runCommands",
@@ -175,9 +174,36 @@
                 "vscode-neovim.escape",
             ]
         },
-        "when": "searchViewletVisible"
+        "when": "sideBarVisible"
     },
+
     {
+        "key": "escape",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.closeSidebar",
+                "workbench.action.toggleAuxiliaryBar",
+                "vscode-neovim.escape",
+            ]
+        },
+        "when": "auxiliaryBarVisible || chatInputHasFocus"
+    },
+
+    // Search shortcuts
+    //  {
+    //     "key": "escape",
+    //     "command": "runCommands",
+    //     "args": {
+    //         "commands": [
+    //             "workbench.action.closeSidebar",
+    //             "vscode-neovim.escape",
+    //         ]
+    //     },
+    //     "when": "searchViewletVisible"
+    // },
+    {
+        
         "key": "enter",
         "command": "runCommands",
         "args": {
@@ -197,7 +223,8 @@
                 // "search.action.focusPreviousSearchResult",
                 "search.action.focusSearchList",
                 "list.focusUp",
-                "workbench.action.findInFiles"
+                "workbench.action.findInFiles",
+                "cursorDown"
                 
             ]
         },
@@ -211,7 +238,8 @@
             "commands": [
                 "search.action.focusSearchList",
                 "list.focusDown",
-                "workbench.action.findInFiles"
+                "workbench.action.findInFiles",
+                "cursorDown"
             ]
         },
         "when": "hasSearchResult && focusedView == 'workbench.view.search' && inputFocus"
@@ -293,5 +321,39 @@
             ]
         },
         "when": "!activeEditorGroupEmpty"
+    },
+    
+    // EDITOR
+    {
+        "key": "cmd+l",
+        "command": "-aichat.newchataction"
+    },
+    {
+        "key": "cmd+l",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.closeSidebar",
+                "workbench.action.moveSideBarLeft",
+                "aichat.newchataction"
+            ]
+        },
+    },
+    {
+        "key": "cmd+l",
+        "command": "-composer.sendToAgent",
+        "when": "editorHasPromptBar && editorPromptBarFocused"
+    },
+    {
+        "key": "cmd+l",
+        "command": "runCommands",
+        "args": {
+            "commands": [
+                "workbench.action.closeSidebar",
+                "workbench.action.moveSideBarLeft",
+                "composer.sendToAgent"
+            ]
+        },
+        "when": "editorHasPromptBar && editorPromptBarFocused"
     }
 ]
