@@ -133,4 +133,4 @@ format_pwd() {
 PROMPT_COMMAND="find_git_branch; find_git_dirty; check_disk_space; format_pwd; git_operation_status;"
 
 # PS1="\[${FLAMINGO}\]\${git_dirty}\[${RESET}\] \[${BLUE}\]\${formated_pwd}\[${RESET}\] \[${LAVENDER}\]\${git_branch}\[${RESET}\] \[${RED}\]\${disk_full}\[${RESET}\] > "
-PS1="\[$START_PROMPT\]\[${TEAL}\]\${formated_pwd}\[${RESET}\] \[${MAUVE}\]\${git_branch}\[${RESET}\]\[${YELLOW}\]\${git_state}\[${RESET}\]\[${PEACH}\]\${git_dirty}\[${RESET}\]\[${BLINK}${RED}\]\${disk_full}\[${RESET}\]\[${GREEN}\]${ARROW}\[${RESET}\]\[$START_PROMPT\]"
+PS1="\[$START_PROMPT\]\[${TEAL}\]\${formated_pwd}\[${RESET}\] \[${MAUVE}\]\${git_branch}\[${RESET}\]\[${YELLOW}\]\${git_state}\[${RESET}\]\[${PEACH}\]\${git_dirty}\[${RESET}\]\[${BLINK}${RED}\]\${disk_full}\[${RESET}\]\[${GREEN}\]${ARROW}\[${RESET}\]\[$STOP_PROMPT\]"
