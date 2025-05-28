@@ -54,10 +54,6 @@ return {
             end, { desc = 'Format current buffer with LSP' })
         end
 
-        -- mason-lspconfig requires that these setup functions are called in this order
-        -- before setting up the servers.
-        require('mason').setup()
-        require('mason-lspconfig').setup()
 
         --  If you want to override the default filetypes that your language server will attach to you can
         --  define the property 'filetypes' to the map in question.
@@ -84,23 +80,33 @@ return {
             },
         }
 
+        -- Setup neovim lua configuration
+        -- require('neodev').setup()
+
+        -- Set keybinding for the function
+        -- mason-lspconfig requires that these setup functions are called in this order
+        -- before setting up the servers.
+        require('mason').setup()
+        vim.lsp.set_log_level("off")
+        -- TODO this doesn't work for some reason.....
         -- Ensure the servers above are installed
-        local mason_lspconfig = require('mason-lspconfig')
-
-        mason_lspconfig.setup {
-            ensure_installed = vim.tbl_keys(servers),
-        }
-        local lsp_capabilities = require('blink.cmp').get_lsp_capabilities()
-
-        mason_lspconfig.setup_handlers {
-            function(server_name)
-                require('lspconfig')[server_name].setup {
-                    capabilities = lsp_capabilities,
-                    on_attach = on_attach,
-                    settings = servers[server_name],
-                    filetypes = (servers[server_name] or {}).filetypes,
-                }
-            end,
-        }
+        -- local mason_lspconfig = require('mason-lspconfig')
+        --
+        -- mason_lspconfig.setup({
+        --     automatic_enable = vim.tbl_keys(servers),
+        -- })
+        -- local lsp_capabilities = require('blink.cmp').get_lsp_capabilities()
+        --
+        -- mason_lspconfig.setup_handlers {
+        --     function(server_name)
+        --         require('lspconfig')[server_name].setup {
+        --             capabilities = lsp_capabilities,
+        --             on_attach = on_attach,
+        --             settings = servers[server_name],
+        --             filetypes = (servers[server_name] or {}).filetypes,
+        --         }
+        --     end,
+        -- }
+        --
     end
 }
