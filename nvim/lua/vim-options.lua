@@ -48,6 +48,8 @@ M.setup = function ()
     vim.o.shiftwidth  =4
     vim.o.expandtab = true
 
+    vim.opt.laststatus = 3
+
     -- set the session options for auto-session
     vim.o.sessionoptions="blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
 
