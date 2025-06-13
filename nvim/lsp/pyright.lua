@@ -4,6 +4,7 @@
 ---
 --- `pyright`, a static type checker and language server for python
 local function set_python_path(path)
+  path = path['args']
   local clients = vim.lsp.get_clients {
     bufnr = vim.api.nvim_get_current_buf(),
     name = 'pyright',
