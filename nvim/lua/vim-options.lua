@@ -63,12 +63,19 @@ M.setup = function ()
     -- Add OS shortcuts
     vim.keymap.set('n', '<A-Left>',  'b',  {silent = true})
     vim.keymap.set('v', '<A-Left>',  'b',  {silent = true})
+    vim.keymap.set('i', '<A-Left>',  '<C-o>b',  {silent = true})
     vim.keymap.set('n', '<A-Right>', 'w',  {silent = true})
     vim.keymap.set('v', '<A-Right>', 'w',  {silent = true})
+    vim.keymap.set('i', '<A-Right>', '<C-o>w',  {silent = true})
     vim.keymap.set('n', '<Home>',    '0',  {silent = true})
     vim.keymap.set('v', '<Home>',    '0',  {silent = true})
     vim.keymap.set('n', '<End>',     'g_', {silent = true})
     vim.keymap.set('v', '<End>',     'g_', {silent = true})
+    -- Meta/Alt + Backspace to delete previous word
+    vim.keymap.set('i', '<A-BS>', '<C-w>', {silent = true, desc = "Delete previous word"})
+     -- C-a and C-e to go to the beginning and end of line in insert mode
+    vim.keymap.set('i', '<C-a>', '<C-o>0', {silent = true, desc = "Go to beginning of line"})
+    vim.keymap.set('i', '<C-e>', '<C-o>$', {silent = true, desc = "Go to end of line"})
 
     -- Move current line up/down and visual block up/down
     vim.keymap.set('n', '<A-k>', ':m-2<CR>==', {})
