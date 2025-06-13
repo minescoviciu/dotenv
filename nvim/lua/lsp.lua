@@ -9,6 +9,7 @@ function M.setup()
     local servers = {
         'pyright',
         'lua_ls',
+        'ansiblels'
         -- Add more servers as needed
     }
     vim.lsp.enable(servers)

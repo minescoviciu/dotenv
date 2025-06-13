@@ -142,6 +142,19 @@ M.setup = function ()
     vim.keymap.set('v', '<leader>fx', ":'<,'>!xmllint --format -<CR>", { desc = 'Format XML selection' })
     vim.keymap.set('v', '<leader>fp', ":'<,'>!black -q -<CR>", { desc = 'Format Python selection' })
     vim.keymap.set('v', '<leader>fj', ":'<,'>!jq -M .<CR>", { desc = 'Format JSON selection' })
+
+    vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
+        pattern = {"*.yml", "*.yaml"},
+        callback = function()
+            -- Check if the first line starts with ---
+            local first_line = vim.api.nvim_buf_get_lines(0, 0, 1, false)[1]
+            if first_line and first_line:match("^---") then
+                vim.bo.filetype = "yaml.ansible"
+            end
+        end,
+        desc = "Set filetype to yaml.ansible for YAML files starting with ---"
+    })
+
 end
 
 return M
