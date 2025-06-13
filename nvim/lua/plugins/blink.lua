@@ -121,7 +121,7 @@ return {
     cmdline = {
       keymap = { preset = 'inherit',
         ['<CR>'] = { 'fallback' },
-      },
+        },
       sources = function()
         local type = vim.fn.getcmdtype()
         -- Search forward and backward
@@ -131,6 +131,7 @@ return {
         return {}
       end,
       completion = {
+        list = { selection = { preselect = false } },
         menu = {
           auto_show = function(ctx) 
             if ctx.mode == 'cmdline' then
