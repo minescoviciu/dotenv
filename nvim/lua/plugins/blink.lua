@@ -119,11 +119,25 @@ return {
       list = { selection = { preselect = false, auto_insert = true } },
     },
     cmdline = {
-      keymap = { preset = 'inherit' },
+      keymap = { preset = 'inherit',
+        ['<CR>'] = { 'fallback' },
+      },
+      sources = function()
+        local type = vim.fn.getcmdtype()
+        -- Search forward and backward
+        if type == '/' or type == '?' then return { 'buffer' } end
+        -- Commands
+        if type == ':' or type == '@' then return { 'cmdline' } end
+        return {}
+      end,
       completion = {
         menu = {
           auto_show = function(ctx) 
             if ctx.mode == 'cmdline' then
+              local type = vim.fn.getcmdtype()
+              if type == '/' or type == '?' then
+                return true
+              end
               return vim.fn.getcmdline():len() >= 3
             end
             return true
