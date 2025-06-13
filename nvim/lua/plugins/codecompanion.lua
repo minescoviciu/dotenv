@@ -7,21 +7,36 @@ return {
     },
     keys = {
         { "<leader>aa", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n" }, desc = "Toggle CodeCompanion Chat" },
-        { "<leader>ac", "<cmd>CodeCompanionChat<cr>", mode = { "n" }, desc = "CodeCompanion New Chat" },
+        { "<leader>ae", "<cmd>CodeCompanionChat<cr>", mode = { "n" }, desc = "CodeCompanion New Chat" },
     },
     config = function(_, opts)
         require("codecompanion").setup({
             opts = {
                 log_level = "INFO",
             },
+            display = {
+                action_palette = {
+                    width = 95,
+                    height = 10,
+                    prompt = "> ", -- Prompt used for interactive LLM calls
+                    provider = "snacks", -- Can be "default", "telescope", "fzf_lua", "mini_pick" or "snacks". If not specified, the plugin will autodetect installed providers.
+                    opts = {
+                        show_default_actions = true, -- Show the default actions in the action palette?
+                        show_default_prompt_library = true, -- Show the default prompt library in the action palette?
+                    },
+                },
+            },
             adapters = {
                 copilot = require("codecompanion.adapters").extend("copilot", {
                     schema = {
                         model = {
-                            default = "claude-3.5-sonnet",
+                            default = "claude-sonnet-4",
                         },
                     },
                 }),
+                opts = {
+                    show_model_choices = true,
+                },
             },
             strategies = {
                 chat = {
