@@ -53,6 +53,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 require('vim-options').setup()
 if vim.g.vscode then
   require('vscode-options').setup()
+else
+  require('lsp').setup()
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
