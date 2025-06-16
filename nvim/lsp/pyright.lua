@@ -37,6 +37,10 @@ return {
         autoSearchPaths = true,
         useLibraryCodeForTypes = true,
         diagnosticMode = 'openFilesOnly',
+        extraPaths = dn_extra_paths,
+        diagnosticMode = "workspace",
+         typeCheckingMode = "basic",
+
       },
     },
   },
@@ -56,26 +60,3 @@ return {
     })
   end,
 }
--- return {
---     cmd = { 'pyright-langserver', '--stdio' },
---     filetypes = { 'python' },
---     root_markers = {
---         'pyproject.toml',
---         'setup.py',
---         'setup.cfg',
---         'requirements.txt',
---         'Pipfile',
---         'pyrightconfig.json',
---         '.git'
---     },
---     settings = {
---         python = {
---             analysis = {
---                 autoSearchPaths = true,
---                 diagnosticMode = "workspace",
---                 useLibraryCodeForTypes = true,
---                 typeCheckingMode = "basic",
---             }
---         }
---     }
--- }
