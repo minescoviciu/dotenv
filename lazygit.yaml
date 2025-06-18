@@ -370,22 +370,22 @@ quitOnTopLevelReturn: false
 # Config relating to things outside of Lazygit like how files are opened, copying to clipboard, etc
 os:
   # Command for editing a file. Should contain "{{filename}}".
-  edit: "cursor --reuse-window -- {{filename}}"
+  edit: ""
 
   # Command for editing a file at a given line number. Should contain
   # "{{filename}}", and may optionally contain "{{line}}".
-  editAtLine: "cursor --reuse-window --goto -- {{filename}}:{{line}}"
+  editAtLine: ""
 
   # Same as EditAtLine, except that the command needs to wait until the
   # window is closed.
-  editAtLineAndWait: "cursor --reuse-window --goto --wait -- {{filename}}:{{line}}"
+  editAtLineAndWait: ""
 
   # For opening a directory in an editor
-  openDirInEditor: "cursor -- {{dir}}"
+  openDirInEditor: ""
 
   # A built-in preset that sets all of the above settings. Supported presets
   # are defined in the getPreset function in editor_presets.go.
-  editPreset: ""
+  editPreset: "nvim"
 
   # Command for opening a file, as if the file is double-clicked. Should
   # contain "{{filename}}", but doesn't support "{{line}}".
