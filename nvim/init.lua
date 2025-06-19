@@ -4,6 +4,14 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- Check if we're on a specific machine
+local hostname = vim.fn.hostname()
+if hostname == 'Andreis-MacBook-Pro-2.local' then
+  vim.g.personal_mac = true
+else
+  vim.g.personal_mac = false
+end
+
 vim.api.nvim_create_autocmd({"FileType"}, {pattern="gitcommit", command="setlocal tw=72"})
 
 -- Install package manager
@@ -49,6 +57,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
+
+
 
 require('vim-options').setup()
 if vim.g.vscode then

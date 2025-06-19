@@ -63,10 +63,11 @@ return {
     event = "VeryLazy",
     keys = {
         { "<leader>aa", "<cmd>CodeCompanionChat Toggle<cr>", mode = { "n" }, desc = "Toggle CodeCompanion Chat" },
-        { "<leader>ae", "<cmd>CodeCompanionChat<cr>", mode = { "n" }, desc = "CodeCompanion New Chat" },
+        { "<leader>an", "<cmd>CodeCompanionChat<cr>", mode = { "n" }, desc = "CodeCompanion [N]ew Chat" },
         { "<leader>aa", "<cmd>CodeCompanionChat Add<cr>", mode = { "v" }, desc = "CodeCompanion Chat with selection" },
-        { '<leader>al', '<cmd>CodeCompanion /lsp<cr>', mode = { 'n', 'v' }, desc = 'Code Companion LSP' },
-        { '<leader>as', '<cmd>CodeCompanion /spell<cr>', mode = { 'n', 'v' }, desc = 'Code Companion Spell' },
+        { '<leader>al', '<cmd>CodeCompanion /lsp<cr>', mode = { 'v' }, desc = 'Code Companion [L]SP' },
+        { '<leader>as', '<cmd>CodeCompanion /spell<cr>', mode = { 'v' }, desc = 'Code Companion [S]pell' },
+        { '<leader>ae', '<cmd>CodeCompanion /explain<cr>', mode = { 'v' }, desc = 'Code Companion [E]xplain' },
     },
     config = function(_, opts)
         require("codecompanion").setup({
@@ -92,7 +93,7 @@ return {
                 copilot = require("codecompanion.adapters").extend("copilot", {
                     schema = {
                         model = {
-                            default = "claude-sonnet-4",
+                            default = "claude-3.7-sonnet",
                         },
                     },
                 }),
@@ -116,13 +117,13 @@ return {
             },
             strategies = {
                 chat = {
-                    adapter = "openai",
+                    adapter = vim.g.personal_mac and "copilot" or "openai",
                     tools = {
                         opts = {
                             auto_submit_errors = true,
                             auto_submit_success = true,
                             default_tools = {
-                                "next_edit_suggestion",
+                                -- "next_edit_suggestion",
                             }
                         },
                         ["next_edit_suggestion"] = {
@@ -195,55 +196,6 @@ return {
                             content = function(context)
                                 local text = require('codecompanion.helpers.actions').get_code(context.start_line, context.end_line)
                                 return 'Correct grammar and reformulate:\n\n' .. text
-                            end,
-                        },
-                    },
-                },
-                ['LSP'] = {
-                    strategy = 'inline',
-                    description = 'Solve LSP commands on the selected code',
-                    opts = {
-                        index = 21,
-                        is_default = false,
-                        short_name = 'lsp',
-                        is_slash_cmd = true,
-                        auto_submit = true,
-                        adapter = {
-                            name = 'copilot',
-                            model = 'gpt-4o',
-                        },
-                    },
-                    prompts = {
-                        {
-                            role = 'system',
-                            contains_code = false,
-                            content = function(context)
-                                return "You are an expert in " .. context.filetype .. "\n" ..
-                                    "You are pluged in a Neovim instance and you have access to a code snippet and the LSP error \n" ..
-                                    "You will solve the LSP problem if possible, otherwise you will explain the problem and give a suggestion on how to fix it.\n"
-                            end,
-                        },
-                        {
-                            role = 'user',
-                            contains_code = true,
-                            content = function(context)
-                                local function format_diagnostics_string(diagnostics)
-                                    local lines = {}
-                                    for _, diagnostic in ipairs(diagnostics) do
-                                        local formatted_line = string.format(
-                                            "Line %d [%s]: %s",
-                                            diagnostic.line_number,
-                                            diagnostic.severity,
-                                            diagnostic.message
-                                        )
-                                        table.insert(lines, formatted_line)
-                                    end
-
-                                    return table.concat(lines, "\n")
-                                end
-                                local diagnostics = require('codecompanion.helpers.actions').get_diagnostics(context.start_line, context.end_line, context.bufnr)
-                                lsp = format_diagnostics_string(lsp)
-                                return 'Help debug this LSP problem: \n' .. lsp
                             end,
                         },
                     },
