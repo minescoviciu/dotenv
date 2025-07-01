@@ -8,8 +8,8 @@ return {
                 style = 'sign',
                 -- Signs used for hunks with 'sign' view
                 signs = {
-                    add = "▎",
-                    change = "▎",
+                    add = "",
+                    change = "",
                     delete = "",
                 },
                 -- Priority of used visualization extmarks
