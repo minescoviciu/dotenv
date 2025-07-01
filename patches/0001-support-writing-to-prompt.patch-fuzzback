@@ -1,0 +1,32 @@
+From 670e2e4d9b179ec4752582ac37583c3609976a22 Mon Sep 17 00:00:00 2001
+From: Andrei Minescu <andreiminescu@gmail.com>
+Date: Tue, 1 Jul 2025 09:26:25 +0300
+Subject: [PATCH] support writing to prompt
+
+---
+ scripts/fuzzback.sh | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/scripts/fuzzback.sh b/scripts/fuzzback.sh
+index e728c0e..612f419 100755
+--- a/scripts/fuzzback.sh
++++ b/scripts/fuzzback.sh
+@@ -307,7 +307,14 @@ fuzzback() {
+     match=$(cat "$tail_file" "$head_file" | finder_split_cmd "$finder_bind" "$finder_layout" "$fuzzback_finder" "$fzf_colors" "$fzf_hide_preview")
+   fi
+ 
+-  if [ "$(echo "$match" | wc -l)" -gt "1" ]; then
++  if [[ "$match" == "__input__"* ]]; then
++    echo "Fuzzback: Input mode" >> /tmp/fuzzback
++    # Extract the text after __input__
++    input_text="${match#__input__}"
++    # Insert the text in the current tmux pane
++    tmux send-keys "$input_text"
++
++  elif [ "$(echo "$match" | wc -l)" -gt "1" ]; then
+     query="$(head -n 1 <<< "$match")"
+     rest="$(tail -n 1 <<< "$match")"
+     trimmed_line=$(echo "$rest" | sed -E 's/-?[0-9]+: +[0-9]+://')
+-- 
+2.46.0
+
