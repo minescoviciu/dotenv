@@ -155,6 +155,13 @@ M.setup = function ()
         desc = "Set filetype to yaml.ansible for YAML files starting with ---"
     })
 
+    vim.api.nvim_create_autocmd({"BufNewFile", "BufRead"}, {
+      pattern = { "*.yaml.j2"},
+      callback = function()
+        vim.bo.filetype = "yaml"
+      end,
+    })
+
     vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
       pattern = { "*.jenkinsfile", "*.Jenkinsfile", "Jenkinsfile", "jenkinsfile" },
       callback = function()
