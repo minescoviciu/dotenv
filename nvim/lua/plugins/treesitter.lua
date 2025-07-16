@@ -8,6 +8,14 @@ return {
     event = "VeryLazy",
     config = function ()
 
+        vim.api.nvim_create_autocmd("FileType", {
+            pattern = "rust",
+            callback = function()
+                if not vim.b.ts_highlight then
+                    vim.cmd("TSBufEnable highlight")
+                end
+            end,
+        })
         -- Defer Treesitter setup after first render to improve startup time of 'nvim {filename}'
         vim.defer_fn(function()
             -- See `:help nvim-treesitter`
