@@ -58,6 +58,8 @@ M.setup = function ()
     vim.wo.foldexpr = "nvim_treesitter#foldexpr()"
     vim.wo.foldenable = false
 
+    vim.o.winborder = 'rounded'
+
     -- [[ Basic Keymaps ]]
 
     -- Add OS shortcuts
