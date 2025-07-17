@@ -20,6 +20,14 @@ local M = {
             vim.keymap.set('n', '<leader>hr', gs.reset_hunk, { desc = '[H]unk [R]eset' })
             vim.keymap.set('n', '<leader>hs', gs.stage_hunk, { desc = '[H]unk [S]tage' })
             vim.keymap.set('n', '<leader>hu', gs.undo_stage_hunk, { desc = '[H]unk [U]ndo last hunk' })
+            
+            map('v', '<leader>hs', function()
+              gitsigns.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+            end)
+
+            map('v', '<leader>hr', function()
+              gitsigns.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+            end)
             -- vim.keymap.set('n', '<leader>hd', gs.diffthis, { desc = '[H]unk [D]iff' })
             -- vim.keymap.set('n', '<leader>hD', function() gs.diffthis('~') end, { desc = '[H]unk [D]iff with Base' })
 
