@@ -21,15 +21,19 @@ local M = {
             vim.keymap.set('n', '<leader>hs', gs.stage_hunk, { desc = '[H]unk [S]tage' })
             vim.keymap.set('n', '<leader>hu', gs.undo_stage_hunk, { desc = '[H]unk [U]ndo last hunk' })
             
-            map('v', '<leader>hs', function()
+            vim.keymap.set('v', '<leader>hs', function()
               gitsigns.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
             end)
-
-            map('v', '<leader>hr', function()
+            vim.keymap.set('v', '<leader>hr', function()
               gitsigns.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
             end)
             -- vim.keymap.set('n', '<leader>hd', gs.diffthis, { desc = '[H]unk [D]iff' })
             -- vim.keymap.set('n', '<leader>hD', function() gs.diffthis('~') end, { desc = '[H]unk [D]iff with Base' })
+            vim.api.nvim_create_user_command('blame-line', function()
+                    vim.cmd('Gitsigns blame_line')
+                end, {
+                  desc = 'Show git blame for current line using Gitsigns'
+            })
 
             -- don't override the built-in and fugitive keymaps
             local gs = package.loaded.gitsigns

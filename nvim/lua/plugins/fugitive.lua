@@ -6,6 +6,12 @@ return {
     config = function()
         -- Set up mapping for Git blame buffer
         local group = vim.api.nvim_create_augroup('FugitiveCustom', { clear = true })
+        vim.api.nvim_create_user_command('blame', function()
+                vim.cmd('Git blame')
+            end, {
+              desc = 'Show git blame for current line using Gitsigns'
+            })
+
         vim.api.nvim_create_autocmd('FileType', {
             pattern = 'fugitiveblame',
             group = group,
