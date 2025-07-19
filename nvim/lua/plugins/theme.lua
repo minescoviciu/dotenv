@@ -38,6 +38,8 @@ local catppuccin = {
             color_overrides = {},
             custom_highlights = {},
             integrations = {
+                telescope = true,
+                treesitter_context = true,
                 gitsigns = true,
                 treesitter = true,
                 blink_cmp = true,
@@ -48,6 +50,16 @@ local catppuccin = {
                     enabled = true,
                     scope_color = "lavender", -- catppuccin color (eg. `lavender`) Default: text
                     colored_indent_levels = true,
+                },
+                markdown = true,
+                native_lsp = {
+                    enabled = true,
+                    underlines = {
+                        errors = { "undercurl" },
+                        hints = { "undercurl" },
+                        warnings = { "undercurl" },
+                        information = { "undercurl" },
+                    },
                 },
             },
         })
