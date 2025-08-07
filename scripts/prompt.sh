@@ -133,11 +133,11 @@ format_pwd() {
 if [[ "$TERM_PROGRAM" == "vscode" ]]; then
     # Do not use PROMPT_COMMAND as it conflicts with Cursor's run in terminal mode
     # It doesn't even like to define it here...
-    PS1="\[${TEAL}\]\w\[${RESET}\]\[${GREEN}\]${ARROW}\[${RESET}\]"
+    PS1="\[${TEAL}\]\w\[${RESET}\]\[${GREEN}\]${ARROW}\[${RESET}\] "
 else
     PROMPT_COMMAND="find_git_branch; find_git_dirty; check_disk_space; format_pwd; git_operation_status;"
 
     # PS1="\[${FLAMINGO}\]\${git_dirty}\[${RESET}\] \[${BLUE}\]\${formated_pwd}\[${RESET}\] \[${LAVENDER}\]\${git_branch}\[${RESET}\] \[${RED}\]\${disk_full}\[${RESET}\] > "
-    PS1="\[$START_PROMPT\]\[${TEAL}\]\${formated_pwd}\[${RESET}\] \[${MAUVE}\]\${git_branch}\[${RESET}\]\[${YELLOW}\]\${git_state}\[${RESET}\]\[${PEACH}\]\${git_dirty}\[${RESET}\]\[${BLINK}${RED}\]\${disk_full}\[${RESET}\]\[${GREEN}\]${ARROW}\[${RESET}\]\[$STOP_PROMPT\]"
+    PS1="\[$START_PROMPT\]\[${TEAL}\]\${formated_pwd}\[${RESET}\] \[${MAUVE}\]\${git_branch}\[${RESET}\]\[${YELLOW}\]\${git_state}\[${RESET}\]\[${PEACH}\]\${git_dirty}\[${RESET}\]\[${BLINK}${RED}\]\${disk_full}\[${RESET}\]\[${GREEN}\]${ARROW}\[${RESET}\]\[$STOP_PROMPT\] "
 fi
 
