@@ -29,7 +29,7 @@ local M = {
             end)
             -- vim.keymap.set('n', '<leader>hd', gs.diffthis, { desc = '[H]unk [D]iff' })
             -- vim.keymap.set('n', '<leader>hD', function() gs.diffthis('~') end, { desc = '[H]unk [D]iff with Base' })
-            vim.api.nvim_create_user_command('blame-line', function()
+            vim.api.nvim_create_user_command('BlameLine', function()
                     vim.cmd('Gitsigns blame_line')
                 end, {
                   desc = 'Show git blame for current line using Gitsigns'
