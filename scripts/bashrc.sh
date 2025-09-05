@@ -37,6 +37,7 @@ alias ll='ls -laF'
 PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
 source ~/.config/scripts/prompt.sh
+source ~/.config/scripts/create_pr.sh
 SECRETS_FILE=~/.config/scripts/secrets.sh
 echo $SECRETS_FILE
 if [ -f $SECRETS_FILE ]; then
