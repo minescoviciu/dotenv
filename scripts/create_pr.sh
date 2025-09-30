@@ -1,32 +1,28 @@
 #!/bin/bash
 
-create_pr() {
-    # Check if title is provided
-    if [ -z "$1" ]; then
-        echo "Error: Please provide a PR title"
-        echo "Usage: create_pr \"Your PR Title\""
-        return 1
-    fi
-    
-    local pr_title="$1"
-    local current_branch=$(git branch --show-current)
+# Helper function to get current and base branch information
+get_branch_info() {
+    current_branch=$(git branch --show-current)
     
     # Extract version from current branch (assuming pattern like aminescu/dev_v25_3/...)
-    local base_branch=$(echo "$current_branch" | grep -o 'dev_v[0-9]\+_[0-9]\+' | head -1)
-    
+    base_branch=$(echo "$current_branch" | grep -o 'dev_v[0-9]\+_[0-9]\+' | head -1)
+
     # If we couldn't extract from branch name, default to dev_v25_3
     if [ -z "$base_branch" ]; then
-        base_branch="dev_v25_3"
+        echo "Warning: Could not determine base branch from current branch name." >&2
+        return 1
     fi
+}
+
+rebase_latest() {
+    # Get branch information
+    get_branch_info || return 1
     
     local origin_base="origin/$base_branch"
-    
+
     echo "Checking if local $base_branch is up to date with $origin_base..."
-    
-    # Fetch the latest from origin
     git fetch origin "$base_branch"
-    
-    # Check if local base is behind origin (local branch always exists)
+
     local local_commit=$(git rev-parse "$base_branch" 2>/dev/null)
     local origin_commit=$(git rev-parse "$origin_base" 2>/dev/null)
     
@@ -46,6 +42,40 @@ create_pr() {
         echo "Rebase failed. Please resolve conflicts and try again."
         return 1
     fi
+
+    if [ "$current_branch" == "$base_branch" ]; then
+        echo "Current branch is the same as base branch. Skipping push."
+        return 0
+    fi
+    echo "Push rebased branch to origin/$current_branch..."
+    git push --force-with-lease origin "$current_branch"
+}
+
+create_pr() {
+    # Check if title is provided
+    if [ -z "$1" ]; then
+        echo "Error: Please provide a PR title"
+        echo "Usage: create_pr \"Your PR Title\""
+        return 1
+    fi
+    
+    local pr_title="$1"
+    
+    echo "Starting PR creation process..."
+    echo "Step 1: Rebasing branch to latest..."
+    
+    # First, rebase the current branch
+    rebase_latest
+    if [ $? -ne 0 ]; then
+        echo "Rebase failed. Cannot create PR."
+        return 1
+    fi
+    
+    echo ""
+    echo "Step 2: Creating pull request..."
+    
+    # Get branch information (rebase_latest already called get_branch_info, but let's be explicit)
+    get_branch_info || return 1
     
     # Show confirmation
     echo ""
@@ -59,7 +89,7 @@ create_pr() {
     gh pr create \
         --title "$pr_title" \
         --assignee @me \
-        --reviewer mburlacu-dn,amihu-dn,bistoc-dn,colaru-dn,anstancu\
+        --reviewer mburlacu-dn,amihu-dn,bistoc-dn,colaru-dn,anstancu \
         --base "$base_branch" \
         --head "$current_branch"
         
