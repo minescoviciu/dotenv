@@ -35,7 +35,11 @@ alias ls='ls --color=auto'
 alias ll='ls -laF'
 
 PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-
+#
+# for file in ~/.config/scripts/*.sh; do
+#     [ -f "$file" ] || continue
+#     source "$file"
+# done
 source ~/.config/scripts/prompt.sh
 source ~/.config/scripts/create_pr.sh
 SECRETS_FILE=~/.config/scripts/secrets.sh
@@ -82,6 +86,8 @@ __wezterm_send_notification() {
 }
 
 alias alert='__wezterm_send_notification Done'
+
+alias notify='~/.config/scripts/wezterm.py notify '
 
 __wezterm_open_web() {
     __wezterm_set_user_var "open-web" "$1"

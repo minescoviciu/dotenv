@@ -100,3 +100,13 @@ create_pr() {
         return 1
     fi
 }
+
+
+# git log --all --since="2024-09-28" --until="2024-10-04" \
+#   --author="aminescu@drivenets.com" \
+#   --author="bistoc@drivenets.com" \
+#   --author="mburlacu@drivenets.com" \
+#   --author="astancu@drivenets.com" \
+#   --author="colaru@drivenets.com" \
+#   --author="amihu@drivenets.com"
+

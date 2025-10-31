@@ -5,6 +5,7 @@ import sys
 import base64
 import subprocess
 import time
+import json
 from datetime import datetime
 
 DEBUG = os.environ.get('DEBUG_WEZTERM') == '1'
@@ -39,10 +40,9 @@ def write_clipboard(tty_file, text):
     tty_file.write(sequence)
     tty_file.flush()
 
-def send_notification(tty_file, message):
+def send_notification(tty_file, message, title="Notification"):
     """Write WezTerm's notify escape sequence."""
     log(f"Sending notification: {message}")
-    title = "Notification"
     in_tmux = "TMUX" in os.environ
 
     if in_tmux:
@@ -51,6 +51,21 @@ def send_notification(tty_file, message):
         tty_file.write(f"\x1b]777;notify;{title};{message}\x1b\\")
 
     tty_file.flush()
+
+def codex_notification(tty_file, text):
+    """
+    data = {
+      "type": "agent-turn-complete",
+      "thread-id": "b5f6c1c2-1111-2222-3333-444455556666",
+      "turn-id": "12345",
+      "cwd": "/Users/alice/projects/example",
+      "input-messages": ["Rename `foo` to `bar` and update the callsites."],
+      "last-assistant-message": "Rename complete and verified `cargo build` succeeds."
+    }
+    """
+    data = json.loads(text)
+    send_notification(tty_file, data["last-assistant-message"], title="Codex")
+
 
 def set_user_var(tty_file, value):
     """Write WezTerm's SetUserVar escape sequence."""
@@ -157,6 +172,8 @@ def main():
                 send_notification(tty_file, text)
             elif operation == "open":
                 set_user_var(tty_file, text)
+            elif operation == "codex":
+                codex_notification(tty_file, text)
             else:
                 log(f"Unknown operation: {operation}")
                 print(f"Unknown operation: {operation}")
