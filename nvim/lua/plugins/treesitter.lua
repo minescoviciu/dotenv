@@ -21,9 +21,12 @@ return {
             -- See `:help nvim-treesitter`
             require('nvim-treesitter.configs').setup({
                 -- Add languages to be installed here that you want installed for treesitter
-                ensure_installed = { 'c', 'cpp', 'go', 'python', 'rust', 'lua', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', "tsx", "css" },
+                ensure_installed = { 'c', 'cpp', 'go', 'python', 'rust', 'lua', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', "tsx", "css", "groovy" },
 
                 autotag = {
+                    enable = true,
+                },
+                fold = {
                     enable = true,
                 },
                 -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
@@ -87,6 +90,9 @@ return {
             })
         end, 0)
 
+        vim.opt.foldmethod = "expr"
+        vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
+        vim.opt.foldenable = false
         -- Diagnostic keymaps
         vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
         vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })

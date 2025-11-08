@@ -10,7 +10,7 @@ return {
                 vim.cmd('Git blame')
             end, {
               desc = 'Show git blame for current line using Gitsigns'
-            })
+        })
 
         vim.api.nvim_create_autocmd('FileType', {
             pattern = 'fugitiveblame',
