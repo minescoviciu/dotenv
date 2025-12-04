@@ -4,19 +4,24 @@
   "theme": "catppuccin",
   "autoupdate": true,
   // Take models from https://models.dev/api.json
-  "model": "github-copilot/claude-sonnet-4.5",
-  "small_model": "github-copilot/claude-haiku-4.5",
+  // Using Anthropic directly since you're authenticated via OAuth
+  "model": "anthropic/claude-sonnet-4-5",
+  "small_model": "anthropic/claude-haiku-4-5-20251001",
   "provider": {
       "openai": {
           "options": {
               "apiKey": "{env:OPENAI_API_KEY}"
           }
       }
-      // "anthropic": {
-      //     "options": {
-      //         "apiKey": "{env:CLAUDE_API}"
-      //     }
-      // }
+  },
+  // Custom keybindings
+  "keybinds": {
+      "session_list": "ctrl+l",
+      "app_exit": "ctrl+c,<leader>q",
+      "messages_half_page_down": "ctrl+d",
+      "messages_half_page_up": "ctrl+u",
+      "session_child_cycle": "<leader>+k",
+      "session_child_cycle_reverse": "<leader>+j"
   }
 }
 

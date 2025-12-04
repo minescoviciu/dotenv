@@ -8,6 +8,7 @@ export FZF_DEFAULT_OPTS=" \
 
 # for macos suppress default shell message see https://support.apple.com/en-gb/102360
 export BASH_SILENCE_DEPRECATION_WARNING=1
+export EDITOR='nvim'
 
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
@@ -24,7 +25,7 @@ HISTFILESIZE=2000
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# one tab complition 
+# one tab complition
 bind 'set show-all-if-ambiguous on'
 bind 'set completion-ignore-case on'
 
