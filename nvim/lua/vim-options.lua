@@ -60,6 +60,20 @@ M.setup = function ()
 
     vim.o.winborder = 'rounded'
 
+    -- Auto-reload files when changed outside of vim
+    vim.o.autoread = true
+
+    -- Check for file changes when switching buffers or gaining focus
+    vim.api.nvim_create_autocmd({"FocusGained", "BufEnter", "CursorHold", "CursorHoldI"}, {
+        group = vim.api.nvim_create_augroup("auto_read", { clear = true }),
+        callback = function()
+            if vim.fn.mode() ~= 'c' then
+                vim.cmd('checktime')
+            end
+        end,
+        desc = "Auto-reload files when changed outside of vim"
+    })
+
     -- [[ Basic Keymaps ]]
 
     -- Add OS shortcuts
