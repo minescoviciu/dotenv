@@ -27,16 +27,16 @@ fi
 
 echo "Linking config files"
 CWD=$(pwd)
-ln -s $CWD/nvim ~/.config && echo "Linked nvim config"
-ln -s $CWD/tmux.conf ~/.tmux.conf && echo "Linked tmux config"
-ln -s $CWD/gitconfig ~/.gitconfig && echo "Linked git config"
-ln -s $CWD/wezterm ~/.config && echo "Linked wezterm config"
-ln -s $CWD/scripts ~/.config && echo "Linked scripts"
-ln -s $CWD/starship.toml ~/.config && echo "Linked starship.toml"
-ln -s $CWD/aerospace.toml ~/.aerospace.toml &&  echo "Linked aerospace.toml"
-ln -s $CWD/sketchybar ~/.config && echo "Linked sketchybar"
-ln -s $CWD/AI/opencode/opencode.jsonc ~/.config/opencode/opencode.jsonc && echo "Linked opencode.json"
-ln -s $CWD/AI/opencode/agent/ ~/.config/opencode/agent && echo "Linked opencode agent"
+ln -s $(pwd)/nvim ~/.config && echo "Linked nvim config"
+ln -s $(pwd)/tmux.conf ~/.tmux.conf && echo "Linked tmux config"
+ln -s $(pwd)/gitconfig ~/.gitconfig && echo "Linked git config"
+ln -s $(pwd)/wezterm ~/.config && echo "Linked wezterm config"
+ln -s $(pwd)/scripts ~/.config && echo "Linked scripts"
+ln -s $(pwd)/starship.toml ~/.config && echo "Linked starship.toml"
+ln -s $(pwd)/aerospace.toml ~/.aerospace.toml &&  echo "Linked aerospace.toml"
+ln -s $(pwd)/sketchybar ~/.config && echo "Linked sketchybar"
+ln -s $(pwd)/AI/opencode/opencode.jsonc ~/.config/opencode/opencode.jsonc && echo "Linked opencode.json"
+ln -s $(pwd)/AI/opencode/agent/ ~/.config/opencode/agent && echo "Linked opencode agent"
 
 CURSOR_PATH="~/Library/Application\ Support/Cursor/User"
 rm -f $CURSOR_PATH/settings.json
