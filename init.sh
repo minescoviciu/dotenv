@@ -35,7 +35,8 @@ ln -s $CWD/scripts ~/.config && echo "Linked scripts"
 ln -s $CWD/starship.toml ~/.config && echo "Linked starship.toml"
 ln -s $CWD/aerospace.toml ~/.aerospace.toml &&  echo "Linked aerospace.toml"
 ln -s $CWD/sketchybar ~/.config && echo "Linked sketchybar"
-ln -s $CWD/opencode.jsonc ~/.config/opencode/opencode.jsonc && echo "Linked opencode.json"
+ln -s $CWD/AI/opencode/opencode.jsonc ~/.config/opencode/opencode.jsonc && echo "Linked opencode.json"
+ln -s $CWD/AI/opencode/agent/ ~/.config/opencode/agent && echo "Linked opencode agent"
 
 CURSOR_PATH="~/Library/Application\ Support/Cursor/User"
 rm -f $CURSOR_PATH/settings.json
