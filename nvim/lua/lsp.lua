@@ -9,6 +9,7 @@ function M.setup()
 
     local servers = {
         'pyright',
+        'ruff',
         'lua_ls',
         'ansiblels',
         'rust_analyzer'

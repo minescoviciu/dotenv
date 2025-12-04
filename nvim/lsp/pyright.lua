@@ -36,11 +36,14 @@ return {
       analysis = {
         autoSearchPaths = true,
         useLibraryCodeForTypes = true,
-        diagnosticMode = 'openFilesOnly',
-        extraPaths = dn_extra_paths,
         diagnosticMode = "workspace",
-         typeCheckingMode = "basic",
-
+        typeCheckingMode = "basic",
+        extraPaths = dn_extra_paths,
+        -- Disable diagnostics that overlap with Ruff
+        -- Ruff handles: imports, formatting, linting, etc.
+        -- Pyright focuses on: type checking
+        disableOrganizeImports = true,  -- Ruff handles this
+        ignore = { '*' },  -- Disable file-level diagnostics
       },
     },
   },

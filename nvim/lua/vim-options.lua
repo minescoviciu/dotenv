@@ -36,7 +36,7 @@ M.setup = function ()
     vim.o.scrolloff = 8
     -- Bash like command completion
     vim.o.wildmode = 'longest:full,full'
-    
+
     -- show relative line numbers
     vim.o.relativenumber = false
     -- put the vertical split on the right
@@ -142,7 +142,7 @@ M.setup = function ()
     )
 
     vim.keymap.set('v', '<leader>fx', ":'<,'>!xmllint --format -<CR>", { desc = 'Format XML selection' })
-    vim.keymap.set('v', '<leader>fp', ":'<,'>!black -q -<CR>", { desc = 'Format Python selection' })
+    vim.keymap.set('v', '<leader>fp', ":'<,'>!ruff format -<CR>", { desc = 'Format Python selection' })
     vim.keymap.set('v', '<leader>fj', ":'<,'>!jq -M .<CR>", { desc = 'Format JSON selection' })
 
     vim.api.nvim_create_autocmd({"BufRead", "BufNewFile"}, {
