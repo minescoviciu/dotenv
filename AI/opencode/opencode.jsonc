@@ -12,6 +12,11 @@
               "apiKey": "{env:OPENAI_API_KEY}"
           }
       }
+      // "anthropic": {
+      //     "options": {
+      //         "apiKey": "{env:CLAUDE_API}"
+      //     }
+      // }
   }
 }
 
