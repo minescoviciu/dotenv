@@ -2,17 +2,18 @@
   "$schema": "https://opencode.ai/config.json",
   // Theme configuration
   "theme": "catppuccin",
+  "plugin": ["opencode-openai-codex-auth@4.2.0"],
   "autoupdate": true,
   // Take models from https://models.dev/api.json
   // Using Anthropic directly since you're authenticated via OAuth
   "model": "anthropic/claude-sonnet-4-5",
   "small_model": "anthropic/claude-haiku-4-5-20251001",
   "provider": {
-      "openai": {
-          "options": {
-              "apiKey": "{env:OPENAI_API_KEY}"
-          }
-      }
+      // "openai": {
+      //     "options": {
+      //         "apiKey": "{env:OPENAI_API_KEY}"
+      //     }
+      // }
   },
   // Custom keybindings
   "keybinds": {
