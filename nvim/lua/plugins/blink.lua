@@ -29,7 +29,7 @@ return {
     -- 'super-tab' for mappings similar to vscode (tab to accept, arrow keys to navigate)
     -- 'enter' for mappings similar to 'super-tab' but with 'enter' to accept
     -- See the full "keymap" documentation for information on defining your own keymap.
-    keymap = { 
+    keymap = {
       preset = 'none',
       ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
       ['<C-e>'] = { 'hide', 'show', 'fallback' },
@@ -43,7 +43,7 @@ return {
         'snippet_forward',
         'fallback',
       },
-      ['<S-Tab>'] = { 
+      ['<S-Tab>'] = {
         function(cmp)
           if cmp.snippet_active() then return cmp.accept()
           else return cmp.select_prev() end
@@ -104,8 +104,8 @@ return {
         },
     },
 
-    completion = { 
-      menu = { 
+    completion = {
+      menu = {
         auto_show = true,
         draw = {
           columns = {
@@ -133,7 +133,7 @@ return {
       completion = {
         list = { selection = { preselect = false } },
         menu = {
-          auto_show = function(ctx) 
+          auto_show = function(ctx)
             if ctx.mode == 'cmdline' then
               local type = vim.fn.getcmdtype()
               if type == '/' or type == '?' then
