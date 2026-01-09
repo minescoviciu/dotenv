@@ -1,9 +1,4 @@
 {
-  "mcpServers": {
-    "Notion": {
-      "url": "https://mcp.notion.com/mcp"
-    }
-  },
   "permissions": {
     "allow": [
       "WebFetch(domain:neovim.io)",
@@ -16,5 +11,11 @@
   "statusLine": {
     "type": "command",
     "command": "/Users/minescoviciu/.claude/statusline-command.sh"
-  }
+  },
+  "mcpServers": {
+    "Notion": {
+      "url": "https://mcp.notion.com/mcp"
+    }
+  },
+  "model": "opus"
 }
