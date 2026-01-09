@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "Notion": {
+      "url": "https://mcp.notion.com/mcp"
+    }
+  },
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:neovim.io)",
+      "Bash(mkdir:*)",
+      "WebFetch(domain:developers.notion.com)"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "/Users/minescoviciu/.claude/statusline-command.sh"
+  }
+}
