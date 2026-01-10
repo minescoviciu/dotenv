@@ -1,4 +1,6 @@
 {
+  "mcpServers": {
+  },
   "permissions": {
     "allow": [
       "WebFetch(domain:neovim.io)",
@@ -8,9 +10,36 @@
     "deny": [],
     "defaultMode": "default"
   },
+  "model": "opus",
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/minescoviciu/.claude/notification-hook.sh"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/minescoviciu/.claude/notification-hook.sh"
+          }
+        ]
+      }
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "/Users/minescoviciu/.claude/statusline-command.sh"
   },
-  "model": "opus"
+  "enabledPlugins": {
+    "pyright-lsp@claude-plugins-official": true
+  }
 }

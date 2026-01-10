@@ -121,47 +121,62 @@ def get_tty_from_pid(pid):
         log(f"Failed to get TTY for PID {pid}: {e}")
     return None
 
-def find_parent_nvim_tty():
-    """Find parent nvim process TTY."""
-    log("Searching for parent nvim TTY")
+def find_parent_shell_tty():
+    """Find TTY from parent shell process (bash/zsh/fish)."""
+    log("Searching for parent shell TTY")
+    shells = ("bash", "zsh", "fish", "sh")
     pid = os.getppid()
     while pid and pid > 1:
         log(f"Checking PID: {pid}")
         cmd_name = get_command_name(pid)
-        if cmd_name and "nvim" in cmd_name:
+        if cmd_name and any(cmd_name.endswith(s) or cmd_name == s for s in shells):
             tty = get_tty_from_pid(pid)
-            if tty:
-                log(f"Found nvim TTY: {tty}")
+            if tty and os.path.exists(tty):
+                log(f"Found shell {cmd_name} TTY: {tty}")
                 return tty
         pid = get_ppid(pid)
-    log("No nvim TTY found")
+    log("No parent shell TTY found")
     return None
 
 def get_target_tty():
     """Get target TTY path."""
     log("Getting target TTY")
-    if "NVIM" in os.environ:
-        log("NVIM environment variable found")
-        nvim_tty = find_parent_nvim_tty()
-        if nvim_tty:
-            log(f"Using nvim TTY: {nvim_tty}")
-            return nvim_tty
-    log("Using default TTY: /dev/tty")
-    return "/dev/tty"
+
+    # First try /dev/tty if it's available
+    try:
+        with open("/dev/tty", "w") as f:
+            log("Using /dev/tty")
+            return "/dev/tty"
+    except (OSError, IOError):
+        log("/dev/tty not available")
+
+    # Walk up parent chain to find a shell with TTY
+    shell_tty = find_parent_shell_tty()
+    if shell_tty:
+        log(f"Using shell TTY: {shell_tty}")
+        return shell_tty
+
+    log("No TTY found")
+    return None
 
 def main():
     start_time = time.time()
     log("Script started")
-    
+
     if len(sys.argv) < 3:
-        print(f"Usage: {sys.argv[0]} <clipboard|notify|open> <text>")
+        print(f"Usage: {sys.argv[0]} <clipboard|notify|open> <text> [title]")
         sys.exit(1)
 
     operation = sys.argv[1]
     text = sys.argv[2]
+    title = sys.argv[3] if len(sys.argv) > 3 else None
     log(f"Operation: {operation}, text length: {len(text)}")
 
     tty_path = get_target_tty()
+    if not tty_path:
+        log("No TTY available, skipping")
+        sys.exit(0)
+
     log(f"Using TTY: {tty_path}")
 
     try:
@@ -169,7 +184,7 @@ def main():
             if operation == "clipboard":
                 write_clipboard(tty_file, text)
             elif operation == "notify":
-                send_notification(tty_file, text)
+                send_notification(tty_file, text, title=title or "Notification")
             elif operation == "open":
                 set_user_var(tty_file, text)
             elif operation == "codex":
