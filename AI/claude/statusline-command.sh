@@ -74,15 +74,29 @@ get_background_tasks() {
 
 # Get token usage indicator
 get_token_usage() {
-    local used=$(echo "$input" | jq -r '.token_usage.used // 0')
-    local total=$(echo "$input" | jq -r '.token_usage.total // 0')
-    token_indicator=""
+    # Read context window data
+    local total=$(echo "$input" | jq -r '.context_window.context_window_size // 0')
+    local input_tokens=$(echo "$input" | jq -r '.context_window.total_input_tokens // 0')
+    local output_tokens=$(echo "$input" | jq -r '.context_window.total_output_tokens // 0')
 
-    if [[ "$used" -gt 0 ]] && [[ "$total" -gt 0 ]]; then
-        local percent=$((used * 100 / total))
-        if [[ "$percent" -gt 80 ]]; then
-            token_indicator="📊${percent}%"
-        fi
+    token_indicator=""
+    token_percent=0
+
+    if [[ "$total" -gt 0 ]]; then
+        # Messages = input + output tokens (conversation)
+        local messages=$((input_tokens + output_tokens))
+        # Estimate system overhead (prompt + tools + MCP) at ~25k
+        local overhead=25000
+        # Total used in context (approximate)
+        local used=$((messages + overhead))
+
+        token_percent=$((used * 100 / total))
+        local remaining=$((total - used))
+        local used_k=$((used / 1000))
+        local total_k=$((total / 1000))
+
+        # Format: used/total [percent%]
+        token_indicator="📊${used_k}k/${total_k}k[${token_percent}%]"
     fi
 }
 
@@ -178,7 +192,18 @@ output=""
 [[ -n "$model_icon" ]] && output="${output}${BLUE}${model_icon}${RESET} "
 [[ -n "$permission_mode" ]] && output="${output}${YELLOW}${permission_mode}${RESET} "
 [[ -n "$background_tasks" ]] && output="${output}${PEACH}${background_tasks}${RESET} "
-[[ -n "$token_indicator" ]] && output="${output}${RED}${token_indicator}${RESET} "
+
+# Token usage with color based on remaining context
+if [[ -n "$token_indicator" ]]; then
+    if [[ "$token_percent" -gt 80 ]]; then
+        output="${output}${RED}${token_indicator}${RESET} "
+    elif [[ "$token_percent" -gt 50 ]]; then
+        output="${output}${YELLOW}${token_indicator}${RESET} "
+    else
+        output="${output}${GREEN}${token_indicator}${RESET} "
+    fi
+
+fi
 
 # Current directory
 output="${output}${TEAL}${formated_pwd}${RESET}"
