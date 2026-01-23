@@ -14,7 +14,7 @@ return {
     },
     bigfile = { enabled = true },
     dashboard = { enabled = true },
-    explorer = { 
+    explorer = {
       enabled = true,
       replace_netrw = true,
     },
@@ -27,6 +27,11 @@ return {
       --   grep = true, -- show file debug info
       --   extmarks = true, -- show extmarks errors
       -- },
+      actions = {
+        sidekick_send = function(...)
+          return require("sidekick.cli.picker.snacks").send(...)
+        end,
+      },
       formatters = {
         file = {
           filename_first = false, -- display filename before the file path
@@ -67,6 +72,10 @@ return {
             ["<c-k>"] = {"list_scroll_up", mode = { "i", "n" }},
             ["<c-u>"] = {"preview_scroll_up", mode = { "i", "n" }},
             ["<c-d>"] = {"preview_scroll_down", mode = { "i", "n" }},
+            ["<c-g>"] = {
+              "sidekick_send",
+              mode = { "n", "i" },
+            },
           },
         },
         list = {
@@ -80,11 +89,11 @@ return {
       },
     },
     indent = { enabled = true },
-    input = { 
+    input = {
       enabled = true,
       win = {
         style = 'above_cursor',
-      }, 
+      },
     },
     notifier = {
       enabled = true,
