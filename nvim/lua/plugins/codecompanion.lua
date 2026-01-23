@@ -49,7 +49,7 @@ Answer Tone and Style
 ]]
 
 return {
-    enable=false,
+    enabled=false,
     cond=not vim.g.vscode,
     "olimorris/codecompanion.nvim",
     dependencies = {

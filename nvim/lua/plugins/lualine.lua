@@ -53,7 +53,8 @@ return {
           },
         },
         lualine_x = {},
-        lualine_y = { 'searchcount', 'progress', require('codecompanion-lualine')},
+        -- lualine_y = { 'searchcount', 'progress', require('codecompanion-lualine')},
+        lualine_y = { 'searchcount', 'progress'},
         lualine_z = {
           { 'location', separator = { left = '', right = '' }, left_padding = 1 },
         },
