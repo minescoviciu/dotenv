@@ -1,0 +1,76 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "edit_predictions": {
+    "disabled_globs": [],
+  },
+  "languages": {
+    "JSONC": {
+      "show_edit_predictions": true,
+    },
+  },
+  "agent_servers": {
+    "claude": {
+      "default_model": "opus",
+      "favorite_models": [],
+      "default_config_options": {},
+      "favorite_config_option_values": {},
+    },
+  },
+  "diagnostics": {
+    "inline": {
+      "enabled": true,
+    },
+  },
+  "notification_panel": {
+    "default_width": 460.0,
+  },
+  "agent": {
+    "default_width": 460.0,
+    "favorite_models": [],
+    "model_parameters": [],
+  },
+  "outline_panel": {
+    "default_width": 460.0,
+    "dock": "right",
+  },
+  "collaboration_panel": {
+    "default_width": 241.0,
+    "button": false,
+  },
+  "git_panel": {
+    "default_width": 460.0,
+    "dock": "right",
+  },
+  "project_panel": {
+    "default_width": 460.0,
+    "dock": "right",
+  },
+  "buffer_font_family": "CaskaydiaCove Nerd Font Mono",
+  "which_key": {
+    "enabled": true,
+  },
+  "autosave": {
+    "after_delay": {
+      "milliseconds": 1000,
+    },
+  },
+  "features": {
+    "edit_prediction_provider": "copilot",
+  },
+  "session": {
+    "trust_all_worktrees": false,
+  },
+  "vim_mode": true,
+  "base_keymap": "VSCode",
+  "icon_theme": "Catppuccin Mocha",
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
+  "theme": "Catppuccin Mocha",
+}

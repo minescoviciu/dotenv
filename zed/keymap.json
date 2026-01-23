@@ -1,0 +1,60 @@
+// Zed keymap
+//
+// For information on binding keys, see the Zed
+// documentation: https://zed.dev/docs/key-bindings
+//
+// To see the default key bindings run `zed: open default keymap`
+// from the command palette.
+[
+  {
+    "context": "Workspace",
+    "bindings": {},
+  },
+  {
+    "context": "Editor && vim_mode == normal",
+    "bindings": {
+      "space s b": "tab_switcher::ToggleAll",
+      // Panels (space p *)
+      "space f b": "project_panel::ToggleFocus",
+      "space a a": "agent::ToggleFocus",
+      "space g o": "git_panel::ToggleFocus",
+      "space s o": "outline_panel::ToggleFocus",
+      // "space s f": "",
+      // Git
+      "space g g": [
+        "task::Spawn",
+        { "task_name": "lazygit", "reveal_target": "center" },
+      ],
+      "space g b": "git::Blame",
+      "space g shift-o": "editor::OpenPermalinkToLine",
+      "space b": "git::Branch",
+      // GitHub
+      "space c g": "editor::OpenPermalinkToLine",
+      "space c shift-g": "editor::CopyPermalinkToLine",
+    },
+  },
+  {
+    "context": "(GitPanel > Editor) || ProjectPanel || (AgentPanel > Editor) || OutlinePanel",
+    "bindings": {
+      "escape": "workspace::CloseActiveDock",
+    },
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "a": "project_panel::NewFile",
+      "d": "project_panel::Delete",
+      "r": "project_panel::Rename",
+    },
+  },
+  {
+    "context": "Editor && vim_mode == visual",
+    "bindings": {
+      ">": ["workspace::SendKeystrokes", "> g v"],
+      "<": ["workspace::SendKeystrokes", "< g v"],
+      // GitHub
+      "space c g": "editor::OpenPermalinkToLine",
+      "space c shift-g": "editor::CopyPermalinkToLine",
+    },
+  },
+]
