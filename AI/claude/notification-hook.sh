@@ -16,12 +16,5 @@ else
     title="Claude"
 fi
 
-# Notification chime
-printf '\a'; sleep 0.05
-printf '\a'; sleep 0.05
-printf '\a'; sleep 0.15
-printf '\a'; sleep 0.05
-printf '\a'
-
 # Send notification using wezterm.py
 ~/.config/scripts/wezterm.py notify "Needs attention" "$title" 2>/dev/null || true
