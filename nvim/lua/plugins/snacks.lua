@@ -1,3 +1,5 @@
+-- This is for running a command in a terminal buffer will remove ui after exit
+-- Snacks.terminal(cmd, opts)
 return {
   cond=not vim.g.vscode,
   "folke/snacks.nvim",
@@ -13,6 +15,19 @@ return {
       fps = 60, -- frames per second. Global setting for all animations
     },
     bigfile = { enabled = true },
+    lazygit = {
+      configure = true,
+      config = {
+        os = {
+          edit = '[ -z "$NVIM" ] && (nvim -- {{filename}}) || (nvim --server "$NVIM" --remote-send "q<C-\\><C-N>:e {{filename}}<CR>")',
+          editAtLine = '[ -z "$NVIM" ] && (nvim +{{line}} -- {{filename}}) || (nvim --server "$NVIM" --remote-send "q<C-\\><C-N>:e +{{line}} {{filename}}<CR>")',
+          openDirInEditor = '[ -z "$NVIM" ] && (nvim -- {{dir}}) || (nvim --server "$NVIM" --remote-send "q" && nvim --server "$NVIM" --remote {{dir}})',
+        }
+      },
+      win = {
+        style = "lazygit",
+      },
+    },
     dashboard = { enabled = true },
     explorer = {
       enabled = true,
