@@ -12,8 +12,9 @@ function M.setup()
         'ruff',
         'lua_ls',
         'ansiblels',
-        'rust_analyzer'
-        -- Add more servers as needed
+        'rust_analyzer',
+        'ts_ls',
+        'biome',
     }
     vim.lsp.enable(servers)
     
