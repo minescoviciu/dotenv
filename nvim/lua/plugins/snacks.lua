@@ -47,11 +47,12 @@ return {
         explorer = {
           tree = true,
           hidden = false,
+          ignored = false,
           follow_file = true,
           watch = false,
-          git_status = false,
-          git_status_open = false,
-          git_untracked = false,
+          git_status = true,
+          git_status_open = true,
+          git_untracked = true,
           auto_close = true,
           jump = { close = true },
           layout = {
