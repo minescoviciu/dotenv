@@ -16,6 +16,18 @@ return {
       local Context = require("sidekick.cli.context")
       local context = Context.get()
 
+      -- Track if shift+enter was pressed (send only, no switch)
+      local send_only = false
+      local shift_enter_key = {
+        "<s-cr>",
+        function(self)
+          send_only = true
+          self:confirm()
+        end,
+        mode = "i",
+        desc = "Send only (no switch)",
+      }
+
       -- Highlight the visual selection if in visual mode
       local ns, bufnr, start_line, end_line
       local input_opts = {
@@ -52,10 +64,14 @@ return {
           wo = { cursorline = false },
           bo = { filetype = 'snacks_input', buftype = 'prompt' },
           b = { completion = false },
+          keys = { i_s_cr = shift_enter_key },
         }
       else
         -- No selection, use the above_cursor style
-        input_opts.win = { style = 'above_cursor' }
+        input_opts.win = {
+          style = 'above_cursor',
+          keys = { i_s_cr = shift_enter_key },
+        }
       end
 
       Snacks.input(input_opts, function(input)
@@ -76,6 +92,9 @@ return {
         local msg_text = context:render({ msg = msg, this = use_this })
         if msg_text then
           require("sidekick.cli").send({ msg = msg_text })
+          if opts.switch_to_claude and not send_only then
+            vim.fn.system("tmux select-window -t $(tmux list-windows -F '#{window_index}:#{window_name}' | grep -i claude | head -1 | cut -d: -f1)")
+          end
         end
       end)
     end
@@ -93,26 +112,16 @@ return {
       "<leader>as",
       function()
         _G._sidekick_prompt_and_send({
-          prompt = "Add context for selection: ",
-          context = "{selection}",
-        })
-      end,
-      mode = { "x" },
-      desc = "Prompt with Selection",
-    },
-    {
-      "<leader>at",
-      function()
-        _G._sidekick_prompt_and_send({
           prompt = "Add context for this: ",
           context = "{this}",
+          switch_to_claude = true,
         })
       end,
       mode = { "x", "n" },
       desc = "Prompt with This",
     },
     {
-      "<leader>ad",
+      "<leader>ax",
       function() require("sidekick.cli").close() end,
       desc = "Detach a CLI Session",
     },
