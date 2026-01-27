@@ -30,8 +30,6 @@ CLEAR_SCREEN = "\033[2J"
 HOME = "\033[H"
 ENTER_ALTERNATE_SCREEN = "\033[?1049h"
 RESTORE_NORMAL_SCREEN = "\033[?1049l"
-HIDE_CURSOR = "\033[?25l"
-SHOW_CURSOR = "\033[?25h"
 
 # Label characters (home row priority)
 LABELS = "asdfqwerzxcvjklmiuopghtybn"
@@ -51,34 +49,6 @@ PATTERNS = [
 def tmux(*args):
     """Run tmux command and return output."""
     return subprocess.check_output(["tmux", *args]).decode().strip()
-
-
-# Regex to match ANSI escape sequences
-ANSI_ESCAPE = re.compile(r'\x1b\[[0-9;]*m')
-
-
-def strip_ansi(content):
-    """Strip ANSI escape sequences and return (clean_content, position_map).
-
-    position_map[clean_pos] = raw_pos for translating positions.
-    """
-    clean = []
-    pos_map = []
-    i = 0
-
-    while i < len(content):
-        match = ANSI_ESCAPE.match(content, i)
-        if match:
-            i = match.end()
-        else:
-            clean.append(content[i])
-            pos_map.append(i)
-            i += 1
-
-    # Add end position for slicing
-    pos_map.append(i)
-
-    return ''.join(clean), pos_map
 
 
 def generate_labels(count):
@@ -158,78 +128,94 @@ def draw_screen(tty_path, content, matches, labels, selected_idx=None):
         output.append(content[cursor:])
 
     with open(tty_path, "w") as f:
-        f.write(CLEAR_SCREEN + HOME + HIDE_CURSOR)
+        f.write(CLEAR_SCREEN + HOME)
         f.write("".join(output).replace("\n", "\n\r"))
         f.write(RESET + HOME)
 
 
-def get_key(tty_path):
-    """Read a key from TTY. Returns (char, shift) tuple."""
-    fd = os.open(tty_path, os.O_RDONLY)
-    old = termios.tcgetattr(fd)
+def get_key(fd):
+    """Read a single key from TTY file descriptor."""
+    return os.read(fd, 1).decode()
+
+
+def copy_to_clipboard(text, tty_path):
+    """Copy text to system clipboard using OSC 52 escape sequence."""
+    import base64
+    encoded = base64.b64encode(text.encode()).decode()
+    osc52 = f"\033]52;c;{encoded}\007"
+    with open(tty_path, "w") as f:
+        f.write(osc52)
+    log.info(f"Copied to clipboard via OSC52: {text!r}")
+
+
+def select_match(tty_path, content, matches, labels):
+    """Interactive selection loop. Returns (selected_text, should_insert) or (None, False) if cancelled."""
+    current_matches = matches[:]
+    current_labels = labels[:]
+    typed = ""
+
+    # Open TTY and set raw mode for the entire selection process
+    fd = os.open(tty_path, os.O_RDWR)
+    old_settings = termios.tcgetattr(fd)
     try:
+        # Flush any pending input and set raw mode (disables echo)
+        termios.tcflush(fd, termios.TCIFLUSH)
         tty.setraw(fd)
-        char = os.read(fd, 1).decode()
 
-        # Check for CSI u escape sequence (Shift+Enter = \x1b[13;2u)
-        if char == "\x1b":
-            seq = os.read(fd, 6).decode()  # Read potential CSI u sequence
-            if seq.startswith("[13;2u"):
-                return ("\r", True)  # Shift+Enter
-            elif seq.startswith("["):
-                return (None, False)  # Other escape sequence, ignore
-            return ("\x1b", False)  # Plain ESC
+        draw_screen(tty_path, content, current_matches, current_labels)
 
-        return (char, False)
-    finally:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old)
-        os.close(fd)
+        while True:
+            char = get_key(fd)
+            log.debug(f"Key pressed: {char!r}, typed so far: {typed!r}")
 
+            # ESC or Ctrl+C - cancel
+            if char in ("\x1b", "\x03"):
+                log.info("Selection cancelled")
+                return None, False
 
-def select_match(tty_path, raw_content, clean_content, matches, labels):
-    """Interactive selection loop. Returns (selected_text, selected_idx, paste) or (None, None, paste)."""
-    draw_screen(tty_path, raw_content, matches, labels)
-    selected = ""
-    label_len = len(labels[0])
-    pending_idx = None  # Store index when waiting for Enter
+            # Exit on non-label characters
+            char_lower = char.lower()
+            if char_lower not in LABELS:
+                log.info(f"Invalid key pressed: {char!r}, exiting")
+                return None, False
 
-    while True:
-        char, shift = get_key(tty_path)
+            # Check if uppercase (Shift held) - means insert after selection
+            should_insert = char.isupper()
 
-        if char == "\x1b":  # ESC - go back to last pane
-            return None, None, True
-        if char == "\x03":  # Ctrl+C - just cancel
-            return None, None, False
+            typed += char_lower
+            log.debug(f"Typed: {typed!r}, should_insert: {should_insert}")
 
-        if char is None:
-            continue
+            # Check if typed matches a complete label
+            if typed in current_labels:
+                idx = current_labels.index(typed)
+                selected_text = current_matches[idx][2]
+                copy_to_clipboard(selected_text, tty_path)
+                return selected_text, should_insert
 
-        # Enter confirms pending match
-        if char in ("\r", "\n") and pending_idx is not None:
-            return matches[pending_idx][2], pending_idx, shift
+            # Filter matches whose labels start with typed prefix
+            filtered = [
+                (m, l) for m, l in zip(current_matches, current_labels)
+                if l.startswith(typed)
+            ]
 
-        if char not in LABELS:
-            continue
-
-        selected += char
-
-        if selected in labels:
-            pending_idx = labels.index(selected)
-            # Wait for Enter/Shift+Enter to confirm
-            continue
-
-        # Filter for multi-char labels
-        if label_len > 1:
-            filtered = [(m, l) for m, l in zip(matches, labels) if l.startswith(selected)]
             if filtered:
-                matches, labels = map(list, zip(*filtered))
-                draw_screen(tty_path, raw_content, matches, labels)
+                # Update current matches and redraw
+                current_matches, current_labels = map(list, zip(*filtered))
+                # Update labels to show remaining suffix
+                display_labels = [l[len(typed):] or l for l in current_labels]
+                draw_screen(tty_path, content, current_matches, display_labels)
+                log.debug(f"Filtered to {len(current_matches)} matches")
             else:
-                selected = ""
-                pending_idx = None
-                matches = find_patterns(clean_content)
-                labels = generate_labels_for_matches(matches)
-                draw_screen(tty_path, raw_content, matches, labels)
+                # No matches for this prefix, reset
+                log.debug("No matches for prefix, resetting")
+                typed = ""
+                current_matches = matches[:]
+                current_labels = labels[:]
+                draw_screen(tty_path, content, current_matches, current_labels)
+    finally:
+        # Restore terminal settings
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        os.close(fd)
 
 
 def main():
@@ -253,27 +239,28 @@ def main():
         return 0
 
     matches = find_patterns(content)
+    labels = generate_labels_for_matches(matches)
     log.info(f"Found {len(matches)} matches")
-    for i, (start, end, text) in enumerate(matches):
-        log.debug(f"  Match {i}: ({start}-{end}) {text!r}")
+    for i, ((start, end, text), label) in enumerate(zip(matches, labels)):
+        log.debug(f"  Match {i} [{label}]: ({start}-{end}) {text!r}")
 
-    # Print found matches to TTY
+    if not matches:
+        log.info("No matches found, exiting")
+        return 0
+
+    # Display with colors and labels
     log.debug("Entering alternate screen")
     with open(pane_tty, "w") as f:
         f.write(ENTER_ALTERNATE_SCREEN)
 
+    selected = None
+    should_insert = False
     try:
-        with open(pane_tty, "w") as f:
-            f.write(CLEAR_SCREEN + HOME)
-            f.write(f"Found {len(matches)} matches:\n\r")
-            for i, (start, end, text) in enumerate(matches):
-                f.write(f"  [{i}] ({start:4d}-{end:4d}): {text!r}\n\r")
-            f.write(f"\n\rPress any key to exit...")
-
-        log.debug("Waiting for input")
-        # Wait for input
-        input()
-        log.debug("Input received")
+        selected, should_insert = select_match(pane_tty, content, matches, labels)
+        if selected:
+            log.info(f"Selected: {selected!r}, should_insert: {should_insert}")
+        else:
+            log.info("No selection made")
     except Exception as e:
         log.error(f"Error during display: {e}")
         raise
@@ -281,6 +268,11 @@ def main():
         log.debug("Restoring normal screen")
         with open(pane_tty, "w") as f:
             f.write(RESTORE_NORMAL_SCREEN)
+
+    # Insert text into pane if Shift was held
+    if selected and should_insert:
+        log.info(f"Inserting text into pane: {selected!r}")
+        subprocess.run(["tmux", "send-keys", "-l", selected], check=False)
 
     log.info("Exiting normally")
     return 0
