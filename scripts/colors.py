@@ -38,6 +38,9 @@ SHOW_CURSOR = "\033[?25h"
 # Label characters (home row priority)
 LABELS = "asdfqwerzxcvjklmiuopghtybn"
 
+# Pattern to match ANSI escape sequences
+ANSI_ESCAPE = re.compile(r'\x1b\[[0-9;]*m')
+
 # Patterns to match (ordered from most specific to least specific)
 PATTERNS = [
     r'https?://[^\s<>"{}|\\^`\[\]]+',  # URLs
@@ -138,6 +141,11 @@ def tmux(*args):
     return subprocess.check_output(["tmux", *args]).decode().strip()
 
 
+def strip_ansi(text):
+    """Remove ANSI escape sequences from text."""
+    return ANSI_ESCAPE.sub('', text)
+
+
 def generate_labels(count):
     """Generate labels for the given count of matches."""
     if count <= len(LABELS):
@@ -192,34 +200,64 @@ def generate_labels_for_matches(matches):
     return [text_to_label[text] for _, _, text in matches]
 
 
-def draw_screen(tty, content, matches, labels):
-    """Draw the screen with highlighted matches and labels."""
+def draw_screen(tty, colored_content, matches, labels):
+    """Draw the screen with highlighted matches and labels, preserving original colors."""
     output = []
-    cursor = 0
+    match_idx = 0
+    visual_pos = 0  # Position in plain text (ignoring ANSI codes)
+    i = 0  # Position in colored content
 
-    for (start, end, match_text), label in zip(matches, labels):
-        if cursor < start:
-            output.append(content[cursor:start])
-        output.append(MATCH_BG + BRIGHT_YELLOW + label + RESET)
-        if len(label) < len(match_text):
-            output.append(MATCH_BG + GREEN + match_text[len(label):] + RESET)
-        cursor = end
+    while i < len(colored_content):
+        # Check for ANSI escape sequence
+        ansi_match = ANSI_ESCAPE.match(colored_content, i)
+        if ansi_match:
+            output.append(ansi_match.group())
+            i = ansi_match.end()
+            continue
 
-    if cursor < len(content):
-        output.append(content[cursor:])
+        # Check if we're at a match start
+        if match_idx < len(matches) and visual_pos == matches[match_idx][0]:
+            _, end, match_text = matches[match_idx]
+            label = labels[match_idx]
+
+            # Output the label with highlight
+            output.append(MATCH_BG + BRIGHT_YELLOW + label + RESET)
+
+            # Output rest of match with green highlight (if label is shorter)
+            if len(label) < len(match_text):
+                output.append(MATCH_BG + GREEN + match_text[len(label):] + RESET)
+
+            # Skip over the match in colored content (by visual chars)
+            chars_to_skip = len(match_text)
+            while chars_to_skip > 0 and i < len(colored_content):
+                skip_ansi = ANSI_ESCAPE.match(colored_content, i)
+                if skip_ansi:
+                    i = skip_ansi.end()
+                else:
+                    i += 1
+                    chars_to_skip -= 1
+
+            visual_pos = end
+            match_idx += 1
+            continue
+
+        # Regular character, copy it
+        output.append(colored_content[i])
+        i += 1
+        visual_pos += 1
 
     tty.clear_and_home()
     tty.write("".join(output).replace("\n", "\n\r"))
     tty.write(RESET + HOME)
 
 
-def select_match(tty, content, matches, labels):
+def select_match(tty, colored_content, matches, labels):
     """Interactive selection loop. Returns (selected_text, should_insert) or (None, False)."""
     current_matches = matches[:]
     current_labels = labels[:]
     typed = ""
 
-    draw_screen(tty, content, current_matches, current_labels)
+    draw_screen(tty, colored_content, current_matches, current_labels)
 
     while True:
         char = tty.read_key()
@@ -257,14 +295,14 @@ def select_match(tty, content, matches, labels):
         if filtered:
             current_matches, current_labels = map(list, zip(*filtered))
             display_labels = [l[len(typed):] or l for l in current_labels]
-            draw_screen(tty, content, current_matches, display_labels)
+            draw_screen(tty, colored_content, current_matches, display_labels)
             log.debug(f"Filtered to {len(current_matches)} matches")
         else:
             log.debug("No matches, resetting")
             typed = ""
             current_matches = matches[:]
             current_labels = labels[:]
-            draw_screen(tty, content, current_matches, current_labels)
+            draw_screen(tty, colored_content, current_matches, current_labels)
 
 
 def main_parent():
@@ -273,25 +311,26 @@ def main_parent():
 
     try:
         pane_id = tmux("display-message", "-p", "#{pane_id}")
-        content = tmux("capture-pane", "-p", "-t", pane_id)
-        log.debug(f"pane_id={pane_id}, content_len={len(content)}")
+        colored_content = tmux("capture-pane", "-p", "-e", "-t", pane_id)
+        log.debug(f"pane_id={pane_id}, content_len={len(colored_content)}")
     except (subprocess.CalledProcessError, FileNotFoundError) as e:
         log.error(f"tmux error: {e}")
         print(f"tmux error: {e}", file=sys.stderr)
         return 1
 
-    # Early exit if no matches
-    matches = find_patterns(content)
+    # Early exit if no matches (match on plain text)
+    plain_content = strip_ansi(colored_content)
+    matches = find_patterns(plain_content)
     if not matches:
         log.info("No matches found, exiting")
         return 0
 
     log.info(f"Found {len(matches)} matches")
 
-    # Write content to temp file (avoids escaping issues on command line)
+    # Write colored content to temp file (avoids escaping issues on command line)
     content_file = f"/tmp/colors_content_{os.getpid()}"
     with open(content_file, 'w') as f:
-        f.write(content)
+        f.write(colored_content)
     log.debug(f"Wrote content to {content_file}")
 
     # Ensure _tmp session exists
@@ -325,17 +364,19 @@ def main_child(original_pane_id, content_file):
     own_tty = tmux("display-message", "-p", "#{pane_tty}")
     log.debug(f"own_pane_id={own_pane_id}, own_tty={own_tty}")
 
-    # Read content from temp file
+    # Read colored content from temp file
     try:
         with open(content_file) as f:
-            content = f.read()
+            colored_content = f.read()
         os.unlink(content_file)  # Clean up
         log.debug(f"Read and removed {content_file}")
     except FileNotFoundError:
         log.error(f"Content file not found: {content_file}")
         return 1
 
-    matches = find_patterns(content)
+    # Match on plain text, display with colors
+    plain_content = strip_ansi(colored_content)
+    matches = find_patterns(plain_content)
     labels = generate_labels_for_matches(matches)
 
     log.info(f"Found {len(matches)} matches")
@@ -351,7 +392,7 @@ def main_child(original_pane_id, content_file):
         tty.clear_and_home()
 
         try:
-            selected, should_insert = select_match(tty, content, matches, labels)
+            selected, should_insert = select_match(tty, colored_content, matches, labels)
             log.info(f"Selected: {selected!r}, should_insert: {should_insert}")
         except Exception as e:
             log.error(f"Error: {e}")
