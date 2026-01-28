@@ -2,8 +2,12 @@
 """
 Tmux pattern matcher - highlights URLs, paths, IPs, etc. and copies selection to clipboard.
 
-Usage: bind-key s run-shell -b "~/.config/scripts/colors.py"
+Uses a pane swap approach: creates a hidden window with the selection UI, then swaps it
+with the original pane for a seamless transition (no visual flash from alternate screen).
+
+Usage: bind-key s run-shell "python3 ~/.config/scripts/colors.py"
 """
+import argparse
 import base64
 import logging
 import os
@@ -28,8 +32,6 @@ MATCH_BG = "\033[48;5;240m"
 RESET = "\033[0m"
 CLEAR_SCREEN = "\033[2J"
 HOME = "\033[H"
-ENTER_ALTERNATE_SCREEN = "\033[?1049h"
-RESTORE_NORMAL_SCREEN = "\033[?1049l"
 HIDE_CURSOR = "\033[?25l"
 SHOW_CURSOR = "\033[?25h"
 
@@ -56,7 +58,6 @@ class TTY:
         self.fd: int = -1
         self.old_settings: list | None = None
         self.in_raw_mode = False
-        self.in_alternate_screen = False
 
     def __enter__(self):
         self.fd = os.open(self.tty_path, os.O_RDWR | os.O_NOCTTY)
@@ -65,8 +66,6 @@ class TTY:
         return self
 
     def __exit__(self, *_):
-        if self.in_alternate_screen:
-            self.exit_alternate_screen()
         if self.in_raw_mode:
             self.exit_raw_mode()
         if self.fd >= 0:
@@ -115,23 +114,17 @@ class TTY:
             self.in_raw_mode = False
             log.debug(f"Exited raw mode, now: {self._get_mode()}")
 
-    def enter_alternate_screen(self):
-        """Enter alternate screen with hidden cursor."""
-        if not self.in_alternate_screen:
-            self.write(ENTER_ALTERNATE_SCREEN + HIDE_CURSOR)
-            self.in_alternate_screen = True
-            log.debug("Entered alternate screen")
-
-    def exit_alternate_screen(self):
-        """Exit alternate screen and show cursor."""
-        if self.in_alternate_screen:
-            self.write(SHOW_CURSOR + RESTORE_NORMAL_SCREEN)
-            self.in_alternate_screen = False
-            log.debug("Exited alternate screen")
-
     def clear_and_home(self):
         """Clear screen and move cursor home."""
         self.write(CLEAR_SCREEN + HOME)
+
+    def hide_cursor(self):
+        """Hide the cursor."""
+        self.write(HIDE_CURSOR)
+
+    def show_cursor(self):
+        """Show the cursor."""
+        self.write(SHOW_CURSOR)
 
     def copy_to_clipboard(self, text):
         """Copy text to system clipboard using OSC 52."""
@@ -274,63 +267,123 @@ def select_match(tty, content, matches, labels):
             draw_screen(tty, content, current_matches, current_labels)
 
 
-def main():
-    log.info("Starting colors.py")
-
-    # Debug: show script's own TTY info
-    try:
-        script_tty = os.ttyname(sys.stdin.fileno())
-    except OSError:
-        script_tty = "<no tty>"
-    log.debug(f"Script stdin TTY: {script_tty}")
-    log.debug(f"Script PID: {os.getpid()}, PPID: {os.getppid()}")
+def main_parent():
+    """Parent mode: capture content and spawn child in swapped pane."""
+    log.info("Starting colors.py (parent mode)")
 
     try:
-        pane_tty = tmux("display-message", "-p", "#{pane_tty}")
         pane_id = tmux("display-message", "-p", "#{pane_id}")
-        alternate_on = tmux("display-message", "-p", "#{alternate_on}")
         content = tmux("capture-pane", "-p", "-t", pane_id)
-        log.debug(f"pane_tty={pane_tty}, pane_id={pane_id}, content_len={len(content)}")
-        log.debug(f"Script TTY vs Pane TTY: {'SAME' if script_tty == pane_tty else 'DIFFERENT'}")
+        log.debug(f"pane_id={pane_id}, content_len={len(content)}")
     except (subprocess.CalledProcessError, FileNotFoundError) as e:
         log.error(f"tmux error: {e}")
         print(f"tmux error: {e}", file=sys.stderr)
         return 1
 
-    if alternate_on == "1":
-        log.info("Already in alternate screen")
+    # Early exit if no matches
+    matches = find_patterns(content)
+    if not matches:
+        log.info("No matches found, exiting")
         return 0
+
+    log.info(f"Found {len(matches)} matches")
+
+    # Write content to temp file (avoids escaping issues on command line)
+    content_file = f"/tmp/colors_content_{os.getpid()}"
+    with open(content_file, 'w') as f:
+        f.write(content)
+    log.debug(f"Wrote content to {content_file}")
+
+    # Ensure _tmp session exists
+    try:
+        tmux("has-session", "-t", "_tmp")
+    except subprocess.CalledProcessError:
+        tmux("new-session", "-d", "-s", "_tmp")
+        log.debug("Created _tmp session")
+
+    # Create window in _tmp session with child process, get new pane ID
+    script_path = os.path.abspath(__file__)
+    new_pane_id = tmux(
+        "new-window", "-t", "_tmp", "-d", "-P", "-F", "#{pane_id}",
+        f"python3 {script_path} --child {pane_id} {content_file}"
+    )
+    log.debug(f"Created new window in _tmp with pane {new_pane_id}")
+
+    # Swap panes (instantaneous, no visual flash)
+    tmux("swap-pane", "-s", new_pane_id, "-t", pane_id)
+    log.debug(f"Swapped panes {new_pane_id} <-> {pane_id}")
+
+    log.info("Parent done")
+    return 0
+
+
+def main_child(original_pane_id, content_file):
+    """Child mode: display selection UI in swapped pane."""
+    log.info(f"Starting colors.py (child mode), original_pane={original_pane_id}")
+
+    own_pane_id = tmux("display-message", "-p", "#{pane_id}")
+    own_tty = tmux("display-message", "-p", "#{pane_tty}")
+    log.debug(f"own_pane_id={own_pane_id}, own_tty={own_tty}")
+
+    # Read content from temp file
+    try:
+        with open(content_file) as f:
+            content = f.read()
+        os.unlink(content_file)  # Clean up
+        log.debug(f"Read and removed {content_file}")
+    except FileNotFoundError:
+        log.error(f"Content file not found: {content_file}")
+        return 1
 
     matches = find_patterns(content)
     labels = generate_labels_for_matches(matches)
+
     log.info(f"Found {len(matches)} matches")
     for (start, end, text), label in zip(matches, labels):
         log.debug(f"  [{label}] pos {start}-{end}: {text!r}")
 
-    if not matches:
-        return 0
-
     selected = None
     should_insert = False
 
-    with TTY(pane_tty) as tty:
-        tty.enter_alternate_screen()
+    with TTY(own_tty) as tty:
         tty.enter_raw_mode()
+        tty.hide_cursor()
+        tty.clear_and_home()
 
         try:
             selected, should_insert = select_match(tty, content, matches, labels)
             log.info(f"Selected: {selected!r}, should_insert: {should_insert}")
         except Exception as e:
             log.error(f"Error: {e}")
-            raise
+
+        tty.show_cursor()
+
+    # Swap back before exiting (returns user to original pane)
+    tmux("swap-pane", "-s", own_pane_id, "-t", original_pane_id)
+    log.debug(f"Swapped back: {own_pane_id} <-> {original_pane_id}")
 
     # Insert text if Shift was held
     if selected and should_insert:
-        log.info(f"Inserting into pane {pane_id}: {selected!r}")
-        subprocess.run(["tmux", "send-keys", "-t", pane_id, "-l", selected], check=False)
+        log.info(f"Inserting into pane {original_pane_id}: {selected!r}")
+        subprocess.run(["tmux", "send-keys", "-t", original_pane_id, "-l", selected], check=False)
 
-    log.info("Done")
+    log.info("Child done")
     return 0
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Tmux pattern matcher")
+    parser.add_argument("--child", metavar="PANE_ID", help="Run in child mode with original pane ID")
+    parser.add_argument("content_file", nargs="?", help="Path to content file (child mode only)")
+    args = parser.parse_args()
+
+    if args.child:
+        if not args.content_file:
+            print("Error: content_file required in child mode", file=sys.stderr)
+            return 1
+        return main_child(args.child, args.content_file)
+    else:
+        return main_parent()
 
 
 if __name__ == "__main__":
