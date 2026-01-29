@@ -268,6 +268,15 @@ def select_match(tty, colored_content, matches, labels):
             log.info("Selection cancelled")
             return None, False
 
+        # Enter - select exact match if one exists
+        if char in ("\r", "\n"):
+            if typed in current_labels:
+                idx = current_labels.index(typed)
+                selected_text = current_matches[idx][2]
+                tty.copy_to_clipboard(selected_text)
+                return selected_text, False  # Enter doesn't indicate shift
+            continue
+
         # Exit on non-label characters
         char_lower = char.lower()
         if char_lower not in LABELS:
@@ -279,30 +288,32 @@ def select_match(tty, colored_content, matches, labels):
         typed += char_lower
         log.debug(f"Typed: {typed!r}, should_insert: {should_insert}")
 
-        # Check for complete label match
-        if typed in current_labels:
-            idx = current_labels.index(typed)
-            selected_text = current_matches[idx][2]
-            tty.copy_to_clipboard(selected_text)
-            return selected_text, should_insert
+        # Filter matches by prefix, deduplicate by label
+        seen_labels = set()
+        filtered = []
+        for m, l in zip(current_matches, current_labels):
+            if l.startswith(typed) and l not in seen_labels:
+                filtered.append((m, l))
+                seen_labels.add(l)
 
-        # Filter matches by prefix
-        filtered = [
-            (m, l) for m, l in zip(current_matches, current_labels)
-            if l.startswith(typed)
-        ]
-
-        if filtered:
-            current_matches, current_labels = map(list, zip(*filtered))
-            display_labels = [l[len(typed):] or l for l in current_labels]
-            draw_screen(tty, colored_content, current_matches, display_labels)
-            log.debug(f"Filtered to {len(current_matches)} matches")
-        else:
+        if not filtered:
+            # No matches, reset
             log.debug("No matches, resetting")
             typed = ""
             current_matches = matches[:]
             current_labels = labels[:]
             draw_screen(tty, colored_content, current_matches, current_labels)
+        elif len(filtered) == 1 and filtered[0][1] == typed:
+            # Unambiguous match - select it
+            selected_text = filtered[0][0][2]
+            tty.copy_to_clipboard(selected_text)
+            return selected_text, should_insert
+        else:
+            # Multiple matches or incomplete label - filter and continue
+            current_matches, current_labels = map(list, zip(*filtered))
+            display_labels = [l[len(typed):] or l for l in current_labels]
+            draw_screen(tty, colored_content, current_matches, display_labels)
+            log.debug(f"Filtered to {len(current_matches)} matches")
 
 
 def main_parent():
