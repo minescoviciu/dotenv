@@ -97,10 +97,7 @@ function M.setup()
             local client = vim.lsp.get_client_by_id(args.data.client_id)
             local opts = { buffer = bufnr }
             
-            -- Navigation
-            vim.keymap.set('n', 'gd', vim.lsp.buf.definition, vim.tbl_extend('force', opts, { desc = 'Go to definition' }))
-            vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, vim.tbl_extend('force', opts, { desc = 'Go to declaration' }))
-            vim.keymap.set('n', 'gr', vim.lsp.buf.references, vim.tbl_extend('force', opts, { desc = 'Go to references' }))
+            -- Navigation (gd, gD, gr, gI, gy defined in snacks.lua with picker)
             
             -- Documentation
             vim.keymap.set('n', 'K', vim.lsp.buf.hover, vim.tbl_extend('force', opts, { desc = 'Hover documentation' }))
