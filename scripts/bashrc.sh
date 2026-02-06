@@ -44,9 +44,12 @@ PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[0
 source ~/.config/scripts/prompt.sh
 source ~/.config/scripts/create_pr.sh
 SECRETS_FILE=~/.config/scripts/secrets.sh
-echo $SECRETS_FILE
 if [ -f $SECRETS_FILE ]; then
     source $SECRETS_FILE
+fi
+WORK_FILE=~/.config/scripts/work.sh
+if [ -f $WORK_FILE ]; then
+    source $WORK_FILE
 fi
 # eval "$(starship init bash)"
 
