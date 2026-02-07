@@ -1,6 +1,4 @@
 {
-  "mcpServers": {
-  },
   "permissions": {
     "allow": [
       "WebFetch(domain:neovim.io)",
@@ -41,5 +39,6 @@
   },
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": true
-  }
+  },
+  "mcpServers": {}
 }
