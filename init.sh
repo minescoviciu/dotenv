@@ -37,6 +37,8 @@ ln -s $(pwd)/aerospace.toml ~/.aerospace.toml &&  echo "Linked aerospace.toml"
 ln -s $(pwd)/sketchybar ~/.config && echo "Linked sketchybar"
 ln -s $(pwd)/AI/opencode/opencode.jsonc ~/.config/opencode/opencode.jsonc && echo "Linked opencode.json"
 ln -s $(pwd)/AI/opencode/agent/ ~/.config/opencode/agent && echo "Linked opencode agent"
+mkdir -p ~/.codex
+ln -sf $(pwd)/AI/codex/config.toml ~/.codex/config.toml && echo "Linked codex config"
 
 CURSOR_PATH="~/Library/Application\ Support/Cursor/User"
 rm -f $CURSOR_PATH/settings.json
@@ -90,4 +92,3 @@ curl -sS https://starship.rs/install.sh | sh
 # Check tmux >= 3.2a
 # Check nvim >= 9.4
 # source /usr/share/bash-completion/completions/git
-

@@ -1,0 +1,55 @@
+experimental_use_rmcp_client = true
+notify = ["/home/dn/.config/scripts/wezterm.py", "codex"]
+model = "gpt-5.3-codex"
+personality = "pragmatic"
+model_reasoning_effort = "high"
+show_raw_agent_reasoning = true
+
+[tui]
+notifications = true
+status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-used", "context-window-size"]
+
+[features]
+multi_agent = true
+
+[tools]
+view_image = true
+runtime_metrics = true
+
+[projects."/home/dn/cheetah"]
+trust_level = "trusted"
+
+[projects."/home/dn/helpers"]
+trust_level = "trusted"
+
+[projects."/home/dn/manager"]
+trust_level = "trusted"
+
+[projects."/home/dn/dotenv"]
+trust_level = "trusted"
+
+[projects."/home/dn/agents"]
+trust_level = "trusted"
+
+[projects."/home/dn/jarvis-mw"]
+trust_level = "trusted"
+
+[mcp_servers.dn-mcp-server]
+url = "http://ai-server:8000/mcp"
+
+[mcp_servers.dn-mcp-server.http_headers]
+X-Email-User = "aminescu@drivenets.com"
+X-JIRA-TOOLS = "enabled,write"
+X-CONFLUENCE-TOOLS = "enabled,write"
+X-GITHUB-TOOLS = "enabled,pull_requests,write,issues"
+
+# Resolve sensitive headers from environment variables to avoid storing tokens in git.
+[mcp_servers.dn-mcp-server.env_http_headers]
+X-Atlassian-Token = "ATLASIAN_TOKEN"
+X-GITHUB-PERSONAL-ACCESS-TOKEN = "GITHUB_PERSONAL_ACCESS_TOKEN"
+
+[notice]
+"hide_gpt-5.1-codex-max_migration_prompt" = true
+
+[notice.model_migrations]
+"gpt-5.1-codex-max" = "gpt-5.2-codex"
