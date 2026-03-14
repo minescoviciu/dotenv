@@ -8,7 +8,6 @@
     "deny": [],
     "defaultMode": "default"
   },
-  "model": "opus",
   "hooks": {
     "Stop": [
       {
@@ -38,7 +37,11 @@
     "command": "/home/dn/dotenv/AI/claude-assets/statusline-command.sh"
   },
   "enabledPlugins": {
-    "pyright-lsp@claude-plugins-official": true
+    "pyright-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
   },
-  "mcpServers": {}
+  "voiceEnabled": false,
+  "mcpServers": {},
+  "autoCompactEnabled": false,
+  "effortLevel": "high"
 }
