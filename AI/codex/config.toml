@@ -1,16 +1,29 @@
 experimental_use_rmcp_client = true
 notify = ["/home/dn/.config/scripts/wezterm.py", "codex"]
-model = "gpt-5.3-codex"
+model = "gpt-5.5"
 personality = "pragmatic"
 model_reasoning_effort = "high"
 show_raw_agent_reasoning = true
+approvals_reviewer = "guardian_subagent"
+approval_policy = "on-request"
+#sandbox_mode = "workspace-write"
+sandbox_mode = "danger-full-access"
+plan_mode_reasoning_effort = "high"
+service_tier = "fast"
+[sandbox_workspace_write]
+exclude_slash_tmp = true
+network_access = true
 
 [tui]
 notifications = true
 status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-used", "context-window-size"]
 
+[tui.model_availability_nux]
+"gpt-5.5" = 4
+
 [features]
 multi_agent = true
+guardian_approval = true
 
 [tools]
 view_image = true
@@ -34,6 +47,27 @@ trust_level = "trusted"
 [projects."/home/dn/jarvis-mw"]
 trust_level = "trusted"
 
+[projects."/home/dn/certs"]
+trust_level = "trusted"
+
+[projects."/home/dn/dhcpcd"]
+trust_level = "trusted"
+
+[projects."/home/dn/ntpsec"]
+trust_level = "trusted"
+
+[projects."/home/dn/ejbca-ce"]
+trust_level = "trusted"
+
+[projects."/home/dn/ssh_tpm"]
+trust_level = "trusted"
+
+[projects."/tmp/all-test-plans"]
+trust_level = "trusted"
+
+[projects."/home/dn/openssl-shim-demo"]
+trust_level = "trusted"
+
 [mcp_servers.dn-mcp-server]
 url = "http://ai-server:8000/mcp"
 
@@ -50,6 +84,10 @@ X-GITHUB-PERSONAL-ACCESS-TOKEN = "GITHUB_PERSONAL_ACCESS_TOKEN"
 
 [notice]
 "hide_gpt-5.1-codex-max_migration_prompt" = true
+fast_default_opt_out = true
 
 [notice.model_migrations]
 "gpt-5.1-codex-max" = "gpt-5.2-codex"
+
+[plugins."github@openai-curated"]
+enabled = true
