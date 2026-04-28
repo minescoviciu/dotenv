@@ -29,6 +29,7 @@
 
 [pretty]
     myline = format:%C(yellow)%h%Creset %C(auto)%D%Creset %Cblue%ar%Creset %s
+    oneline-author-date = format:%C(yellow)%h%Creset %C(blue)%ad%Creset %C(green)%aN%Creset %s
     details = format:Commit %C(yellow bold)%H%C(reset)%nRefs: %C(auto)%D%C(reset)%nAuthor:       %aN %C(bold green)<%aE>%C(reset)%nAuthorDate:   %C(blue)%ar%C(reset)%nCommiter:     %cN %C(bold green)<%cE>%C(reset)%nCommiterDate: %C(blue)%cr%C(reset)%n%n%C(magenta)%s%C(reset)%n%n%b
 
 [format]
@@ -42,6 +43,7 @@
 
 [alias]
     show-pretty =!git show --color --pretty=format:'%C(auto)%H%C(reset) %C(auto)%d%C(reset)%nAuthor: %an %C(green)<%ae>%C(reset)  %nCommitted: %C(blue)%ar%C(reset)%n%n%C(yellow)%s%C(reset)%n%n%b'
+    lo = log --abbrev-commit --date=short --pretty=oneline-author-date
     st = status -sb
     co = checkout
     cleanup = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
