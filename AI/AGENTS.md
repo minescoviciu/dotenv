@@ -1,6 +1,8 @@
+# AGENTS.md
+
 ## Purpose
 
-This document defines the ground rules for how codex-cli agents interact with the repository, ensuring controlled, predictable, and high-quality modifications.
+This document defines the ground rules for how cli agents interact with the repository, ensuring controlled, predictable, and high-quality modifications.
 
 ---
 
@@ -103,5 +105,4 @@ For any proposed change or modification, present:
 
 1. **Summary** – what the change does and why.
 2. **Assumptions** – any context or interpretations made.
-
 

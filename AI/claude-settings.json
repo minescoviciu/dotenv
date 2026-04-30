@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/minescoviciu/.claude/notification-hook.sh"
+            "command": "/home/dn/dotenv/AI/claude-assets/notification-hook.sh"
           }
         ]
       }
@@ -27,7 +27,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/minescoviciu/.claude/notification-hook.sh"
+            "command": "/home/dn/dotenv/AI/claude-assets/notification-hook.sh"
           }
         ]
       }
@@ -35,7 +35,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "/Users/minescoviciu/.claude/statusline-command.sh"
+    "command": "/home/dn/dotenv/AI/claude-assets/statusline-command.sh"
   },
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": true
