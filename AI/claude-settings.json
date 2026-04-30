@@ -30,6 +30,17 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/dn/dotenv/AI/claude-assets/permission-evaluator.sh"
+          }
+        ]
+      }
     ]
   },
   "statusLine": {
