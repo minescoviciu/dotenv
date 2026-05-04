@@ -43,5 +43,5 @@
   "voiceEnabled": false,
   "mcpServers": {},
   "autoCompactEnabled": false,
-  "effortLevel": "high"
+  "model": "opus"
 }

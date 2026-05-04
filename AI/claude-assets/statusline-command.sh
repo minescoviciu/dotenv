@@ -98,30 +98,15 @@ format_reset_time() {
     local style="$2" # "time" or "datetime"
     [[ -z "$iso" || "$iso" == "null" ]] && return
 
-    # Extract date and time parts (strip timezone)
-    local date_part="${iso%%T*}"
-    local time_full="${iso##*T}"
-    local hour="${time_full%%:*}"
-    local rest="${time_full#*:}"
-    local minute="${rest%%:*}"
-
-    # 24h -> 12h
-    local h=$((10#$hour))
-    local ampm="am"
-    (( h >= 12 )) && ampm="pm"
-    (( h > 12 )) && h=$(( h - 12 ))
-    (( h == 0 )) && h=12
+    # Parse UTC timestamp to epoch, then format in local TZ
+    local epoch
+    epoch=$(TZ=UTC date -j -f "%Y-%m-%dT%H:%M:%S" "${iso:0:19}" "+%s" 2>/dev/null)
+    [[ -z "$epoch" ]] && return
 
     if [[ "$style" == "time" ]]; then
-        printf "%d:%s%s" "$h" "$minute" "$ampm"
+        date -r "$epoch" "+%H:%M %Z"
     else
-        local md="${date_part#*-}"
-        local month="${md%%-*}"
-        local day="${md##*-}"
-        local d=$((10#$day))
-        local months=(jan feb mar apr may jun jul aug sep oct nov dec)
-        local m=$((10#$month - 1))
-        printf "%s %d, %d:%s%s" "${months[$m]}" "$d" "$h" "$minute" "$ampm"
+        date -r "$epoch" "+%b %-d, %H:%M %Z" | tr '[:upper:]' '[:lower:]'
     fi
 }
 
