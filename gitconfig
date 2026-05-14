@@ -43,7 +43,7 @@
 
 [alias]
     show-pretty =!git show --color --pretty=format:'%C(auto)%H%C(reset) %C(auto)%d%C(reset)%nAuthor: %an %C(green)<%ae>%C(reset)  %nCommitted: %C(blue)%ar%C(reset)%n%n%C(yellow)%s%C(reset)%n%n%b'
-    lo = log --abbrev-commit --date=short --pretty=oneline-author-date
+    lo = log --all --decorate --abbrev-commit --date=short --pretty=oneline-author-date
     st = status -sb
     co = checkout
     cleanup = "!git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
