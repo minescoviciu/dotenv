@@ -6,7 +6,7 @@
       "WebFetch(domain:developers.notion.com)"
     ],
     "deny": [],
-    "defaultMode": "default"
+    "defaultMode": "auto"
   },
   "hooks": {
     "Stop": [
@@ -15,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/home/dn/dotenv/AI/claude-assets/notification-hook.sh"
+            "command": "/Users/minescoviciu/dotfiles/AI/claude-assets/notification-hook.sh"
           }
         ]
       }
@@ -26,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/home/dn/dotenv/AI/claude-assets/notification-hook.sh"
+            "command": "/Users/minescoviciu/dotfiles/AI/claude-assets/notification-hook.sh"
           }
         ]
       }
@@ -45,14 +45,18 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "/home/dn/dotenv/AI/claude-assets/statusline-command.sh"
+    "command": "/Users/minescoviciu/dotfiles/AI/claude-assets/statusline-command.sh"
   },
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true
   },
-  "voiceEnabled": false,
-  "mcpServers": {},
+  "effortLevel": "high",
+  "theme": "dark",
   "autoCompactEnabled": false,
-  "model": "opus"
+  "remoteControlAtStartup": false,
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true,
+  "voiceEnabled": false,
+  "mcpServers": {}
 }
