@@ -1,6 +1,7 @@
 [pull]
     rebase = true
 [user]
+    name = Andrei Minescu
     email = andreiminescu@gmail.com
 [core]
     editor = nvim
