@@ -10,6 +10,13 @@ export FZF_DEFAULT_OPTS=" \
 export BASH_SILENCE_DEPRECATION_WARNING=1
 export EDITOR='nvim'
 
+# Maintain a stable SSH agent socket symlink so forwarded agents keep working
+# across tmux reconnects. tmux.conf pins SSH_AUTH_SOCK to ~/.ssh/ssh_auth_sock;
+# this hook refreshes the symlink to the current forwarded socket on each login.
+if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh_auth_sock" ] && [ -S "$SSH_AUTH_SOCK" ]; then
+    ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh_auth_sock"
+fi
+
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
 HISTCONTROL=ignoredups:ignorespace
