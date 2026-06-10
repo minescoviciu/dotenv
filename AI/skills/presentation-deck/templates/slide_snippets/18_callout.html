@@ -1,0 +1,39 @@
+<!-- CALLOUT — single bordered note
+     A bordered note slotted inside any body slide. NOT a slide on
+     its own — embed it after a list, table, or diagram to flag a
+     risk, caveat, or success.
+
+     Flavors:
+       - default      -> accent (informational).
+       - `.warn`      -> caveat.
+       - `.alert`     -> risk / blocker.
+       - `.ok`        -> success / done.
+
+     One icon and one short sentence. Don't stack callouts on the
+     same slide.
+
+     Use Lucide icons: `info`, `alert-triangle`, `flame`,
+     `check-circle`, `clock`.
+-->
+<div class="callout">
+  <span class="col-icon"><i data-lucide="info"></i></span>
+  <span class="col-text">One sentence naming the caveat, with <strong>the load-bearing word</strong> in bold.</span>
+</div>
+
+<!-- Warn -->
+<div class="callout warn">
+  <span class="col-icon"><i data-lucide="alert-triangle"></i></span>
+  <span class="col-text">A warning the audience must consider before accepting the recommendation.</span>
+</div>
+
+<!-- Alert -->
+<div class="callout alert">
+  <span class="col-icon"><i data-lucide="flame"></i></span>
+  <span class="col-text">A risk that blocks the plan if not addressed; name the owner and date.</span>
+</div>
+
+<!-- OK -->
+<div class="callout ok">
+  <span class="col-icon"><i data-lucide="check-circle"></i></span>
+  <span class="col-text">Validated outcome: name the measurement and the date.</span>
+</div>

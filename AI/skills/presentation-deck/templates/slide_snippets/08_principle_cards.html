@@ -1,0 +1,65 @@
+<!-- PILLAR / OPTION / RISK CARDS
+     A grid of cards used for MECE pillar arguments, option
+     comparisons, risk inventories, workstream summaries. Each card:
+     mono label + bold one-line title + short description.
+
+     The `.pn` label names *what kind* of card this is —
+     "Pillar 01 — Cost", "Option A — Build", "Risk 02 — Concentration".
+     Decorative "Principle 01" framing is reserved for manifesto
+     decks; in working decks, name the dimension.
+
+     Grid shapes:
+       - 2x2 default (4 items, room for prose).
+       - `cards three-up` (3 items, MECE pillars).
+       - `cards compact` (up to 8 items, 4-up).
+
+     Replace: topbar, headline, card content. Add or remove .card
+     blocks; the grid rebalances.
+-->
+<section>
+  <div class="topbar">
+    <span class="doc">Deck Title</span>
+    <span class="tracker">
+      <span class="t-step">Summary</span>
+      <span class="t-step active">Findings</span>
+      <span class="t-step">Recommendation</span>
+      <span class="t-step">Plan</span>
+    </span>
+    <span class="right">
+      <span class="classification">Confidential &mdash; Draft</span>
+      <span class="num">NN of NN</span>
+    </span>
+  </div>
+  <div class="body stagger" data-staggered="0">
+    <h2 class="headline">
+      Four pillars carry the argument; each is
+      <span class="hl">independently verifiable</span>.
+    </h2>
+    <div class="cards">
+      <div class="card">
+        <div class="pn">Pillar 01 &mdash; Dimension</div>
+        <div class="pt">Pillar title stating its <span class="hl">conclusion</span>.</div>
+        <div class="pd">One- or two-sentence justification with a number or named source.</div>
+      </div>
+      <div class="card">
+        <div class="pn">Pillar 02 &mdash; Dimension</div>
+        <div class="pt">Mirror the shape of pillar 01.</div>
+        <div class="pd">Same length, same grammar, so the grid reads as parallel.</div>
+      </div>
+      <div class="card">
+        <div class="pn">Pillar 03 &mdash; Dimension</div>
+        <div class="pt">Third independent pillar.</div>
+        <div class="pd">If you can delete this pillar without weakening the headline, it isn't load-bearing.</div>
+      </div>
+      <div class="card">
+        <div class="pn">Pillar 04 &mdash; Dimension</div>
+        <div class="pt">Fourth pillar &mdash; the one to remember.</div>
+        <div class="pd">Last card carries the residual fact you want the room to leave with.</div>
+      </div>
+    </div>
+  </div>
+  <div class="source">
+    <span class="label">Source</span>
+    The docs, dashboards, or interviews each pillar is grounded in.
+  </div>
+</section>

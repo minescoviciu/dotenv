@@ -1,0 +1,53 @@
+<!-- TITLE slide
+     Opening slide. Editorial chrome:
+       - Top-left: DriveNets logo (theme-aware: RGB on light, white on dark).
+       - Top-right: meta block (Document / Audience / Slides — N of M).
+       - Center: eyebrow (subject + date), action display title with
+         the verb or measurable highlighted, lede subtitle that names
+         audience + recommendation + decision-asked-for.
+       - Bottom: nav hint and slide-count + duration.
+
+     Logo files: both `DriveNets_Logo-RGB.svg` and
+     `DriveNets_Logo-white.svg` must sit next to the deck. They live
+     in the skill's `assets/` directory — `cp` them into
+     `~/presentations/decks/` alongside the HTML.
+
+     Title grammar: the display title is the *answer*, not a tease.
+     Replace placeholder with the deck's one-sentence recommendation
+     and put the measurable inside a `.hl` span.
+-->
+<section class="title-slide">
+  <div class="upper">
+    <div class="brand">
+      <img class="logo logo-light" src="DriveNets_Logo-RGB.svg" alt="DriveNets">
+      <img class="logo logo-dark"  src="DriveNets_Logo-white.svg" alt="DriveNets">
+    </div>
+    <div class="meta">
+      <div>Document &mdash; <span class="val">Working Draft v0.1</span></div>
+      <div>Audience &mdash; <span class="val">Engineering &amp; leadership</span></div>
+      <div>Slides &mdash; <span class="val num">01 of NN</span></div>
+    </div>
+  </div>
+  <div class="center stagger" data-staggered="0">
+    <div class="eyebrow">Subject area &middot; 14 May 2026</div>
+    <h1 class="display">
+      The deck's recommendation in one sentence,<br>
+      with the <span class="hl">measurable</span> highlighted.
+    </h1>
+    <p class="lede" style="margin-top: 1.4em;">
+      One- or two-sentence subtitle: who the audience is, what the
+      ask is, by when.
+    </p>
+  </div>
+  <div class="footer">
+    <span class="nav-hint">
+      <kbd>&rarr;</kbd><kbd>Space</kbd> next &middot;
+      <kbd>&larr;</kbd> back &middot;
+      <kbd>Esc</kbd> overview &middot;
+      <kbd>G</kbd> go to &middot;
+      <kbd>F</kbd> fullscreen &middot;
+      <kbd>T</kbd> theme
+    </span>
+    <span>NN slides &middot; ~N min</span>
+  </div>
+</section>

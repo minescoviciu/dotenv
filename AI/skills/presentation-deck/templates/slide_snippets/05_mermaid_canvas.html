@@ -1,0 +1,58 @@
+<!-- MERMAID DIAGRAM CARD
+     One diagram, presented as a bordered card with a dotted
+     background. Pan/zoom is OPT-IN — add `interactive` to the wrap
+     only if the diagram is dense enough to need it.
+
+     The headline above the diagram should state the conclusion the
+     diagram visualises ("X collapses Y to Z"), not name the diagram.
+
+     classDef block uses the light-mode palette; the deck script
+     auto-rewrites it for dark mode so contrast holds.
+
+     Replace: topbar tracker active step, page-of-N, headline,
+     diagram source, source line.
+-->
+<section>
+  <div class="topbar">
+    <span class="doc">Deck Title</span>
+    <span class="tracker">
+      <span class="t-step">Summary</span>
+      <span class="t-step">Findings</span>
+      <span class="t-step active">Recommendation</span>
+      <span class="t-step">Plan</span>
+    </span>
+    <span class="right">
+      <span class="classification">Confidential &mdash; Draft</span>
+      <span class="num">NN of NN</span>
+    </span>
+  </div>
+  <div class="body" style="gap: 0.7em;">
+    <h2 class="headline">
+      Action headline that summarises what the diagram
+      <span class="hl">proves</span>.
+    </h2>
+    <div class="diagram-wrap">
+      <pre class="mermaid">
+flowchart LR
+    A[Start] --> B{Gate}
+    B -- yes --> C[Do]
+    B -- no  --> D[Skip]
+    C --> E([Done])
+    D --> E
+
+    classDef accent fill:#dde7ff,stroke:#0555ff,color:#001946,stroke-width:1.5px
+    classDef warn   fill:#fff5d6,stroke:#b88500,color:#3d2c00,stroke-width:1.5px
+    classDef ok     fill:#dcf5e6,stroke:#157a40,color:#0a4f24,stroke-width:1.5px
+    classDef alert  fill:#ffe6cc,stroke:#c25400,color:#5a2400,stroke-width:1.5px
+
+    class A,C accent
+    class B warn
+    class E ok
+      </pre>
+    </div>
+  </div>
+  <div class="source">
+    <span class="label">Source</span>
+    Architecture review, RFC, or measurement that the flow is based on.
+  </div>
+</section>

@@ -1,0 +1,82 @@
+<!-- SCORECARD — Harvey-ball comparison table
+     Multi-column comparison: criteria down the rows, options across
+     the columns, Harvey balls (0-4 fill) in cells. Column for the
+     recommended option gets `.recommended` styling.
+
+     Cell flavors:
+       - `.hball.hb-0` through `.hb-4` — fill states (empty -> full).
+       - `.is-good` / `.is-warn` / `.is-bad` — conditional text color.
+       - `.num` — right-align tabular numeric column.
+
+     Footnote markers: `<sup class="fn">1</sup>` in body cells link
+     to the `.footnotes` block below the table.
+
+     Replace: topbar, headline, criteria rows, cell content,
+     footnotes, source.
+-->
+<section>
+  <div class="topbar">
+    <span class="doc">Deck Title</span>
+    <span class="tracker">
+      <span class="t-step">Summary</span>
+      <span class="t-step">Findings</span>
+      <span class="t-step active">Recommendation</span>
+      <span class="t-step">Plan</span>
+    </span>
+    <span class="right">
+      <span class="classification">Confidential &mdash; Draft</span>
+      <span class="num">NN of NN</span>
+    </span>
+  </div>
+  <div class="body stagger" data-staggered="0">
+    <h2 class="headline">
+      Action headline that names the
+      <span class="hl">recommended option</span> and why.
+    </h2>
+    <table class="scorecard">
+      <thead>
+        <tr>
+          <th>Criterion</th>
+          <th>Option A</th>
+          <th class="recommended">Option B<sup class="fn">1</sup></th>
+          <th>Option C</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Cost</th>
+          <td><span class="hball hb-3"></span></td>
+          <td class="recommended"><span class="hball hb-4"></span></td>
+          <td><span class="hball hb-1"></span></td>
+        </tr>
+        <tr>
+          <th>Time-to-value</th>
+          <td><span class="hball hb-2"></span></td>
+          <td class="recommended"><span class="hball hb-4"></span></td>
+          <td><span class="hball hb-3"></span></td>
+        </tr>
+        <tr>
+          <th>Risk</th>
+          <td><span class="hball hb-1"></span></td>
+          <td class="recommended"><span class="hball hb-3"></span></td>
+          <td><span class="hball hb-2"></span></td>
+        </tr>
+        <tr>
+          <th>Strategic fit</th>
+          <td><span class="hball hb-2"></span></td>
+          <td class="recommended"><span class="hball hb-4"></span></td>
+          <td><span class="hball hb-2"></span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="footnotes">
+      <ol>
+        <li>Footnote text expanding a caveat on the recommended option.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="source">
+    <span class="label">Source</span>
+    Vendor RFPs, finance model, risk register &middot; date.
+  </div>
+</section>

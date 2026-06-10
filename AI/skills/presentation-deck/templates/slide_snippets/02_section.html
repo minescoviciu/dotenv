@@ -1,0 +1,38 @@
+<!-- SECTION DIVIDER
+     Marks a new part of the deck. Uses the `section-divider` modifier
+     for a slightly different background so the audience feels the
+     turn of the page. Tracker strip in the topbar highlights the
+     section that's opening.
+
+     Carries a one-line answer to "what will this section conclude?"
+     — never blank; the divider has to earn its slot.
+
+     Replace: doc name, tracker labels (highlight the active one),
+     slide num, eyebrow, title, "what this concludes" lede.
+-->
+<section class="section-divider">
+  <div class="topbar">
+    <span class="doc">Deck Title</span>
+    <span class="tracker">
+      <span class="t-step">Summary</span>
+      <span class="t-step active">Findings</span>
+      <span class="t-step">Recommendation</span>
+      <span class="t-step">Plan</span>
+    </span>
+    <span class="right">
+      <span class="classification">Confidential &mdash; Draft</span>
+      <span class="num">NN of NN</span>
+    </span>
+  </div>
+  <div class="body stagger" data-staggered="0">
+    <div>
+      <div class="eyebrow">Section NN</div>
+      <h2 class="title">Section heading with <span class="hl">one</span> highlighted word.</h2>
+      <p class="lede">By the end of this section: a one-sentence preview of the conclusion the audience should hold after the next 3-5 slides.</p>
+    </div>
+  </div>
+  <div class="source">
+    <span class="label">Source</span>
+    Optional: drop the source line on a divider, or cite the input docs the section is built from.
+  </div>
+</section>

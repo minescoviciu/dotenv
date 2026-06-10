@@ -1,0 +1,1900 @@
+<!doctype html>
+<!--
+  Starter deck for the `presentation-deck` skill.
+
+  Single-file, statically-servable Reveal.js deck. No build step. All
+  dependencies loaded from CDN (Google Fonts, Reveal.js, Mermaid,
+  svg-pan-zoom, Lucide).
+
+  Design system: action-titled consulting-grade chrome (topbar with
+  doc + tracker strip + classification + page-of-N, source line on
+  every body slide, optional takeaway band), DN palette in both light
+  and dark modes, primitives for stats / scorecards / 2x2 matrices /
+  timelines / waterfalls / before-after / callouts.
+
+  - Light theme is default. Dark via `<html data-theme="dark">` or T key.
+  - Draft watermark via `<html data-draft="true">`.
+  - Logo: copy DriveNets_Logo-RGB.svg + DriveNets_Logo-white.svg next
+    to the deck so the title slide's `<img src>` resolves.
+
+  To make a new deck:
+    cp this file to ~/presentations/decks/<name>.html, edit slides,
+    open in a browser. Always write slide 2 as the executive summary.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deck Title</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+
+  <style>
+    /* ============================================================
+       Theme tokens — DN palette
+       Light default; dark via html[data-theme="dark"].
+       Dark uses neutral surfaces; DN colors are for text + accents.
+       ============================================================ */
+    :root {
+      --bg:            #fafbfc;
+      --surface:       #f1f5fa;
+      --surface-2:     #e6edf5;
+      --border:        #d6dee9;
+      --border-strong: #b8c5d6;
+      --fg:            #001946;
+      --fg-mid:        #475569;
+      --fg-muted:      #5b6776;
+
+      --accent:        #0555ff;
+      --accent-bright: #4bbefa;
+      --accent-deep:   #001946;
+      --accent-soft:   #dde7ff;
+      --accent-softer: #eef3ff;
+
+      --warn:          #b88500;
+      --warn-soft:     #fff5d6;
+      --alert:         #c25400;
+      --alert-soft:    #ffe6cc;
+      --ok:            #157a40;
+      --ok-soft:       #dcf5e6;
+
+      --card-bg:       #ffffff;
+      --kbd-bg:        #ffffff;
+
+      --dot-color:     rgba(0, 25, 70, 0.08);
+
+      --radius-sm:     4px;
+      --radius-md:     6px;
+      --radius-lg:     10px;
+
+      --space-1:       4px;
+      --space-2:       8px;
+      --space-3:       14px;
+      --space-4:       22px;
+      --space-5:       34px;
+      --space-6:       52px;
+
+      --font:          'Geist', system-ui, -apple-system, sans-serif;
+      --font-mono:     'Geist Mono', ui-monospace, SFMono-Regular, monospace;
+    }
+    html[data-theme="dark"] {
+      --bg:            #07090c;
+      --surface:       #11141a;
+      --surface-2:     #1a1f27;
+      --border:        rgba(255,255,255,0.14);
+      --border-strong: rgba(255,255,255,0.26);
+      --fg:            #ffffff;
+      --fg-mid:        #cfd4dc;
+      --fg-muted:      #99a0ab;
+
+      --accent:        #4bbefa;
+      --accent-bright: #7cd6ff;
+      --accent-deep:   #0555ff;
+      --accent-soft:   rgba(75,190,250,0.20);
+      --accent-softer: rgba(75,190,250,0.10);
+
+      --warn:          #fac80f;
+      --warn-soft:     rgba(250,200,15,0.18);
+      --alert:         #ff9c2e;
+      --alert-soft:    rgba(255,156,46,0.18);
+      --ok:            #4ad07a;
+      --ok-soft:       rgba(74,208,122,0.18);
+
+      --card-bg:       #1a1f27;
+      --kbd-bg:        #242a33;
+
+      --dot-color:     rgba(255,255,255,0.07);
+    }
+
+    html, body, .reveal-viewport { background: var(--bg) !important; }
+    .reveal {
+      background: transparent;
+      font-family: var(--font);
+      color: var(--fg);
+      font-size: 26px;
+      font-weight: 400;
+      font-feature-settings: 'ss01', 'cv11', 'tnum';
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    .reveal a { color: var(--accent); text-decoration: none; }
+
+    /* ============================================================
+       Reveal section layout — 3-row grid (chrome / body / source).
+       !important because reveal sets inline display:block on .present.
+       ============================================================ */
+    .reveal .slides { text-align: left; }
+    .reveal .slides section {
+      display: grid !important;
+      grid-template-rows: auto 1fr auto;
+      height: 100% !important;
+      width: 100% !important;
+      padding: 3.4vh 5vw 3vh !important;
+      box-sizing: border-box;
+      text-align: left;
+    }
+    .reveal .slides section.title-slide {
+      grid-template-rows: auto 1fr auto;
+      padding: 5vh 6vw !important;
+    }
+    .reveal .slides section.section-divider {
+      grid-template-rows: auto 1fr auto;
+      background: var(--surface);
+    }
+    .reveal .slides section > * { min-width: 0; }
+
+    /* Stagger animation — fires once per slide the first time it's
+       presented. Gated by data-staggered so back-arrowing doesn't
+       replay the rise. */
+    .reveal .slides section.present .stagger[data-staggered="0"] > * {
+      animation: rise 460ms cubic-bezier(.2,.7,.2,1) both;
+    }
+    .reveal .slides section.present .stagger[data-staggered="0"] > *:nth-child(1) { animation-delay:  40ms; }
+    .reveal .slides section.present .stagger[data-staggered="0"] > *:nth-child(2) { animation-delay: 110ms; }
+    .reveal .slides section.present .stagger[data-staggered="0"] > *:nth-child(3) { animation-delay: 180ms; }
+    .reveal .slides section.present .stagger[data-staggered="0"] > *:nth-child(4) { animation-delay: 250ms; }
+    .reveal .slides section.present .stagger[data-staggered="0"] > *:nth-child(5) { animation-delay: 320ms; }
+    .reveal .slides section.present .stagger[data-staggered="0"] > *:nth-child(6) { animation-delay: 390ms; }
+    .reveal .slides section.present .stagger[data-staggered="0"] > *:nth-child(7) { animation-delay: 460ms; }
+    .reveal .slides section.present .stagger[data-staggered="0"] > *:nth-child(8) { animation-delay: 530ms; }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================================
+       Document chrome — topbar (doc + tracker + classification +
+       page-of-N), progress bar (top), arrow buttons.
+       ============================================================ */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.4em;
+      padding-bottom: 0.7em;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.6em;
+      font-family: var(--font-mono);
+      font-size: 0.62em;
+      color: var(--fg-muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .topbar .doc {
+      color: var(--fg-mid);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .topbar .tracker {
+      display: flex;
+      gap: 0.4em;
+      align-items: center;
+      flex: 1;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .topbar .tracker .t-step {
+      color: var(--fg-muted);
+      padding: 0.18em 0.7em;
+      border-radius: 999px;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .topbar .tracker .t-step.active {
+      color: var(--accent);
+      background: var(--accent-soft);
+      font-weight: 600;
+    }
+    .topbar .right {
+      display: flex;
+      align-items: center;
+      gap: 0.9em;
+      white-space: nowrap;
+    }
+    .topbar .classification {
+      color: var(--alert);
+      border: 1px solid var(--alert);
+      border-radius: 3px;
+      padding: 0.1em 0.55em;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .topbar .num { color: var(--fg-mid); }
+    .topbar .divider { color: var(--border-strong); }
+    .num { font-variant-numeric: tabular-nums; }
+
+    /* Progress bar — top edge, 5px, visible from the back row. */
+    .progress {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 5px; background: transparent; z-index: 10;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      transition: width 360ms cubic-bezier(.4,0,.2,1);
+    }
+
+    .arrows {
+      position: fixed; bottom: 1.6vh; right: 1.6vw;
+      display: flex; gap: 0.5rem; z-index: 11;
+    }
+    .arrow-btn {
+      width: 2.2rem; height: 2.2rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      color: var(--fg-mid);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 160ms;
+    }
+    .arrow-btn:hover:not(:disabled) {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-softer);
+    }
+    .arrow-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* Draft watermark — activate with <html data-draft="true"> */
+    html[data-draft="true"] body::after {
+      content: 'DRAFT — DO NOT CIRCULATE';
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 8vw;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      opacity: 0.06;
+      transform: rotate(-22deg);
+      pointer-events: none;
+      z-index: 5;
+      white-space: nowrap;
+    }
+
+    /* ============================================================
+       Typography building blocks
+       ============================================================ */
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.62em;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.9em;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6em;
+    }
+    .eyebrow::before {
+      content: '';
+      width: 1.4em;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    /* Title slide display. */
+    h1.display {
+      font-weight: 600;
+      font-size: 2.6em;
+      line-height: 1.06;
+      letter-spacing: -0.025em;
+      color: var(--fg);
+      margin: 0;
+    }
+    h1.display .hl { color: var(--accent); font-weight: 600; }
+
+    /* Editorial title (h2.title) — used on section dividers and
+       framing slides. Carries an eyebrow, allows a lede. */
+    h2.title {
+      font-weight: 600;
+      font-size: 1.55em;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.7em 0;
+      color: var(--fg);
+    }
+    h2.title .hl { color: var(--accent); font-weight: 600; }
+
+    /* Action headline — the workhorse. States the conclusion of the
+       slide in one sentence. No eyebrow above it; body proves it. */
+    h2.headline {
+      font-weight: 600;
+      font-size: 1.4em;
+      line-height: 1.22;
+      letter-spacing: -0.018em;
+      margin: 0 0 1.0em 0;
+      color: var(--fg);
+      max-width: 38ch;
+    }
+    h2.headline .hl,
+    h2.headline .num-hl {
+      color: var(--accent);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .lede {
+      font-size: 0.95em;
+      line-height: 1.5;
+      color: var(--fg-mid);
+      max-width: 64ch;
+      margin: 0;
+    }
+    .dek {
+      font-size: 0.86em;
+      line-height: 1.5;
+      color: var(--fg-mid);
+      max-width: 60ch;
+      margin: 0 0 0.6em 0;
+    }
+    .pull {
+      font-size: 1.5em;
+      font-weight: 300;
+      line-height: 1.25;
+      color: var(--fg);
+      letter-spacing: -0.015em;
+      max-width: 28ch;
+      margin: 0;
+    }
+    .pull-attrib {
+      font-family: var(--font-mono);
+      font-size: 0.7em;
+      color: var(--fg-muted);
+      margin-top: 1.6em;
+      letter-spacing: 0.04em;
+    }
+    .pull-attrib .who { color: var(--fg-mid); font-weight: 500; }
+    .attrib {
+      font-family: var(--font-mono);
+      font-size: 0.7em;
+      color: var(--fg-muted);
+      margin-top: 0.6em;
+    }
+
+    .inline-code,
+    .lede code, .desc code, .val code, .pd code, .cd code, .pull code, .label code,
+    .dek code, .takeaway code, .source code, .body p code, .body li code {
+      font-family: var(--font-mono);
+      font-size: 0.82em;
+      color: var(--accent-deep);
+      background: var(--accent-softer);
+      padding: 0.12em 0.4em;
+      border-radius: 3px;
+      font-weight: 500;
+    }
+    html[data-theme="dark"] .inline-code,
+    html[data-theme="dark"] .lede code,
+    html[data-theme="dark"] .desc code,
+    html[data-theme="dark"] .val code,
+    html[data-theme="dark"] .pd code,
+    html[data-theme="dark"] .cd code,
+    html[data-theme="dark"] .pull code,
+    html[data-theme="dark"] .label code,
+    html[data-theme="dark"] .dek code,
+    html[data-theme="dark"] .takeaway code,
+    html[data-theme="dark"] .source code,
+    html[data-theme="dark"] .body p code,
+    html[data-theme="dark"] .body li code {
+      color: var(--accent-bright);
+      background: var(--accent-soft);
+    }
+
+    /* ============================================================
+       Title slide
+       ============================================================ */
+    .reveal .slides section.title-slide .upper {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7em;
+      font-family: var(--font-mono);
+      font-size: 0.7em;
+      color: var(--fg-mid);
+      font-weight: 500;
+    }
+    .brand-mark {
+      width: 1.6em; height: 1.6em;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--accent-bright), var(--accent));
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.8em;
+    }
+    .brand img.logo { height: 1.6em; width: auto; display: block; }
+    .brand .logo-dark { display: none; }
+    html[data-theme="dark"] .brand .logo-light { display: none; }
+    html[data-theme="dark"] .brand .logo-dark  { display: block; }
+    .title-slide .meta {
+      font-family: var(--font-mono);
+      font-size: 0.66em;
+      color: var(--fg-muted);
+      text-align: right;
+      line-height: 1.9;
+      font-variant-numeric: tabular-nums;
+    }
+    .title-slide .meta .val { color: var(--fg-mid); font-weight: 500; }
+    .title-slide .center {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3vh 0;
+      max-width: 90%;
+    }
+    .title-slide .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-family: var(--font-mono);
+      font-size: 0.66em;
+      color: var(--fg-muted);
+      padding-top: 1.5em;
+      border-top: 1px solid var(--border);
+    }
+    .nav-hint { display: inline-flex; gap: 0.5em; align-items: center; flex-wrap: wrap; }
+    .nav-hint kbd {
+      font-family: var(--font-mono);
+      font-size: 0.95em;
+      padding: 0.18em 0.5em;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      color: var(--fg-mid);
+      background: var(--kbd-bg);
+      font-weight: 500;
+    }
+
+    /* ============================================================
+       Body container + source line (third grid row)
+       ============================================================ */
+    .body {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2em;
+      min-height: 0;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2em;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* Source line — anchored to the bottom row of the section grid.
+       Every slide that shows a number or claim deserves one. */
+    .source {
+      font-family: var(--font-mono);
+      font-size: 0.58em;
+      color: var(--fg-muted);
+      padding-top: 0.8em;
+      border-top: 1px solid var(--border);
+      letter-spacing: 0.02em;
+      line-height: 1.5;
+      font-variant-numeric: tabular-nums;
+    }
+    .source .label {
+      color: var(--fg-mid);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-right: 0.6em;
+    }
+    .footnotes {
+      font-family: var(--font-mono);
+      font-size: 0.56em;
+      color: var(--fg-muted);
+      line-height: 1.55;
+      margin-top: 0.4em;
+    }
+    .footnotes ol { padding-left: 1.5em; margin: 0; }
+
+    sup.fn {
+      font-family: var(--font-mono);
+      font-size: 0.7em;
+      color: var(--accent);
+      font-weight: 600;
+      vertical-align: super;
+      margin-left: 0.15em;
+    }
+
+    /* ============================================================
+       Takeaway band — single-line so-what stripe; reuse highlight bg
+       ============================================================ */
+    .takeaway {
+      background: var(--accent-deep);
+      color: #ffffff;
+      border-radius: var(--radius-md);
+      padding: 0.7em 1.1em;
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+      line-height: 1.4;
+    }
+    .takeaway .tkl {
+      font-family: var(--font-mono);
+      font-size: 0.68em;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-bright);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .takeaway .tkt {
+      font-size: 0.9em;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    /* ============================================================
+       Callout — warn / alert / ok / accent
+       ============================================================ */
+    .callout {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.8em;
+      align-items: flex-start;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius-md);
+      padding: 0.8em 1em;
+    }
+    .callout .col-icon {
+      color: var(--accent);
+      font-size: 1.1em;
+      line-height: 1;
+      padding-top: 0.15em;
+    }
+    .callout .col-text {
+      font-size: 0.86em;
+      line-height: 1.5;
+      color: var(--fg);
+    }
+    .callout .col-text strong { color: var(--fg); font-weight: 600; }
+    .callout.warn  { border-left-color: var(--warn);  background: var(--warn-soft); }
+    .callout.alert { border-left-color: var(--alert); background: var(--alert-soft); }
+    .callout.ok    { border-left-color: var(--ok);    background: var(--ok-soft); }
+    .callout.warn  .col-icon { color: var(--warn); }
+    .callout.alert .col-icon { color: var(--alert); }
+    .callout.ok    .col-icon { color: var(--ok); }
+
+    /* ============================================================
+       Numbered list
+       ============================================================ */
+    .numbered { list-style: none; display: flex; flex-direction: column; gap: 0.4em; margin: 0; padding: 0; }
+    .numbered li {
+      display: grid;
+      grid-template-columns: 3em 1fr;
+      gap: 1.1em;
+      align-items: flex-start;
+      padding: 0.75em 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .numbered li:last-child { border-bottom: none; }
+    .numbered .n {
+      font-family: var(--font-mono);
+      font-weight: 500;
+      font-size: 0.7em;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 0.3em 0.5em;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      width: fit-content;
+      letter-spacing: 0.04em;
+    }
+    .numbered .label {
+      font-size: 0.98em;
+      font-weight: 600;
+      color: var(--fg);
+      margin-bottom: 0.25em;
+      line-height: 1.28;
+      letter-spacing: -0.01em;
+    }
+    .numbered .label .hl { color: var(--accent); }
+    .numbered .desc { font-size: 0.86em; line-height: 1.5; color: var(--fg-mid); max-width: 70ch; }
+
+    /* ============================================================
+       Card grid (pillar / option / risk cards)
+       ============================================================ */
+    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; flex: 1; min-height: 0; }
+    .cards.three-up { grid-template-columns: repeat(3, 1fr); }
+    .cards.compact  { grid-template-columns: repeat(4, 1fr); }
+    .cards.compact .card { padding: 0.85em 1em; gap: 0.35em; }
+    .cards.compact .card .pt { font-size: 0.92em; line-height: 1.25; }
+    .cards.compact .card .pd { font-size: 0.78em; line-height: 1.45; }
+    .cards.compact .card .pn { font-size: 0.62em; }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1em 1.2em;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4em;
+      min-height: 0;
+    }
+    .card .pn {
+      font-family: var(--font-mono);
+      font-size: 0.64em;
+      color: var(--accent);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+    .card .pn::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .card .pt {
+      font-size: 0.98em;
+      color: var(--fg);
+      font-weight: 600;
+      line-height: 1.28;
+      letter-spacing: -0.01em;
+    }
+    .card .pt .hl { color: var(--accent); }
+    .card .pd { font-size: 0.84em; line-height: 1.5; color: var(--fg-mid); }
+
+    /* ============================================================
+       Section list (key / value)
+       ============================================================ */
+    .section-list {
+      list-style: none;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    .section-list li {
+      display: grid;
+      grid-template-columns: 13em 1fr;
+      gap: 1.2em;
+      padding: 0.65em 1.2em;
+      border-bottom: 1px solid var(--border);
+      align-items: baseline;
+    }
+    .section-list li:last-child { border-bottom: none; }
+    .section-list .key {
+      color: var(--accent);
+      font-size: 0.88em;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .section-list .val { font-size: 0.86em; line-height: 1.5; color: var(--fg-mid); max-width: 64ch; }
+
+    /* ============================================================
+       Key/value chip rows — replaces inline-styled chips that used to
+       live in the two-column tree slide. .kv-row stacks rows; .kv-chip
+       is the mono pill; .kv-text is the description.
+       ============================================================ */
+    .kv-rows { display: flex; flex-direction: column; gap: 0.7em; }
+    .kv-row { display: grid; grid-template-columns: 5.5em 1fr; gap: 0.9em; align-items: baseline; }
+    .kv-chip {
+      font-family: var(--font-mono);
+      font-size: 0.74em;
+      color: var(--accent);
+      background: var(--accent-soft);
+      padding: 0.28em 0.55em;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+    }
+    .kv-text { font-size: 0.88em; line-height: 1.5; color: var(--fg-mid); }
+    .kv-text strong { color: var(--fg); font-weight: 600; }
+
+    /* ============================================================
+       Tree code block
+       ============================================================ */
+    .tree {
+      font-family: var(--font-mono);
+      font-size: 0.78em;
+      line-height: 1.75;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1em 1.2em;
+      color: var(--fg-mid);
+      white-space: pre;
+      overflow: auto;
+      margin: 0;
+      font-variant-numeric: tabular-nums;
+    }
+    .tree .dir { color: var(--accent); font-weight: 500; }
+    .tree .cmt { color: var(--fg-muted); }
+    .tree .file { color: var(--fg); }
+
+    /* ============================================================
+       Stat tiles — single big number with label and delta
+       ============================================================ */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+      gap: 1em;
+      flex: 1;
+      min-height: 0;
+    }
+    .stat-tile {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1em 1.2em 1.1em;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35em;
+      justify-content: center;
+      min-height: 0;
+    }
+    .stat-num {
+      font-size: 2.4em;
+      font-weight: 600;
+      line-height: 1;
+      letter-spacing: -0.025em;
+      color: var(--fg);
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-num .stat-unit {
+      font-size: 0.5em;
+      font-weight: 500;
+      color: var(--fg-mid);
+      margin-left: 0.15em;
+    }
+    .stat-num.accent { color: var(--accent); }
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.6em;
+      color: var(--fg-mid);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .stat-cap {
+      font-size: 0.78em;
+      color: var(--fg-mid);
+      line-height: 1.45;
+      margin-top: 0.2em;
+    }
+    .stat-delta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3em;
+      font-family: var(--font-mono);
+      font-size: 0.7em;
+      font-weight: 500;
+      padding: 0.18em 0.5em;
+      border-radius: 999px;
+      width: fit-content;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.02em;
+    }
+    .stat-delta.up   { color: var(--ok);    background: var(--ok-soft); }
+    .stat-delta.down { color: var(--alert); background: var(--alert-soft); }
+    .stat-delta.flat { color: var(--fg-mid); background: var(--surface); }
+
+    /* ============================================================
+       Scorecard table — Harvey balls + conditional formatting
+       ============================================================ */
+    .scorecard {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      font-size: 0.86em;
+    }
+    .scorecard thead th {
+      font-family: var(--font-mono);
+      font-size: 0.82em;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--fg-mid);
+      text-align: left;
+      padding: 0.7em 0.9em;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .scorecard thead th.recommended { color: var(--accent); }
+    .scorecard tbody td,
+    .scorecard tbody th {
+      padding: 0.6em 0.9em;
+      border-bottom: 1px solid var(--border);
+      color: var(--fg-mid);
+      font-weight: 400;
+      text-align: left;
+      line-height: 1.45;
+    }
+    .scorecard tbody tr:last-child td,
+    .scorecard tbody tr:last-child th { border-bottom: none; }
+    .scorecard tbody th {
+      color: var(--fg);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .scorecard td.recommended { background: var(--accent-softer); color: var(--fg); }
+    .scorecard td.is-good  { color: var(--ok);    font-weight: 500; }
+    .scorecard td.is-warn  { color: var(--warn);  font-weight: 500; }
+    .scorecard td.is-bad   { color: var(--alert); font-weight: 500; }
+    .scorecard td.num,
+    .scorecard th.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+    /* Harvey balls — five fill states */
+    .hball {
+      display: inline-block;
+      width: 0.9em;
+      height: 0.9em;
+      border: 1.5px solid var(--accent);
+      border-radius: 50%;
+      vertical-align: -0.1em;
+      background:
+        conic-gradient(var(--accent) var(--hb, 0%), transparent 0);
+    }
+    .hball.hb-0 { --hb: 0%;   }
+    .hball.hb-1 { --hb: 25%;  }
+    .hball.hb-2 { --hb: 50%;  }
+    .hball.hb-3 { --hb: 75%;  }
+    .hball.hb-4 { --hb: 100%; }
+
+    /* ============================================================
+       2x2 matrix
+       ============================================================ */
+    .matrix {
+      display: grid;
+      grid-template:
+        "ylab tl tr"  1fr
+        "ylab bl br"  1fr
+        ".    xlab xlab" auto
+        / 2.2em 1fr 1fr;
+      gap: 0.7em;
+      flex: 1;
+      min-height: 0;
+    }
+    .matrix .ax-y,
+    .matrix .ax-x {
+      font-family: var(--font-mono);
+      font-size: 0.66em;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fg-mid);
+      font-weight: 500;
+    }
+    .matrix .ax-y { grid-area: ylab; writing-mode: vertical-rl; transform: rotate(180deg); display: flex; align-items: center; justify-content: center; }
+    .matrix .ax-x { grid-area: xlab; display: flex; align-items: center; justify-content: center; padding-top: 0.4em; }
+    .matrix .q {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.9em 1em;
+      display: flex; flex-direction: column; gap: 0.3em;
+      min-height: 0;
+    }
+    .matrix .q.tl { grid-area: tl; }
+    .matrix .q.tr { grid-area: tr; }
+    .matrix .q.bl { grid-area: bl; }
+    .matrix .q.br { grid-area: br; }
+    .matrix .q.recommended { background: var(--accent-softer); border-color: var(--accent); }
+    .matrix .q .qlabel {
+      font-family: var(--font-mono);
+      font-size: 0.62em;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .matrix .q .qtitle {
+      font-size: 0.94em;
+      font-weight: 600;
+      color: var(--fg);
+      line-height: 1.25;
+    }
+    .matrix .q .qbody {
+      font-size: 0.8em;
+      color: var(--fg-mid);
+      line-height: 1.45;
+    }
+
+    /* ============================================================
+       Horizon / timeline (gantt-flavoured)
+       ============================================================ */
+    .horizon {
+      display: grid;
+      gap: 0.4em;
+      flex: 1;
+      position: relative;
+      min-height: 0;
+    }
+    .horizon .h-head,
+    .horizon .h-row {
+      display: grid;
+      grid-template-columns: 8em repeat(var(--cols, 4), 1fr);
+      gap: 0.5em;
+      align-items: center;
+    }
+    .horizon .h-head .h-col {
+      font-family: var(--font-mono);
+      font-size: 0.66em;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--fg-mid);
+      padding-bottom: 0.5em;
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+    }
+    .horizon .h-row { padding: 0.4em 0; }
+    .horizon .h-lane {
+      font-size: 0.84em;
+      font-weight: 600;
+      color: var(--fg);
+    }
+    .horizon .h-track {
+      grid-column: 2 / -1;
+      position: relative;
+      height: 1.6em;
+      display: grid;
+      grid-template-columns: repeat(var(--cols, 4), 1fr);
+    }
+    .horizon .h-bar {
+      background: var(--accent-soft);
+      color: var(--accent-deep);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 0.18em 0.6em;
+      font-size: 0.74em;
+      font-weight: 500;
+      display: flex; align-items: center;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      align-self: center;
+      height: 1.5em;
+    }
+    .horizon .h-bar.ok    { background: var(--ok-soft);    border-color: var(--ok);    color: var(--ok); }
+    .horizon .h-bar.warn  { background: var(--warn-soft);  border-color: var(--warn);  color: var(--warn); }
+    .horizon .h-bar.alert { background: var(--alert-soft); border-color: var(--alert); color: var(--alert); }
+    .horizon .today-line {
+      position: absolute;
+      top: 1.2em; bottom: 0;
+      width: 2px;
+      background: var(--accent);
+      pointer-events: none;
+    }
+    .horizon .today-label {
+      position: absolute;
+      top: 0;
+      transform: translateX(-50%);
+      font-family: var(--font-mono);
+      font-size: 0.6em;
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+
+    /* ============================================================
+       Waterfall / bridge
+       ============================================================ */
+    .waterfall {
+      display: flex;
+      align-items: flex-end;
+      gap: 0.8em;
+      flex: 1;
+      min-height: 0;
+      padding-top: 1em;
+    }
+    .wf-bar {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.4em;
+      min-width: 0;
+    }
+    .wf-cap {
+      font-family: var(--font-mono);
+      font-size: 0.75em;
+      font-weight: 600;
+      color: var(--fg);
+      font-variant-numeric: tabular-nums;
+    }
+    .wf-block {
+      width: 100%;
+      background: var(--accent-soft);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius-sm);
+      min-height: 1.5em;
+      height: calc(var(--h, 50) * 1%);
+      max-height: 100%;
+    }
+    .wf-bar.wf-up   .wf-block { background: var(--ok-soft);    border-color: var(--ok); }
+    .wf-bar.wf-down .wf-block { background: var(--alert-soft); border-color: var(--alert); }
+    .wf-bar.wf-end  .wf-block { background: var(--accent-deep); border-color: var(--accent-deep); }
+    .wf-label {
+      font-size: 0.74em;
+      color: var(--fg-mid);
+      text-align: center;
+      line-height: 1.35;
+      max-width: 14ch;
+    }
+
+    /* ============================================================
+       Before / after split
+       ============================================================ */
+    .ba {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1.2em;
+      align-items: stretch;
+      flex: 1;
+      min-height: 0;
+    }
+    .ba-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1em 1.2em;
+      display: flex; flex-direction: column;
+      gap: 0.5em;
+      min-height: 0;
+    }
+    .ba-panel .ba-label {
+      font-family: var(--font-mono);
+      font-size: 0.62em;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--fg-mid);
+      font-weight: 500;
+    }
+    .ba-panel.after .ba-label { color: var(--accent); }
+    .ba-panel .ba-title { font-size: 1em; font-weight: 600; color: var(--fg); line-height: 1.25; }
+    .ba-panel .ba-body { font-size: 0.84em; line-height: 1.5; color: var(--fg-mid); }
+    .ba-delta {
+      align-self: center;
+      font-family: var(--font-mono);
+      font-size: 0.74em;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-radius: var(--radius-md);
+      padding: 0.5em 0.8em;
+      text-align: center;
+      line-height: 1.45;
+      white-space: pre-line;
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       Agenda
+       ============================================================ */
+    .agenda {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 0;
+      padding: 0;
+      flex: 1;
+      min-height: 0;
+    }
+    .agenda li {
+      display: grid;
+      grid-template-columns: 2.6em 1fr auto;
+      gap: 1.2em;
+      align-items: baseline;
+      padding: 0.7em 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .agenda li:last-child { border-bottom: none; }
+    .agenda .a-n {
+      font-family: var(--font-mono);
+      font-size: 0.74em;
+      color: var(--fg-muted);
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+    }
+    .agenda .a-title { font-size: 1em; font-weight: 500; color: var(--fg-mid); letter-spacing: -0.005em; }
+    .agenda .a-time {
+      font-family: var(--font-mono);
+      font-size: 0.7em;
+      color: var(--fg-muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .agenda li.active .a-n,
+    .agenda li.active .a-title { color: var(--accent); font-weight: 600; }
+    .agenda li.done .a-n,
+    .agenda li.done .a-title { color: var(--fg-muted); }
+
+    /* ============================================================
+       Mermaid diagram card (canvas) — dotted background.
+       Pan/zoom is OPT-IN: add .interactive to .diagram-wrap.
+       ============================================================ */
+    .diagram-wrap {
+      flex: 1;
+      display: flex;
+      align-items: stretch;
+      justify-content: stretch;
+      background-color: var(--card-bg);
+      background-image: radial-gradient(var(--dot-color) 1.2px, transparent 1.2px);
+      background-size: 22px 22px;
+      background-position: 0 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1em;
+      overflow: hidden;
+      min-height: 0;
+      position: relative;
+    }
+    .diagram-wrap.interactive { cursor: grab; }
+    .diagram-wrap.interactive:active { cursor: grabbing; }
+    .diagram-wrap pre.mermaid {
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      overflow: hidden;
+    }
+    .diagram-wrap pre.mermaid svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .pz-hint {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.55em;
+      color: var(--fg-muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.3em 0.7em;
+      border-radius: var(--radius-sm);
+      pointer-events: none;
+      z-index: 5;
+      letter-spacing: 0.06em;
+    }
+
+    /* ============================================================
+       Closing cards
+       ============================================================ */
+    .closing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9em; flex: 1; min-height: 0; }
+    .closing-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1em 1.2em;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35em;
+      min-height: 0;
+    }
+    .closing-card .cnum {
+      font-family: var(--font-mono);
+      font-size: 0.62em;
+      color: var(--fg-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+    .closing-card .ct {
+      font-size: 1em;
+      color: var(--fg);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+    }
+    .closing-card .cd { font-size: 0.84em; line-height: 1.5; color: var(--fg-mid); }
+    .closing-card.highlight {
+      background: var(--accent-deep);
+      border-color: var(--accent-deep);
+    }
+    .closing-card.highlight .cnum { color: var(--accent-bright); }
+    .closing-card.highlight .ct { color: #ffffff; }
+    .closing-card.highlight .cd { color: rgba(255,255,255,0.88); }
+    .closing-card.done {
+      background: var(--accent-softer);
+      border-color: var(--accent);
+    }
+    .closing-card.done .cnum { color: var(--accent); }
+
+    /* ============================================================
+       Lucide icon defaults
+       ============================================================ */
+    [data-lucide] {
+      width: 1em;
+      height: 1em;
+      vertical-align: -0.15em;
+      stroke-width: 2;
+    }
+    .icon-accent [data-lucide] { color: var(--accent); }
+    .icon-warn   [data-lucide] { color: var(--warn); }
+    .icon-alert  [data-lucide] { color: var(--alert); }
+    .icon-ok     [data-lucide] { color: var(--ok); }
+
+    /* ============================================================
+       Reveal theme overrides — kill defaults that fight our design
+       ============================================================ */
+    .reveal .controls { display: none !important; }
+    .reveal .slide-number { display: none !important; }
+    .reveal .progress { display: none !important; }
+
+    /* Print / PDF — strip presenter chrome */
+    @media print {
+      .progress, .arrows, .pz-hint { display: none !important; }
+      html[data-draft="true"] body::after { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="reveal">
+  <div class="slides">
+
+    <!-- ============================================================
+         01 — TITLE
+         ============================================================ -->
+    <section class="title-slide">
+      <div class="upper">
+        <!-- DriveNets logos: light variant for the default theme, white
+             variant for dark mode. Both files must sit next to the deck
+             (cp them from /home/dn/dotenv/AI/skills/presentation-deck/assets/). -->
+        <div class="brand">
+          <img class="logo logo-light" src="DriveNets_Logo-RGB.svg" alt="DriveNets">
+          <img class="logo logo-dark"  src="DriveNets_Logo-white.svg" alt="DriveNets">
+        </div>
+        <div class="meta">
+          <div>Document &mdash; <span class="val">Working Draft v0.1</span></div>
+          <div>Audience &mdash; <span class="val">Engineering &amp; leadership</span></div>
+          <div>Slides &mdash; <span class="val num">01 of 08</span></div>
+        </div>
+      </div>
+      <div class="center stagger" data-staggered="0">
+        <div class="eyebrow">Subject area &middot; 14 May 2026</div>
+        <h1 class="display">
+          Consolidating the MW pipelines<br>
+          cuts cycle time by <span class="hl">40%</span>.
+        </h1>
+        <p class="lede" style="margin-top: 1.4em;">
+          A one- or two-sentence subtitle that names the audience, the
+          recommendation, and the decision being asked for.
+        </p>
+      </div>
+      <div class="footer">
+        <span class="nav-hint">
+          <kbd>&rarr;</kbd><kbd>Space</kbd> next &middot;
+          <kbd>&larr;</kbd> back &middot;
+          <kbd>Esc</kbd> overview &middot;
+          <kbd>G</kbd> go to &middot;
+          <kbd>F</kbd> fullscreen &middot;
+          <kbd>T</kbd> theme
+        </span>
+        <span>08 slides &middot; ~10 min</span>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         02 — EXECUTIVE SUMMARY (always slide 2)
+         Answer + three MECE pillars + ask. Reads cold.
+         ============================================================ -->
+    <section>
+      <div class="topbar">
+        <span class="doc">Deck Title</span>
+        <span class="tracker">
+          <span class="t-step active">Summary</span>
+          <span class="t-step">Findings</span>
+          <span class="t-step">Recommendation</span>
+          <span class="t-step">Plan</span>
+        </span>
+        <span class="right">
+          <span class="classification">Confidential &mdash; Draft</span>
+          <span class="num">02 of 08</span>
+        </span>
+      </div>
+      <div class="body stagger" data-staggered="0">
+        <h2 class="headline">
+          Consolidating the three MW pipelines cuts cycle time
+          <span class="num-hl">9d &rarr; 5d</span> and retires
+          <span class="num-hl">two</span> on-call rotations.
+        </h2>
+        <div class="cards three-up">
+          <div class="card">
+            <div class="pn">Pillar 01 &mdash; Cost</div>
+            <div class="pt">$1.2M / yr saved.</div>
+            <div class="pd">Two FTE rotations collapsed and one tooling licence retired by Q4.</div>
+          </div>
+          <div class="card">
+            <div class="pn">Pillar 02 &mdash; Speed</div>
+            <div class="pt">Cycle time 9d &rarr; 5d.</div>
+            <div class="pd">Single trigger removes three handoffs; tested in shadow on 14% of traffic.</div>
+          </div>
+          <div class="card">
+            <div class="pn">Pillar 03 &mdash; Risk</div>
+            <div class="pt">Rollback path preserved.</div>
+            <div class="pd">Shadow mode in weeks 1-3 of cutover; one-command revert at any step.</div>
+          </div>
+        </div>
+        <div class="takeaway">
+          <span class="tkl">Decision needed</span>
+          <span class="tkt">Approve cutover on 1 July; allocate two engineers for May-June.</span>
+        </div>
+      </div>
+      <div class="source">
+        <span class="label">Source</span>
+        Pipeline telemetry Apr 2024 &mdash; Mar 2026 &middot; Ops cost model v3.1 &middot; Shadow trial wk 14-18.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         03 — ACTION-TITLED WORKHORSE (numbered list + takeaway)
+         ============================================================ -->
+    <section>
+      <div class="topbar">
+        <span class="doc">Deck Title</span>
+        <span class="tracker">
+          <span class="t-step">Summary</span>
+          <span class="t-step active">Findings</span>
+          <span class="t-step">Recommendation</span>
+          <span class="t-step">Plan</span>
+        </span>
+        <span class="right">
+          <span class="classification">Confidential &mdash; Draft</span>
+          <span class="num">03 of 08</span>
+        </span>
+      </div>
+      <div class="body stagger" data-staggered="0">
+        <h2 class="headline">
+          Three handoffs slow the pipeline by <span class="num-hl">4 days</span>;
+          each is avoidable.
+        </h2>
+        <ol class="numbered">
+          <li>
+            <span class="n">01</span>
+            <div>
+              <div class="label">Manual Jira triage adds <span class="hl">1.6 days</span> per build.</div>
+              <div class="desc">Owner assignment runs through a daily standup; 62% of builds wait overnight.</div>
+            </div>
+          </li>
+          <li>
+            <span class="n">02</span>
+            <div>
+              <div class="label">Cross-team approval gates add <span class="hl">1.4 days</span>.</div>
+              <div class="desc">Two approvers required by policy; one is sufficient for 84% of changes per audit.</div>
+            </div>
+          </li>
+          <li>
+            <span class="n">03</span>
+            <div>
+              <div class="label">Test-bed capacity throttles weekend runs.</div>
+              <div class="desc">Rack 7 sits at 96% utilisation; weekend queue regularly exceeds 12 hours.</div>
+            </div>
+          </li>
+        </ol>
+        <div class="takeaway">
+          <span class="tkl">So what</span>
+          <span class="tkt">Capacity, not code, is the constraint &mdash; request 2 racks before 1 July.</span>
+        </div>
+      </div>
+      <div class="source">
+        <span class="label">Source</span>
+        CI dashboards wk 14-18 &middot; Audit memo MW-2026-04 &middot; Infra capacity report 9 May 2026.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         04 — STAT ROW (KPI hero)
+         ============================================================ -->
+    <section>
+      <div class="topbar">
+        <span class="doc">Deck Title</span>
+        <span class="tracker">
+          <span class="t-step">Summary</span>
+          <span class="t-step active">Findings</span>
+          <span class="t-step">Recommendation</span>
+          <span class="t-step">Plan</span>
+        </span>
+        <span class="right">
+          <span class="classification">Confidential &mdash; Draft</span>
+          <span class="num">04 of 08</span>
+        </span>
+      </div>
+      <div class="body stagger" data-staggered="0">
+        <h2 class="headline">
+          Shadow trial validates the savings on
+          <span class="num-hl">14%</span> of live traffic.
+        </h2>
+        <div class="stat-row">
+          <div class="stat-tile">
+            <div class="stat-num accent">40<span class="stat-unit">%</span></div>
+            <div class="stat-label">Cycle-time reduction</div>
+            <div class="stat-delta up">&uarr; 12 pp vs FY25</div>
+            <div class="stat-cap">9-day median falls to 5 days in shadow mode.</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-num">$1.2<span class="stat-unit">M</span></div>
+            <div class="stat-label">Annual cost saved</div>
+            <div class="stat-delta up">&uarr; 18% vs plan</div>
+            <div class="stat-cap">Two rotations collapsed plus one licence retired.</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-num">0</div>
+            <div class="stat-label">Rollback events</div>
+            <div class="stat-delta flat">&mdash; 5 weeks</div>
+            <div class="stat-cap">Shadow mode held without a single revert.</div>
+          </div>
+        </div>
+      </div>
+      <div class="source">
+        <span class="label">Source</span>
+        Shadow telemetry 5 Apr &mdash; 9 May 2026 &middot; Finance model v3.1.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         05 — MERMAID FLOW with theme-safe classDef
+         ============================================================ -->
+    <section>
+      <div class="topbar">
+        <span class="doc">Deck Title</span>
+        <span class="tracker">
+          <span class="t-step">Summary</span>
+          <span class="t-step">Findings</span>
+          <span class="t-step active">Recommendation</span>
+          <span class="t-step">Plan</span>
+        </span>
+        <span class="right">
+          <span class="classification">Confidential &mdash; Draft</span>
+          <span class="num">05 of 08</span>
+        </span>
+      </div>
+      <div class="body" style="gap: 0.7em;">
+        <h2 class="headline">
+          One trigger collapses the pipeline from <span class="num-hl">5</span> steps to <span class="num-hl">3</span>.
+        </h2>
+        <div class="diagram-wrap interactive">
+          <pre class="mermaid">
+flowchart LR
+    A[Commit] --> B[Build]
+    B --> C{Gate}
+    C -->|pass| D[Shadow run]
+    C -->|fail| E[Rollback]
+    D --> F[Cutover]
+    F --> G([Live])
+
+    classDef accent fill:#dde7ff,stroke:#0555ff,color:#001946,stroke-width:1.5px
+    classDef warn   fill:#fff5d6,stroke:#b88500,color:#3d2c00,stroke-width:1.5px
+    classDef ok     fill:#dcf5e6,stroke:#157a40,color:#0a4f24,stroke-width:1.5px
+    classDef alert  fill:#ffe6cc,stroke:#c25400,color:#5a2400,stroke-width:1.5px
+
+    class A,B,D accent
+    class C warn
+    class E alert
+    class F,G ok
+          </pre>
+        </div>
+      </div>
+      <div class="source">
+        <span class="label">Source</span>
+        Pipeline RFC MW-2026-04 &middot; Architecture review 22 Apr 2026.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         06 — 2x2 MATRIX
+         ============================================================ -->
+    <section>
+      <div class="topbar">
+        <span class="doc">Deck Title</span>
+        <span class="tracker">
+          <span class="t-step">Summary</span>
+          <span class="t-step">Findings</span>
+          <span class="t-step active">Recommendation</span>
+          <span class="t-step">Plan</span>
+        </span>
+        <span class="right">
+          <span class="classification">Confidential &mdash; Draft</span>
+          <span class="num">06 of 08</span>
+        </span>
+      </div>
+      <div class="body stagger" data-staggered="0">
+        <h2 class="headline">
+          Initiatives split clean on impact vs. effort &mdash; fund the
+          <span class="hl">two top-right</span>.
+        </h2>
+        <div class="matrix">
+          <div class="ax-y">Impact &uarr;</div>
+          <div class="q tl">
+            <div class="qlabel">High impact &middot; low effort</div>
+            <div class="qtitle">Pipeline consolidation</div>
+            <div class="qbody">Validated in shadow; ready to schedule.</div>
+          </div>
+          <div class="q tr recommended">
+            <div class="qlabel">High impact &middot; high effort &middot; recommended</div>
+            <div class="qtitle">Test-bed expansion (2 racks)</div>
+            <div class="qbody">Removes weekend queue; pays back in 7 months.</div>
+          </div>
+          <div class="q bl">
+            <div class="qlabel">Low impact &middot; low effort</div>
+            <div class="qtitle">Dashboards refresh</div>
+            <div class="qbody">Nice-to-have; defer to FY27.</div>
+          </div>
+          <div class="q br">
+            <div class="qlabel">Low impact &middot; high effort</div>
+            <div class="qtitle">Custom UI for Jenkins</div>
+            <div class="qbody">Drop. Vendor tool reaches parity in Q3.</div>
+          </div>
+          <div class="ax-x">Effort &rarr;</div>
+        </div>
+      </div>
+      <div class="source">
+        <span class="label">Source</span>
+        Engineering planning workshop 6 May 2026 &middot; Effort estimates from team leads.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         07 — SECTION LIST (anatomy / fields)
+         ============================================================ -->
+    <section>
+      <div class="topbar">
+        <span class="doc">Deck Title</span>
+        <span class="tracker">
+          <span class="t-step">Summary</span>
+          <span class="t-step">Findings</span>
+          <span class="t-step">Recommendation</span>
+          <span class="t-step active">Plan</span>
+        </span>
+        <span class="right">
+          <span class="classification">Confidential &mdash; Draft</span>
+          <span class="num">07 of 08</span>
+        </span>
+      </div>
+      <div class="body stagger" data-staggered="0">
+        <h2 class="headline">
+          Each cutover phase has a single owner and a binary exit
+          gate.
+        </h2>
+        <ul class="section-list">
+          <li><span class="key">Wk 18 &mdash; Shadow</span><span class="val">Owner: Mihai. Exit: 14% traffic, zero rollbacks, p99 within target.</span></li>
+          <li><span class="key">Wk 22 &mdash; Canary</span><span class="val">Owner: Andrei. Exit: 50% traffic for 5 days, alerting parity.</span></li>
+          <li><span class="key">Wk 26 &mdash; Cutover</span><span class="val">Owner: Sara. Exit: 100% traffic, legacy pipeline frozen.</span></li>
+          <li><span class="key">Wk 28 &mdash; Decommission</span><span class="val">Owner: Sara. Exit: Jenkins instance retired, two rotations closed.</span></li>
+        </ul>
+        <div class="callout">
+          <span class="col-icon"><i data-lucide="info"></i></span>
+          <span class="col-text">Phase gates are <strong>binary</strong>: either every exit criterion holds or the phase pauses &mdash; no partial credit.</span>
+        </div>
+      </div>
+      <div class="source">
+        <span class="label">Source</span>
+        Cutover plan MW-2026-04 v2 &middot; Owner commitments 6 May 2026.
+      </div>
+    </section>
+
+    <!-- ============================================================
+         08 — CLOSING (status + ask)
+         ============================================================ -->
+    <section>
+      <div class="topbar">
+        <span class="doc">Deck Title</span>
+        <span class="tracker">
+          <span class="t-step">Summary</span>
+          <span class="t-step">Findings</span>
+          <span class="t-step">Recommendation</span>
+          <span class="t-step active">Plan</span>
+        </span>
+        <span class="right">
+          <span class="classification">Confidential &mdash; Draft</span>
+          <span class="num">08 of 08</span>
+        </span>
+      </div>
+      <div class="body stagger" data-staggered="0">
+        <h2 class="headline">
+          One milestone shipped, three to land, one decision needed.
+        </h2>
+        <div class="closing-grid">
+          <div class="closing-card done">
+            <div class="cnum">01 &mdash; Done</div>
+            <div class="ct">Shadow trial validated.</div>
+            <div class="cd">Five weeks at 14% live traffic; zero rollbacks; p99 within target.</div>
+          </div>
+          <div class="closing-card">
+            <div class="cnum">02 &mdash; Next</div>
+            <div class="ct">Canary phase opens wk 22.</div>
+            <div class="cd">50% traffic for 5 days with full alerting parity.</div>
+          </div>
+          <div class="closing-card">
+            <div class="cnum">03 &mdash; After</div>
+            <div class="ct">Cutover and decommission wk 26-28.</div>
+            <div class="cd">Legacy pipeline frozen; two on-call rotations closed.</div>
+          </div>
+          <div class="closing-card highlight">
+            <div class="cnum">Decision needed</div>
+            <div class="ct">Approve cutover on 1 July.</div>
+            <div class="cd">Two engineers in May-June and 2 racks of test-bed capacity by 1 July.</div>
+          </div>
+        </div>
+      </div>
+      <div class="source">
+        <span class="label">Source</span>
+        Cutover plan MW-2026-04 v2 &middot; Finance model v3.1 &middot; Infra commitment 9 May 2026.
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- custom chrome (top progress bar + arrow buttons) -->
+<div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+<div class="arrows">
+  <button class="arrow-btn" id="prevBtn" aria-label="Previous">&larr;</button>
+  <button class="arrow-btn" id="nextBtn" aria-label="Next">&rarr;</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  // ============================================================
+  // Mermaid theme — reads CSS custom properties so light/dark
+  // route through the same code path. Re-init on theme toggle.
+  // ============================================================
+  function readVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+  function initMermaid() {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      securityLevel: 'loose',
+      themeVariables: {
+        background:          readVar('--card-bg'),
+        primaryColor:        isDark ? readVar('--surface-2') : readVar('--accent-softer'),
+        primaryTextColor:    readVar('--fg'),
+        primaryBorderColor:  readVar('--accent'),
+        lineColor:           readVar('--fg-mid'),
+        secondaryColor:      readVar('--surface'),
+        tertiaryColor:       readVar('--bg'),
+        mainBkg:             isDark ? readVar('--surface-2') : readVar('--accent-softer'),
+        nodeBorder:          readVar('--accent'),
+        clusterBkg:          readVar('--surface'),
+        clusterBorder:       readVar('--border-strong'),
+        titleColor:          readVar('--accent'),
+        edgeLabelBackground: readVar('--card-bg'),
+        textColor:           readVar('--fg'),
+        fontFamily:          readVar('--font'),
+        fontSize:            '15px',
+        noteBkgColor:        readVar('--accent-soft'),
+        noteBorderColor:     readVar('--accent'),
+        noteTextColor:       readVar('--fg'),
+        actorBkg:            isDark ? readVar('--surface-2') : readVar('--accent-softer'),
+        actorBorder:         readVar('--accent'),
+        actorTextColor:      readVar('--fg'),
+      },
+      flowchart: { curve: 'basis', padding: 14, nodeSpacing: 42, rankSpacing: 52, htmlLabels: true },
+      sequence:  { actorMargin: 50, boxMargin: 10, messageMargin: 36, mirrorActors: false }
+    });
+  }
+  initMermaid();
+
+  // Stash each diagram's source for re-render and rewrite classDef
+  // colors so dark mode reads correctly. The trick: in dark mode the
+  // light-tuned classDef fills are too pale and the colored text fails
+  // contrast on the dark card. Swap to white-text-on-tinted-fill.
+  function darkClassDefRewrite(src) {
+    return src
+      .replace(/classDef\s+accent[^\n]*/g,
+        'classDef accent fill:rgba(75,190,250,0.22),stroke:#7cd6ff,color:#ffffff,stroke-width:1.5px')
+      .replace(/classDef\s+warn[^\n]*/g,
+        'classDef warn fill:rgba(250,200,15,0.22),stroke:#fac80f,color:#ffffff,stroke-width:1.5px')
+      .replace(/classDef\s+ok[^\n]*/g,
+        'classDef ok fill:rgba(74,208,122,0.22),stroke:#4ad07a,color:#ffffff,stroke-width:1.5px')
+      .replace(/classDef\s+alert[^\n]*/g,
+        'classDef alert fill:rgba(255,156,46,0.22),stroke:#ff9c2e,color:#ffffff,stroke-width:1.5px');
+  }
+  document.querySelectorAll('pre.mermaid').forEach(function (el) {
+    el.dataset.source = el.textContent;
+  });
+
+  // ============================================================
+  // svg-pan-zoom lifecycle — pan/zoom only on .diagram-wrap.interactive
+  // ============================================================
+  var panZoomInstances = [];
+
+  function destroyPanZoom() {
+    panZoomInstances.forEach(function (inst) {
+      try { inst.destroy(); } catch (e) {}
+    });
+    panZoomInstances = [];
+  }
+
+  function attachPanZoom() {
+    destroyPanZoom();
+    document.querySelectorAll('.diagram-wrap pre.mermaid svg').forEach(function (svg) {
+      svg.removeAttribute('width');
+      svg.removeAttribute('height');
+      svg.style.maxWidth = 'none';
+      svg.style.width    = '100%';
+      svg.style.height   = '100%';
+      if (!svg.getAttribute('preserveAspectRatio')) {
+        svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+      }
+      var wrap = svg.closest('.diagram-wrap');
+      var interactive = wrap && wrap.classList.contains('interactive');
+      if (!interactive) return;
+      try {
+        var inst = svgPanZoom(svg, {
+          controlIconsEnabled:   true,
+          fit:                   true,
+          center:                true,
+          minZoom:               0.3,
+          maxZoom:               10,
+          zoomScaleSensitivity:  0.3,
+          dblClickZoomEnabled:   true,
+          mouseWheelZoomEnabled: true,
+          panEnabled:            true,
+          contain:               false,
+        });
+        panZoomInstances.push(inst);
+        if (!wrap.querySelector('.pz-hint')) {
+          var hint = document.createElement('div');
+          hint.className = 'pz-hint';
+          hint.textContent = 'drag  ·  scroll  ·  double-click';
+          wrap.appendChild(hint);
+        }
+      } catch (e) { console.error('svg-pan-zoom failed', e); }
+    });
+  }
+
+  // ============================================================
+  // Mermaid render pipeline
+  // ============================================================
+  function renderMermaid() {
+    destroyPanZoom();
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.querySelectorAll('pre.mermaid').forEach(function (el) {
+      if (el.getAttribute('data-processed') === 'true' && el.dataset.source) {
+        el.removeAttribute('data-processed');
+        el.innerHTML = '';
+      }
+      var src = el.dataset.source || el.textContent;
+      el.textContent = isDark ? darkClassDefRewrite(src) : src;
+    });
+    document.querySelectorAll('.diagram-wrap .pz-hint').forEach(function (h) { h.remove(); });
+    try {
+      var p = mermaid.run({ querySelector: 'pre.mermaid' });
+      if (p && typeof p.then === 'function') {
+        p.then(function () {
+          attachPanZoom();
+          if (window.lucide) lucide.createIcons();
+        }).catch(function (e) { console.error(e); });
+      } else {
+        attachPanZoom();
+        if (window.lucide) lucide.createIcons();
+      }
+    } catch (e) { console.error('mermaid render failed', e); }
+  }
+
+  // ============================================================
+  // Reveal boot + custom chrome wiring
+  // ============================================================
+  Reveal.initialize({
+    hash: true,
+    transition: 'fade',
+    width: 1440,
+    height: 900,
+    margin: 0,
+    center: false,
+    controls: false,
+    progress: false,
+    slideNumber: false,
+  }).then(function () {
+    if (window.lucide) lucide.createIcons();
+    renderMermaid();
+    updateChrome();
+    markStaggered();
+  });
+
+  var progressFill = document.getElementById('progressFill');
+  var prevBtn      = document.getElementById('prevBtn');
+  var nextBtn      = document.getElementById('nextBtn');
+
+  function updateChrome() {
+    var idx   = Reveal.getIndices().h;
+    var total = Reveal.getTotalSlides();
+    progressFill.style.width = ((idx + 1) / total * 100) + '%';
+    prevBtn.disabled = idx === 0;
+    nextBtn.disabled = idx === total - 1;
+  }
+
+  // Stagger fires once per slide: flip data-staggered to "1" after
+  // the animation runs so back-arrowing doesn't replay it.
+  function markStaggered() {
+    var current = document.querySelector('.reveal .slides section.present');
+    if (!current) return;
+    current.querySelectorAll('.stagger[data-staggered="0"]').forEach(function (el) {
+      setTimeout(function () { el.setAttribute('data-staggered', '1'); }, 700);
+    });
+  }
+
+  Reveal.on('slidechanged', function () {
+    updateChrome();
+    renderMermaid();
+    markStaggered();
+  });
+
+  prevBtn.addEventListener('click', function () { Reveal.prev(); });
+  nextBtn.addEventListener('click', function () { Reveal.next(); });
+
+  // Keyboard:
+  //   T   — toggle theme
+  //   G   — go to slide N (prompt)
+  //   F   — fullscreen (Reveal native)
+  //   Esc — overview (Reveal native)
+  document.addEventListener('keydown', function (e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 't' || e.key === 'T') {
+      e.preventDefault();
+      var cur = document.documentElement.getAttribute('data-theme');
+      document.documentElement.setAttribute('data-theme', cur === 'dark' ? '' : 'dark');
+      initMermaid();
+      renderMermaid();
+      return;
+    }
+    if (e.key === 'g' || e.key === 'G') {
+      e.preventDefault();
+      var total = Reveal.getTotalSlides();
+      var n = prompt('Go to slide (1-' + total + '):');
+      if (!n) return;
+      var idx = parseInt(n, 10) - 1;
+      if (!isNaN(idx) && idx >= 0 && idx < total) Reveal.slide(idx);
+    }
+  });
+
+  // Re-fit interactive diagrams on resize.
+  window.addEventListener('resize', function () {
+    panZoomInstances.forEach(function (inst) {
+      try { inst.resize(); inst.fit(); inst.center(); } catch (e) {}
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!-- 2x2 MATRIX
+     Quadrant layout for prioritisation / positioning / option
+     analysis (impact x effort, value x feasibility, urgency x
+     importance). One quadrant marked `recommended` to point the
+     audience to the answer.
+
+     Axes labelled vertically (`.ax-y`) and horizontally (`.ax-x`).
+     Each quadrant: small mono label, bold title, short body.
+
+     Replace: topbar, headline, axis labels, quadrant content (move
+     `.recommended` to the right cell for your context), source.
+-->
+<section>
+  <div class="topbar">
+    <span class="doc">Deck Title</span>
+    <span class="tracker">
+      <span class="t-step">Summary</span>
+      <span class="t-step">Findings</span>
+      <span class="t-step active">Recommendation</span>
+      <span class="t-step">Plan</span>
+    </span>
+    <span class="right">
+      <span class="classification">Confidential &mdash; Draft</span>
+      <span class="num">NN of NN</span>
+    </span>
+  </div>
+  <div class="body stagger" data-staggered="0">
+    <h2 class="headline">
+      Action headline naming the
+      <span class="hl">recommended</span> quadrant.
+    </h2>
+    <div class="matrix">
+      <div class="ax-y">Y axis &uarr;</div>
+      <div class="q tl">
+        <div class="qlabel">High Y &middot; Low X</div>
+        <div class="qtitle">Quadrant title.</div>
+        <div class="qbody">One-line body.</div>
+      </div>
+      <div class="q tr recommended">
+        <div class="qlabel">High Y &middot; High X &middot; recommended</div>
+        <div class="qtitle">Quadrant title.</div>
+        <div class="qbody">Why this is the answer.</div>
+      </div>
+      <div class="q bl">
+        <div class="qlabel">Low Y &middot; Low X</div>
+        <div class="qtitle">Quadrant title.</div>
+        <div class="qbody">One-line body.</div>
+      </div>
+      <div class="q br">
+        <div class="qlabel">Low Y &middot; High X</div>
+        <div class="qtitle">Quadrant title.</div>
+        <div class="qbody">One-line body.</div>
+      </div>
+      <div class="ax-x">X axis &rarr;</div>
+    </div>
+  </div>
+  <div class="source">
+    <span class="label">Source</span>
+    Workshop output, model, or interview synthesis &middot; date.
+  </div>
+</section>

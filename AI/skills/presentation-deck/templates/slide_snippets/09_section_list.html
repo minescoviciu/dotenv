@@ -1,0 +1,41 @@
+<!-- SECTION LIST — key / value reference
+     A card-style list with an accent key column and a description
+     value column. Use for "anatomy of X" slides: structure of a doc,
+     fields in a config, phases of a plan, owners and their gates.
+
+     Headline names the conclusion ("Each phase has a single owner
+     and a binary exit gate"). The list proves it.
+
+     Replace: topbar, headline, key/value rows, source.
+-->
+<section>
+  <div class="topbar">
+    <span class="doc">Deck Title</span>
+    <span class="tracker">
+      <span class="t-step">Summary</span>
+      <span class="t-step">Findings</span>
+      <span class="t-step">Recommendation</span>
+      <span class="t-step active">Plan</span>
+    </span>
+    <span class="right">
+      <span class="classification">Confidential &mdash; Draft</span>
+      <span class="num">NN of NN</span>
+    </span>
+  </div>
+  <div class="body stagger" data-staggered="0">
+    <h2 class="headline">
+      Action headline that names the <span class="hl">invariant</span>
+      the list demonstrates.
+    </h2>
+    <ul class="section-list">
+      <li><span class="key">Field / phase</span><span class="val">One-line description. Inline <code>code</code> is fine.</span></li>
+      <li><span class="key">Field / phase</span><span class="val">Owner, exit gate, or numeric target.</span></li>
+      <li><span class="key">Field / phase</span><span class="val">Same shape, so the eye scans cleanly.</span></li>
+      <li><span class="key">Field / phase</span><span class="val">Stop at 6 rows; past that, split the slide.</span></li>
+    </ul>
+  </div>
+  <div class="source">
+    <span class="label">Source</span>
+    Doc, plan, or schema the list reflects &middot; date.
+  </div>
+</section>

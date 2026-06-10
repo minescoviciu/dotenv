@@ -1,0 +1,69 @@
+<!-- HORIZON / TIMELINE (gantt-flavoured)
+     A 3-5 column horizon (Now / Q3 / Q4 / 2027) with 3-5 swimlanes
+     (Engineering / Product / Ops). Bars span columns. A `today-line`
+     marks the current week.
+
+     `--cols` controls the grid column count; bars are positioned via
+     inline `grid-column` spans (e.g. `grid-column: 2 / span 2`).
+
+     Replace: topbar, headline, column labels, lane labels, bars,
+     today-line position, source.
+-->
+<section>
+  <div class="topbar">
+    <span class="doc">Deck Title</span>
+    <span class="tracker">
+      <span class="t-step">Summary</span>
+      <span class="t-step">Findings</span>
+      <span class="t-step">Recommendation</span>
+      <span class="t-step active">Plan</span>
+    </span>
+    <span class="right">
+      <span class="classification">Confidential &mdash; Draft</span>
+      <span class="num">NN of NN</span>
+    </span>
+  </div>
+  <div class="body stagger" data-staggered="0">
+    <h2 class="headline">
+      Action headline naming the <span class="hl">commitment</span>
+      the timeline encodes.
+    </h2>
+    <div class="horizon" style="--cols: 4;">
+      <div class="h-head">
+        <div></div>
+        <div class="h-col">Now &middot; Q2</div>
+        <div class="h-col">Q3</div>
+        <div class="h-col">Q4</div>
+        <div class="h-col">2027</div>
+      </div>
+      <div class="h-row">
+        <div class="h-lane">Engineering</div>
+        <div class="h-track">
+          <div class="h-bar" style="grid-column: 1 / span 2;">Shadow &middot; canary</div>
+          <div class="h-bar ok" style="grid-column: 3 / span 1;">Cutover</div>
+        </div>
+      </div>
+      <div class="h-row">
+        <div class="h-lane">Infra</div>
+        <div class="h-track">
+          <div class="h-bar warn" style="grid-column: 1 / span 1;">Rack order</div>
+          <div class="h-bar" style="grid-column: 2 / span 1;">Install</div>
+        </div>
+      </div>
+      <div class="h-row">
+        <div class="h-lane">Ops</div>
+        <div class="h-track">
+          <div class="h-bar" style="grid-column: 3 / span 1;">Runbook update</div>
+          <div class="h-bar ok" style="grid-column: 4 / span 1;">Rotation close</div>
+        </div>
+      </div>
+      <div class="today-line" style="left: 35%;">
+        <div class="today-label">TODAY</div>
+      </div>
+    </div>
+  </div>
+  <div class="source">
+    <span class="label">Source</span>
+    Plan doc &middot; owner commitments &middot; date.
+  </div>
+</section>

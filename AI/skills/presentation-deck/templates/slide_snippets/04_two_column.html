@@ -1,0 +1,54 @@
+<!-- TWO COLUMN — tree + kv-row chips (engineering supplement)
+     Side-by-side layout: a labeled tree/code block on the left, a
+     short list of mono chips on the right. Use only for "where things
+     live on disk" or "shape of a config" slides. In a leadership deck,
+     skip this recipe — use stat_row / scorecard / section_list instead.
+
+     Replaced inline-style chips with the .kv-row + .kv-chip primitive
+     so the system is token-driven.
+
+     Replace: topbar, headline, tree contents, chip rows, source.
+-->
+<section>
+  <div class="topbar">
+    <span class="doc">Deck Title</span>
+    <span class="tracker">
+      <span class="t-step">Summary</span>
+      <span class="t-step active">Findings</span>
+      <span class="t-step">Recommendation</span>
+      <span class="t-step">Plan</span>
+    </span>
+    <span class="right">
+      <span class="classification">Confidential &mdash; Draft</span>
+      <span class="num">NN of NN</span>
+    </span>
+  </div>
+  <div class="body stagger" data-staggered="0">
+    <h2 class="headline">
+      Action headline that frames what the tree on the left
+      <span class="hl">means</span>.
+    </h2>
+    <div class="two-col" style="grid-template-columns: 1.25fr 1fr;">
+<pre class="tree"><span class="dir">root/</span>
+&#9500;&#9472;&#9472; <span class="dir">dir-a/</span>            <span class="cmt"># one-line comment</span>
+&#9474;   &#9492;&#9472;&#9472; <span class="file">file.md</span>       <span class="cmt"># description</span>
+&#9492;&#9472;&#9472; <span class="dir">dir-b/</span>            <span class="cmt"># another comment</span>
+    &#9492;&#9472;&#9472; <span class="file">other.md</span>
+</pre>
+      <div class="kv-rows" style="justify-content: center;">
+        <div class="kv-row">
+          <span class="kv-chip">dir-a/</span>
+          <span class="kv-text"><strong>Label</strong> &mdash; what lives in this directory and why.</span>
+        </div>
+        <div class="kv-row">
+          <span class="kv-chip">dir-b/</span>
+          <span class="kv-text"><strong>Label</strong> &mdash; one-line purpose statement.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="source">
+    <span class="label">Source</span>
+    Architecture doc or repository path the tree reflects.
+  </div>
+</section>

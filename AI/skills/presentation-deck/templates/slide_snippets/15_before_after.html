@@ -1,0 +1,50 @@
+<!-- BEFORE / AFTER split
+     Two panels side-by-side with a delta chip between them. Use to
+     compare today's state to the recommended state, with the change
+     quantified in the middle.
+
+     Each panel can host bullets, a mini-diagram (Mermaid in a nested
+     .diagram-wrap), a stat tile, or prose.
+
+     Replace: topbar, headline, before panel, delta chip text, after
+     panel, source.
+-->
+<section>
+  <div class="topbar">
+    <span class="doc">Deck Title</span>
+    <span class="tracker">
+      <span class="t-step">Summary</span>
+      <span class="t-step">Findings</span>
+      <span class="t-step active">Recommendation</span>
+      <span class="t-step">Plan</span>
+    </span>
+    <span class="right">
+      <span class="classification">Confidential &mdash; Draft</span>
+      <span class="num">NN of NN</span>
+    </span>
+  </div>
+  <div class="body stagger" data-staggered="0">
+    <h2 class="headline">
+      The new shape <span class="hl">removes</span> the named bottleneck.
+    </h2>
+    <div class="ba">
+      <div class="ba-panel">
+        <div class="ba-label">Today</div>
+        <div class="ba-title">Current state title.</div>
+        <div class="ba-body">One- or two-sentence description of how it works today, with the named friction.</div>
+      </div>
+      <div class="ba-delta">&rarr; -4 days
+-1 handoff
++rollback</div>
+      <div class="ba-panel after">
+        <div class="ba-label">Tomorrow</div>
+        <div class="ba-title">Recommended state title.</div>
+        <div class="ba-body">One- or two-sentence description of the new shape, with the proof point.</div>
+      </div>
+    </div>
+  </div>
+  <div class="source">
+    <span class="label">Source</span>
+    Architecture review, measurement, or model behind the delta &middot; date.
+  </div>
+</section>

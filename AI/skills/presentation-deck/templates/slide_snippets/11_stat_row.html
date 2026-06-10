@@ -1,0 +1,57 @@
+<!-- STAT ROW — KPI hero
+     Three (or four) big numbers side-by-side. Each tile: number,
+     label, optional delta chip, optional caption sentence.
+
+     Use when the slide's job is to convince with numbers, not
+     prose. The headline interprets the numbers ("X validates Y on
+     14% of traffic").
+
+     Delta chips: `.up` (green), `.down` (alert), `.flat` (neutral).
+     One per tile is enough; do not stack deltas.
+
+     Replace: topbar, headline, tile content, source.
+-->
+<section>
+  <div class="topbar">
+    <span class="doc">Deck Title</span>
+    <span class="tracker">
+      <span class="t-step">Summary</span>
+      <span class="t-step active">Findings</span>
+      <span class="t-step">Recommendation</span>
+      <span class="t-step">Plan</span>
+    </span>
+    <span class="right">
+      <span class="classification">Confidential &mdash; Draft</span>
+      <span class="num">NN of NN</span>
+    </span>
+  </div>
+  <div class="body stagger" data-staggered="0">
+    <h2 class="headline">
+      Action headline that <span class="hl">interprets</span> the numbers.
+    </h2>
+    <div class="stat-row">
+      <div class="stat-tile">
+        <div class="stat-num accent">40<span class="stat-unit">%</span></div>
+        <div class="stat-label">Headline KPI</div>
+        <div class="stat-delta up">&uarr; 12 pp vs FY25</div>
+        <div class="stat-cap">One-sentence caption naming what was measured.</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-num">$1.2<span class="stat-unit">M</span></div>
+        <div class="stat-label">Secondary KPI</div>
+        <div class="stat-delta up">&uarr; 18% vs plan</div>
+        <div class="stat-cap">One-sentence caption.</div>
+      </div>
+      <div class="stat-tile">
+        <div class="stat-num">0</div>
+        <div class="stat-label">Risk indicator</div>
+        <div class="stat-delta flat">&mdash; 5 weeks</div>
+        <div class="stat-cap">One-sentence caption.</div>
+      </div>
+    </div>
+  </div>
+  <div class="source">
+    <span class="label">Source</span>
+    Telemetry window and finance model citations &middot; date.
+  </div>
+</section>

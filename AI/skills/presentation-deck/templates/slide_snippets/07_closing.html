@@ -1,0 +1,59 @@
+<!-- CLOSING — status / next-steps cards
+     2x2 grid of cards summarising what shipped, what's coming, and
+     the decision you need. One card marked `.done` (light accent
+     background), one marked `.highlight` (deep navy) for the ask.
+
+     Headline names the count: "One shipped, two to land, one
+     decision needed." Forces the audience to leave with the right
+     mental model.
+
+     Replace: topbar tracker active step, page-of-N, headline,
+     card content (numbers + titles + descriptions), source.
+-->
+<section>
+  <div class="topbar">
+    <span class="doc">Deck Title</span>
+    <span class="tracker">
+      <span class="t-step">Summary</span>
+      <span class="t-step">Findings</span>
+      <span class="t-step">Recommendation</span>
+      <span class="t-step active">Plan</span>
+    </span>
+    <span class="right">
+      <span class="classification">Confidential &mdash; Draft</span>
+      <span class="num">NN of NN</span>
+    </span>
+  </div>
+  <div class="body stagger" data-staggered="0">
+    <h2 class="headline">
+      One <span class="hl">shipped</span>, two to land, one decision
+      needed.
+    </h2>
+    <div class="closing-grid">
+      <div class="closing-card done">
+        <div class="cnum">01 &mdash; Done</div>
+        <div class="ct">First milestone shipped.</div>
+        <div class="cd">One sentence of what landed and what it unlocked.</div>
+      </div>
+      <div class="closing-card">
+        <div class="cnum">02 &mdash; Next</div>
+        <div class="ct">Second milestone.</div>
+        <div class="cd">Concrete next piece of work, owner, exit gate.</div>
+      </div>
+      <div class="closing-card">
+        <div class="cnum">03 &mdash; After</div>
+        <div class="ct">Third milestone.</div>
+        <div class="cd">Including any dependency on prior milestones.</div>
+      </div>
+      <div class="closing-card highlight">
+        <div class="cnum">Decision needed</div>
+        <div class="ct">Name the decision in a verb.</div>
+        <div class="cd">A single sentence that names the resource, approval, or date you need.</div>
+      </div>
+    </div>
+  </div>
+  <div class="source">
+    <span class="label">Source</span>
+    Plan doc, finance model, owner commitments &middot; date.
+  </div>
+</section>

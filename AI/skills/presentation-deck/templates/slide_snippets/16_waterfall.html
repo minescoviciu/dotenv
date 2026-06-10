@@ -1,0 +1,67 @@
+<!-- WATERFALL / BRIDGE
+     Five bars showing how a number moves: starting baseline, two or
+     three contributors (+/-), ending total.
+
+     Bar height: `style="--h: 60;"` is interpreted as 60% of the
+     available height. Pick a baseline (e.g. starting bar = 100%) and
+     scale others proportionally.
+
+     Bar flavors:
+       - default (`.wf-bar`)  -> accent fill.
+       - `.wf-up`             -> green (positive contributor).
+       - `.wf-down`           -> alert (negative contributor).
+       - `.wf-start` / `.wf-end` -> baseline / total.
+
+     Replace: topbar, headline, bar heights, captions, labels, source.
+-->
+<section>
+  <div class="topbar">
+    <span class="doc">Deck Title</span>
+    <span class="tracker">
+      <span class="t-step">Summary</span>
+      <span class="t-step active">Findings</span>
+      <span class="t-step">Recommendation</span>
+      <span class="t-step">Plan</span>
+    </span>
+    <span class="right">
+      <span class="classification">Confidential &mdash; Draft</span>
+      <span class="num">NN of NN</span>
+    </span>
+  </div>
+  <div class="body stagger" data-staggered="0">
+    <h2 class="headline">
+      The bridge shows <span class="hl">where the savings come from</span>.
+    </h2>
+    <div class="waterfall">
+      <div class="wf-bar wf-start">
+        <div class="wf-cap">100</div>
+        <div class="wf-block" style="--h: 60;"></div>
+        <div class="wf-label">FY25 baseline</div>
+      </div>
+      <div class="wf-bar wf-up">
+        <div class="wf-cap">+22</div>
+        <div class="wf-block" style="--h: 13;"></div>
+        <div class="wf-label">New automation</div>
+      </div>
+      <div class="wf-bar wf-down">
+        <div class="wf-cap">-8</div>
+        <div class="wf-block" style="--h: 5;"></div>
+        <div class="wf-label">Reinvestment</div>
+      </div>
+      <div class="wf-bar wf-up">
+        <div class="wf-cap">+18</div>
+        <div class="wf-block" style="--h: 11;"></div>
+        <div class="wf-label">Rotation collapse</div>
+      </div>
+      <div class="wf-bar wf-end">
+        <div class="wf-cap">132</div>
+        <div class="wf-block" style="--h: 80;"></div>
+        <div class="wf-label">FY26 target</div>
+      </div>
+    </div>
+  </div>
+  <div class="source">
+    <span class="label">Source</span>
+    Finance model v3.1, validated against Q1 actuals &middot; date.
+  </div>
+</section>
