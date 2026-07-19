@@ -17,6 +17,12 @@ if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$HOME/.ssh/ssh_auth_sock" ]
     ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/ssh_auth_sock"
 fi
 
+# Repoint the current shell at the stable agent socket. Use inside an existing
+# tmux pane whose SSH_AUTH_SOCK was baked in before the symlink scheme was set up.
+fixssh() {
+    export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
+}
+
 # don't put duplicate lines in the history. See bash(1) for more options
 # ... or force ignoredups and ignorespace
 HISTCONTROL=ignoredups:ignorespace

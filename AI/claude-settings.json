@@ -52,11 +52,14 @@
     "typescript-lsp@claude-plugins-official": true
   },
   "effortLevel": "high",
+  "tui": "fullscreen",
   "theme": "dark",
   "autoCompactEnabled": false,
   "remoteControlAtStartup": false,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "voiceEnabled": false,
-  "mcpServers": {}
+  "mcpServers": {},
+  "disableClaudeAiConnectors": true,
+  "model": "claude-fable-5[1m]"
 }
