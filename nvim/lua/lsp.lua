@@ -24,9 +24,6 @@ function M.setup()
             :map(function(client)
                 return client.name
             end)
-            :filter(function(name)
-                return name ~= "copilot"
-            end)
             :totable()
     end
 

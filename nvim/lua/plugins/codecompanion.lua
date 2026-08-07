@@ -98,13 +98,6 @@ return {
                 },
             },
             adapters = {
-                copilot = require("codecompanion.adapters").extend("copilot", {
-                    schema = {
-                        model = {
-                            default = "claude-3.7-sonnet",
-                        },
-                    },
-                }),
                 openai = function()
                     return require("codecompanion.adapters").extend("openai", {
                         env = {
@@ -125,7 +118,7 @@ return {
             },
             strategies = {
                 chat = {
-                    adapter = vim.g.personal_mac and "copilot" or "openai",
+                    adapter = "openai",
                     tools = {
                         opts = {
                             auto_submit_errors = true,
@@ -146,10 +139,10 @@ return {
                     },
                 },
                 inline = {
-                    adapter = "copilot",
+                    adapter = "openai",
                 },
                 agent = {
-                    adapter = "copilot",
+                    adapter = "openai",
                 },
             },
             chat = {
@@ -181,7 +174,7 @@ return {
                         is_slash_cmd = true,
                         auto_submit = true,
                         adapter = {
-                            name = 'copilot',
+                            name = 'openai',
                             model = 'gpt-4o',
                         },
                     },
