@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+#
+# Reject any push that contains a WORK commit.
+#
+# WORK commits are local-only scratch history on the `work` branch. See
+# AGENTS.md section 2. Enable with: git config core.hooksPath .githooks
+#
+# stdin receives one line per ref being pushed:
+#   <local_ref> <local_sha> <remote_ref> <remote_sha>
+
+set -euo pipefail
+
+zero=$(git hash-object --stdin </dev/null | tr '[:xdigit:]' '0')
+found=0
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+	# Branch deletion — nothing to inspect.
+	if [ "$local_sha" = "$zero" ]; then
+		continue
+	fi
+
+	if [ "$remote_sha" = "$zero" ]; then
+		# New remote branch: everything not already on some remote.
+		range=$(git rev-list "$local_sha" --not --remotes)
+	else
+		range=$(git rev-list "$remote_sha..$local_sha")
+	fi
+
+	for sha in $range; do
+		subject=$(git log -1 --format=%s "$sha")
+		case "$subject" in
+		WORK*)
+			if [ "$found" -eq 0 ]; then
+				echo "pre-push: refusing to push WORK commits (AGENTS.md section 2)." >&2
+				echo >&2
+			fi
+			found=1
+			printf '  %s %s -> %s\n' "$(git rev-parse --short "$sha")" "$subject" "$remote_ref" >&2
+			;;
+		esac
+	done
+done
+
+if [ "$found" -ne 0 ]; then
+	echo >&2
+	echo "Drop or rename these commits before pushing. Do not use --no-verify." >&2
+	exit 1
+fi
+
+exit 0
