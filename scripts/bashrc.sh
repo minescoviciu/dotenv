@@ -64,6 +64,10 @@ WORK_FILE=~/.config/scripts/work.sh
 if [ -f $WORK_FILE ]; then
     source $WORK_FILE
 fi
+AWS_COMPLETER=$(command -v aws_completer)
+if [ -n "$AWS_COMPLETER" ]; then
+    complete -C "$AWS_COMPLETER" aws
+fi
 # eval "$(starship init bash)"
 
 copy-clipboard() {
