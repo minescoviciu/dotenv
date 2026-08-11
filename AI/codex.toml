@@ -91,3 +91,14 @@ fast_default_opt_out = true
 
 [plugins."github@openai-curated"]
 enabled = true
+
+[plugins."sites@openai-bundled"]
+enabled = true
+
+[plugins."visualize@openai-bundled"]
+enabled = true
+
+[marketplaces.openai-bundled]
+last_updated = "2026-08-11T06:25:42Z"
+source_type = "local"
+source = "/home/dn/.codex/.tmp/bundled-marketplaces/openai-bundled"
