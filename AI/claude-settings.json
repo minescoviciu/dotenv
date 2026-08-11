@@ -16,6 +16,10 @@
           {
             "type": "command",
             "command": "$HOME/dotfiles/AI/claude-assets/notification-hook.sh"
+          },
+          {
+            "type": "command",
+            "command": "$HOME/dotfiles/AI/claude-assets/last-response-hook.sh"
           }
         ]
       }
@@ -59,6 +63,8 @@
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "voiceEnabled": false,
+  "showMessageTimestamps": true,
+  "showTurnDuration": true,
   "mcpServers": {},
   "disableClaudeAiConnectors": true,
   "model": "claude-fable-5[1m]"

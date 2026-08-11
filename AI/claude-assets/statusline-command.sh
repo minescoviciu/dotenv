@@ -39,6 +39,7 @@ echo "$input" > /tmp/claude-statusline-debug.json
 model=$(echo "$input" | jq -r 'if .model | type == "object" then .model.id // .model.display_name // "" else .model // "" end')
 permission_mode=$(echo "$input" | jq -r '.permission_mode // ""')
 current_dir=$(echo "$input" | jq -r '.workspace.current_dir // ""')
+session_id=$(echo "$input" | jq -r '.session_id // ""')
 ctx_size=$(echo "$input" | jq -r '.context_window.context_window_size // 0')
 used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // 0')
 remain_pct=$(echo "$input" | jq -r '.context_window.remaining_percentage // 0')
@@ -197,6 +198,12 @@ if [[ -f "$SETTINGS_FILE" ]]; then
     fi
 fi
 line1+="${SEP}${thinking_color}thinking: ${thinking}${RESET}"
+
+# Time of the last response, stamped by the Stop hook (last-response-hook.sh)
+if [[ -n "$session_id" && -r "/tmp/claude-last-response-${session_id}" ]]; then
+    last_response=$(<"/tmp/claude-last-response-${session_id}")
+    [[ -n "$last_response" ]] && line1+="${SEP}${LAVENDER}last ${last_response}${RESET}"
+fi
 
 # ══════════════════════════════════════════════════════════════════
 # FETCH & PARSE API USAGE
