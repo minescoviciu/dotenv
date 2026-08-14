@@ -34,10 +34,10 @@ ln -s $(pwd)/wezterm ~/.config && echo "Linked wezterm config"
 ln -s $(pwd)/scripts ~/.config && echo "Linked scripts"
 ln -s $(pwd)/aerospace.toml ~/.aerospace.toml &&  echo "Linked aerospace.toml"
 ln -s $(pwd)/sketchybar ~/.config && echo "Linked sketchybar"
-ln -s $(pwd)/AI/opencode/opencode.jsonc ~/.config/opencode/opencode.jsonc && echo "Linked opencode.json"
-ln -s $(pwd)/AI/opencode/agent/ ~/.config/opencode/agent && echo "Linked opencode agent"
+mkdir -p ~/.config/opencode
+ln -sfn $(pwd)/AI/opencode.jsonc ~/.config/opencode/opencode.jsonc && echo "Linked opencode.jsonc"
 mkdir -p ~/.codex
-ln -sf $(pwd)/AI/codex/config.toml ~/.codex/config.toml && echo "Linked codex config"
+ln -sfn $(pwd)/AI/codex.toml ~/.codex/config.toml && echo "Linked codex config"
 
 CURSOR_PATH="~/Library/Application\ Support/Cursor/User"
 rm -f $CURSOR_PATH/settings.json
