@@ -15,11 +15,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/dotfiles/AI/claude-assets/notification-hook.sh"
+            "command": "$HOME/.claude/assets/notification-hook.sh"
           },
           {
             "type": "command",
-            "command": "$HOME/dotfiles/AI/claude-assets/last-response-hook.sh"
+            "command": "$HOME/.claude/assets/last-response-hook.sh"
           }
         ]
       }
@@ -30,7 +30,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/dotfiles/AI/claude-assets/notification-hook.sh"
+            "command": "$HOME/.claude/assets/notification-hook.sh"
           }
         ]
       }
@@ -41,7 +41,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$HOME/dotfiles/AI/claude-assets/permission-evaluator.sh"
+            "command": "$HOME/.claude/assets/permission-evaluator.sh"
           }
         ]
       }
@@ -49,7 +49,7 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "$HOME/dotfiles/AI/claude-assets/statusline-command.sh"
+    "command": "$HOME/.claude/assets/statusline-command.sh"
   },
   "enabledPlugins": {
     "pyright-lsp@claude-plugins-official": true,
@@ -67,5 +67,5 @@
   "showTurnDuration": true,
   "mcpServers": {},
   "disableClaudeAiConnectors": true,
-  "model": "claude-fable-5[1m]"
+  "model": "opus[1m]"
 }
