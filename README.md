@@ -24,7 +24,7 @@ usually stale. Apt is only used where no better release artifact exists.
 | Node.js / npm | **nvm**, not apt, not NodeSource | Only needed to run `codex`/`opencode` if installed via npm. Apt's node is 18.19 (old, no prebuilt GitHub release binaries either — Node distributes via nodejs.org/dist). nvm keeps it user-managed and easily upgradable: `nvm install --lts`. |
 | `codex` (OpenAI Codex CLI) | GitHub release binary → `~/.local/bin` | Release ships `codex-x86_64-unknown-linux-musl.tar.gz`; extract and rename the binary to `codex`. |
 | `starship` | **Not installed** — removed from `init.sh` entirely | Preference: skip it. Both the `starship.toml` symlink line and the `curl \| sh` install line were deleted from `init.sh`. |
-| `opencode` | **Not installed** (by request) | The config symlinks in `init.sh` (`~/.config/opencode/{opencode.jsonc,agent}`) were left in place for possible future use, but the binary itself is intentionally skipped. |
+| `opencode` | **Not installed** (by request) | The `~/.config/opencode/opencode.jsonc` symlink in `init.sh` is left in place for possible future use, but the binary itself is intentionally skipped. (The companion `agent` symlink was dropped — `AI/opencode/agent/` no longer exists.) |
 | `jq`, `docker`, `python3`, `rg` (ripgrep), `git` | Already fine via apt | Current enough out of the box, no action needed. |
 
 Not applicable on Linux — skip entirely: `aerospace.toml` (macOS window manager),
@@ -44,37 +44,41 @@ variable and the next command chokes on a multi-line argument.
 
 ## 2. Run `init.sh`
 
-Two manual steps are needed first, because `init.sh` uses plain `ln -s`
-(no `-f`, no parent-dir creation) for these two targets:
-
-```bash
-# ~/.gitconfig already exists as a real file on a fresh Ubuntu box (or from
-# a previous setup) — back it up so the symlink can be created.
-cp ~/.gitconfig ~/.gitconfig.bak
-rm ~/.gitconfig
-
-# init.sh symlinks into ~/.config/opencode/{opencode.jsonc,agent} but never
-# creates the parent dir — without this, both those `ln -s` calls fail.
-mkdir -p ~/.config/opencode
-```
-
-Then:
+No manual preparation needed:
 
 ```bash
 cd ~/dotenv
 bash init.sh
 ```
 
-**Known quirks in `init.sh` you'll see and can ignore:**
-- The Cursor editor block (`~/Library/Application Support/Cursor/User/...`)
-  fails with `ln: target ...: No such file or directory` — it's a macOS-only
-  path and there's nothing to fix on Linux.
-- The lazygit block has a pre-existing path mismatch bug: it does
-  `rm -f ~/.config/lazygit/config.yml` but then symlinks to
-  `~/.config/config.yml` instead of `~/.config/lazygit/config.yml`. Net
-  effect: `~/.config/config.yml` → `lazygit.yaml` gets created, but lazygit
-  itself won't actually read it from there. Not yet fixed — flagged for
-  awareness, not fixed by default.
+`init.sh` is **stateless** — every step converges on the same result, so
+re-run it as often as you like. It creates parent directories, replaces
+existing symlinks rather than failing on them, and rewrites its own block in
+the rc file instead of appending to it. A pre-existing real `~/.gitconfig` is
+replaced by the symlink; a real *directory* sitting where a link belongs is
+reported and left alone rather than being linked into.
+
+macOS-only targets (aerospace, sketchybar, Cursor settings) are skipped on
+Linux instead of failing noisily.
+
+### Adding a script
+
+`~/.config/scripts` is globbed at shell startup, and **the executable bit
+decides what happens to each file**:
+
+| Mode | Meaning | Effect |
+|---|---|---|
+| not executable | shell setup — functions, completions, prompt | sourced into every new shell |
+| executable | a command invoked on demand by a tmux or fzf binding | never sourced |
+
+So `chmod +x` anything you invoke by path, and leave anything meant to be
+sourced non-executable. Because the rc block is a glob and not a list, adding,
+renaming or deleting a script needs **no re-run of `init.sh`** — the next
+shell picks it up.
+
+This distinction matters: the on-demand scripts do their work at the top
+level, so sourcing `tmux-toggle-popup.sh` opens a popup and
+`tmux-toggle-nvim-opencode.sh` jumps to another window — on every new shell.
 
 ---
 
