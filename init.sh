@@ -61,28 +61,37 @@ ln -s $CWD/vscode/keybindings.json $CURSOR_PATH/keybindings.json && echo "Linked
 rm -f ~/.config/lazygit/config.yml
 ln -s $CWD/lazygit.yaml ~/.config/config.yml && echo "Linked lazygit"
 
-for script_file in "$SCRIPTS_PATH"/*; do
-  # Check if it is a regular file
-  if [ -f "$script_file" ]; then
-    case "${script_file##*.}" in
-      "sh")
-        echo "source $script_file" >> "$SHELL_RC"
-        echo "Added source command for $script_file to $SHELL_RC"
-        ;;
-      "bash")
-        if [ "$current_shell" = "bash" ]; then
-          echo "source $script_file" >> "$SHELL_RC"
-          echo "Added source command for $script_file to $SHELL_RC"
-        fi
-        ;;
-      "zsh")
-        if [ "$current_shell" = "zsh" ]; then
-          echo "source $script_file" >> "$SHELL_RC"
-          echo "Added source command for $script_file to $SHELL_RC"
-        fi
-        ;;
-    esac
+# Only scripts that set up shell state -- functions, completions, the prompt --
+# belong in the rc file. The rest of scripts/ is run on demand by a tmux or fzf
+# binding, and those files do their work at the top level: sourcing
+# tmux-toggle-popup.sh opens a popup and tmux-toggle-nvim-opencode.sh jumps to
+# another window, on every single new shell. Hence an explicit list rather than
+# globbing the directory.
+SOURCED_SCRIPTS=(
+  bashrc.sh
+  prompt.sh
+  just_completions.sh
+  work.sh
+  completion.bash
+  key-bindings.bash
+  completion.zsh
+  key-bindings.zsh
+)
+
+for script_name in "${SOURCED_SCRIPTS[@]}"; do
+  script_file="$SCRIPTS_PATH/$script_name"
+  [ -f "$script_file" ] || continue
+  case "${script_name##*.}" in
+    "bash") [ "$current_shell" = "bash" ] || continue ;;
+    "zsh")  [ "$current_shell" = "zsh" ]  || continue ;;
+  esac
+  # Re-running init.sh should not stack duplicate source lines.
+  if grep -qxF "source $script_file" "$SHELL_RC" 2>/dev/null; then
+    echo "Already sourced: $script_file"
+    continue
   fi
+  echo "source $script_file" >> "$SHELL_RC"
+  echo "Added source command for $script_file to $SHELL_RC"
 done
 
 echo "Checking apps"
