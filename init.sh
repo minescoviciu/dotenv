@@ -52,6 +52,11 @@ link "$CWD/gitconfig"               ~/.gitconfig                      "git confi
 link "$CWD/wezterm"                 ~/.config/wezterm                 "wezterm config"
 link "$CWD/scripts"                 ~/.config/scripts                 "scripts"
 link "$CWD/lazygit.yaml"            ~/.config/lazygit/config.yml      "lazygit config"
+# Optional overlay, layered on top by scripts/lazygit.sh. Only some machines
+# have one, so this is not routed through link(), which would report it missing.
+if [ -e "$CWD/lazygit-local.yaml" ]; then
+    link "$CWD/lazygit-local.yaml"  ~/.config/lazygit/local.yml       "lazygit local overlay"
+fi
 link "$CWD/AI/opencode.jsonc"       ~/.config/opencode/opencode.jsonc "opencode config"
 link "$CWD/AI/codex.toml"           ~/.codex/config.toml              "codex config"
 
