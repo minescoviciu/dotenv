@@ -32,7 +32,6 @@ ln -s $(pwd)/tmux.conf ~/.tmux.conf && echo "Linked tmux config"
 ln -s $(pwd)/gitconfig ~/.gitconfig && echo "Linked git config"
 ln -s $(pwd)/wezterm ~/.config && echo "Linked wezterm config"
 ln -s $(pwd)/scripts ~/.config && echo "Linked scripts"
-ln -s $(pwd)/starship.toml ~/.config && echo "Linked starship.toml"
 ln -s $(pwd)/aerospace.toml ~/.aerospace.toml &&  echo "Linked aerospace.toml"
 ln -s $(pwd)/sketchybar ~/.config && echo "Linked sketchybar"
 ln -s $(pwd)/AI/opencode/opencode.jsonc ~/.config/opencode/opencode.jsonc && echo "Linked opencode.json"
@@ -78,10 +77,6 @@ BINARIES=("nvim" "git" "tmux" "fzf" "delta")
 for binary in ${BINARIES[@]}; do
     chekc_if_install $binary
 done
-
-
-#install spaceship
-curl -sS https://starship.rs/install.sh | sh
 
 
 # TODO
