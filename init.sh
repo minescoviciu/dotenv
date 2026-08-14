@@ -2,6 +2,10 @@
 
 # uncomment for debugging
 # set -x
+#
+# This script is stateless: every step converges on the same result, so it is
+# safe to re-run after any change. Re-running never duplicates a line in the rc
+# file and never stacks a symlink inside a previous one.
 
 chekc_if_install () {
     type $1
@@ -12,6 +16,25 @@ chekc_if_install () {
     fi
 }
 
+# Point dest at src, creating the parent dir first. -f replaces an existing
+# symlink and -n keeps us from descending into one that points at a directory,
+# which is what would otherwise nest a link inside the previous run's link.
+link () {
+    local src="$1" dest="$2" label="$3"
+    if [ ! -e "$src" ]; then
+        echo -e "\033[31mMissing source, skipped: $src\033[0m"
+        return 1
+    fi
+    # A real directory or file here is not ours to replace -- linking over it
+    # would either nest inside it or throw away whatever it holds.
+    if [ -d "$dest" ] && [ ! -L "$dest" ]; then
+        echo -e "\033[31mReal directory in the way, left alone: $dest\033[0m"
+        return 1
+    fi
+    mkdir -p "$(dirname "$dest")"
+    ln -sfn "$src" "$dest" && echo "Linked $label"
+}
+
 # assume bash shell
 SCRIPTS_PATH=~/.config/scripts
 SHELL_RC=~/.bashrc
@@ -20,46 +43,39 @@ if [ "$current_shell" = "zsh" ]; then
     SHELL_RC=~/.zshrc
 fi
 
-if [ ! -d ~/.config ]; then
-    echo "Creating ~/.config dir"
-    mkdir -p ~/.config
-fi
+CWD=$(pwd)
 
 echo "Linking config files"
-CWD=$(pwd)
-ln -s $(pwd)/nvim ~/.config && echo "Linked nvim config"
-ln -s $(pwd)/tmux.conf ~/.tmux.conf && echo "Linked tmux config"
-ln -s $(pwd)/gitconfig ~/.gitconfig && echo "Linked git config"
-ln -s $(pwd)/wezterm ~/.config && echo "Linked wezterm config"
-ln -s $(pwd)/scripts ~/.config && echo "Linked scripts"
-ln -s $(pwd)/aerospace.toml ~/.aerospace.toml &&  echo "Linked aerospace.toml"
-ln -s $(pwd)/sketchybar ~/.config && echo "Linked sketchybar"
-mkdir -p ~/.config/opencode
-ln -sfn $(pwd)/AI/opencode.jsonc ~/.config/opencode/opencode.jsonc && echo "Linked opencode.jsonc"
-mkdir -p ~/.codex
-ln -sfn $(pwd)/AI/codex.toml ~/.codex/config.toml && echo "Linked codex config"
+link "$CWD/nvim"                    ~/.config/nvim                    "nvim config"
+link "$CWD/tmux.conf"               ~/.tmux.conf                      "tmux config"
+link "$CWD/gitconfig"               ~/.gitconfig                      "git config"
+link "$CWD/wezterm"                 ~/.config/wezterm                 "wezterm config"
+link "$CWD/scripts"                 ~/.config/scripts                 "scripts"
+link "$CWD/lazygit.yaml"            ~/.config/lazygit/config.yml      "lazygit config"
+link "$CWD/AI/opencode.jsonc"       ~/.config/opencode/opencode.jsonc "opencode config"
+link "$CWD/AI/codex.toml"           ~/.codex/config.toml              "codex config"
 
 # Claude Code. Everything lives under ~/.claude; the runtime dirs it manages
 # itself (projects/, sessions/, plugins/, ...) stay untouched.
 #
 # settings.json points its hooks and statusline at ~/.claude/assets/, not at
 # this repo's path, so the config does not care where the clone lives.
-mkdir -p ~/.claude
-ln -sfn $(pwd)/AI/claude-settings.json ~/.claude/settings.json && echo "Linked claude settings"
-ln -sfn $(pwd)/AI/AGENTS.md ~/.claude/CLAUDE.md && echo "Linked claude AGENTS.md"
-ln -sfn $(pwd)/AI/claude-assets ~/.claude/assets && echo "Linked claude assets"
-ln -sfn $(pwd)/AI/claude-assets/agents ~/.claude/agents && echo "Linked claude agents"
-ln -sfn $(pwd)/AI/commands ~/.claude/commands && echo "Linked claude commands"
-ln -sfn $(pwd)/AI/skills ~/.claude/skills && echo "Linked claude skills"
+link "$CWD/AI/claude-settings.json" ~/.claude/settings.json           "claude settings"
+link "$CWD/AI/AGENTS.md"            ~/.claude/CLAUDE.md               "claude AGENTS.md"
+link "$CWD/AI/claude-assets"        ~/.claude/assets                  "claude assets"
+link "$CWD/AI/claude-assets/agents" ~/.claude/agents                  "claude agents"
+link "$CWD/AI/commands"             ~/.claude/commands                "claude commands"
+link "$CWD/AI/skills"               ~/.claude/skills                  "claude skills"
 
-CURSOR_PATH="~/Library/Application\ Support/Cursor/User"
-rm -f $CURSOR_PATH/settings.json
-rm -f $CURSOR_PATH/keybindings.json
-ln -s $CWD/vscode/settings.json $CURSOR_PATH/settings.json && echo "Linked vscode settings"
-ln -s $CWD/vscode/keybindings.json $CURSOR_PATH/keybindings.json && echo "Linked vscode keybindings"
-
-rm -f ~/.config/lazygit/config.yml
-ln -s $CWD/lazygit.yaml ~/.config/config.yml && echo "Linked lazygit"
+# macOS-only targets. On Linux these paths do not exist and every one of them
+# used to fail noisily on each run.
+if [ "$(uname)" = "Darwin" ]; then
+    CURSOR_PATH="$HOME/Library/Application Support/Cursor/User"
+    link "$CWD/aerospace.toml"           ~/.aerospace.toml               "aerospace config"
+    link "$CWD/sketchybar"               ~/.config/sketchybar            "sketchybar config"
+    link "$CWD/vscode/settings.json"     "$CURSOR_PATH/settings.json"    "vscode settings"
+    link "$CWD/vscode/keybindings.json"  "$CURSOR_PATH/keybindings.json" "vscode keybindings"
+fi
 
 # Only scripts that set up shell state -- functions, completions, the prompt --
 # belong in the rc file. The rest of scripts/ is run on demand by a tmux or fzf
