@@ -77,38 +77,59 @@ if [ "$(uname)" = "Darwin" ]; then
     link "$CWD/vscode/keybindings.json"  "$CURSOR_PATH/keybindings.json" "vscode keybindings"
 fi
 
-# Only scripts that set up shell state -- functions, completions, the prompt --
-# belong in the rc file. The rest of scripts/ is run on demand by a tmux or fzf
-# binding, and those files do their work at the top level: sourcing
-# tmux-toggle-popup.sh opens a popup and tmux-toggle-nvim-opencode.sh jumps to
-# another window, on every single new shell. Hence an explicit list rather than
-# globbing the directory.
-SOURCED_SCRIPTS=(
-  bashrc.sh
-  prompt.sh
-  just_completions.sh
-  work.sh
-  completion.bash
-  key-bindings.bash
-  completion.zsh
-  key-bindings.zsh
-)
+# Shell rc integration.
+#
+# The rc file gets one managed block that globs the scripts directory at shell
+# startup, rather than a source line per script. That keeps init.sh out of the
+# loop entirely: add, rename or delete a script and the next shell reflects it,
+# with no re-run needed and nothing to keep in sync by hand.
+RC_BEGIN="# >>> dotenv scripts >>>"
+RC_END="# <<< dotenv scripts <<<"
 
-for script_name in "${SOURCED_SCRIPTS[@]}"; do
-  script_file="$SCRIPTS_PATH/$script_name"
-  [ -f "$script_file" ] || continue
-  case "${script_name##*.}" in
-    "bash") [ "$current_shell" = "bash" ] || continue ;;
-    "zsh")  [ "$current_shell" = "zsh" ]  || continue ;;
-  esac
-  # Re-running init.sh should not stack duplicate source lines.
-  if grep -qxF "source $script_file" "$SHELL_RC" 2>/dev/null; then
-    echo "Already sourced: $script_file"
-    continue
-  fi
-  echo "source $script_file" >> "$SHELL_RC"
-  echo "Added source command for $script_file to $SHELL_RC"
+case "$current_shell" in
+    zsh) rc_extra_glob='*.zsh' ;;
+    *)   rc_extra_glob='*.bash' ;;
+esac
+
+# Strip the previous managed block plus any legacy per-script source lines,
+# so the rewrite below is idempotent no matter which version wrote the rc file.
+if [ -f "$SHELL_RC" ]; then
+    rc_tmp=$(mktemp)
+    awk -v b="$RC_BEGIN" -v e="$RC_END" -v p="$SCRIPTS_PATH" '
+        index($0, b) { skip = 1; next }
+        index($0, e) { skip = 0; next }
+        skip         { next }
+        index($0, "source " p "/") == 1 { next }
+        { print }
+    ' "$SHELL_RC" |
+    # Drop trailing blank lines too, otherwise the blank line that separates the
+    # block below is left behind on every run and the file grows a line at a time.
+    awk 'NF { last = NR } { line[NR] = $0 } END { for (i = 1; i <= last; i++) print line[i] }' \
+        > "$rc_tmp" && mv "$rc_tmp" "$SHELL_RC"
+fi
+
+cat >> "$SHELL_RC" <<EOF
+
+$RC_BEGIN
+# Managed by dotenv/init.sh -- do not edit between these markers.
+#
+# The executable bit decides what happens to a file in ~/.config/scripts:
+#
+#   not executable -> shell setup (functions, completions, prompt), sourced here
+#   executable     -> a command run on demand by a tmux or fzf binding
+#
+# Executable ones must never be sourced: they do their work at the top level,
+# so sourcing tmux-toggle-popup.sh opens a popup and
+# tmux-toggle-nvim-opencode.sh jumps to another window, on every new shell.
+#
+# So: chmod +x a script you invoke, leave it non-executable to have it sourced.
+for _dotenv_rc in "\$HOME/.config/scripts"/*.sh "\$HOME/.config/scripts"/$rc_extra_glob; do
+    [ -f "\$_dotenv_rc" ] && [ ! -x "\$_dotenv_rc" ] && . "\$_dotenv_rc"
 done
+unset _dotenv_rc
+$RC_END
+EOF
+echo "Refreshed the dotenv block in $SHELL_RC"
 
 echo "Checking apps"
 BINARIES=("nvim" "git" "tmux" "fzf" "delta")
