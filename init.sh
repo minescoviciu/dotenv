@@ -39,6 +39,19 @@ ln -sfn $(pwd)/AI/opencode.jsonc ~/.config/opencode/opencode.jsonc && echo "Link
 mkdir -p ~/.codex
 ln -sfn $(pwd)/AI/codex.toml ~/.codex/config.toml && echo "Linked codex config"
 
+# Claude Code. Everything lives under ~/.claude; the runtime dirs it manages
+# itself (projects/, sessions/, plugins/, ...) stay untouched.
+#
+# settings.json points its hooks and statusline at ~/.claude/assets/, not at
+# this repo's path, so the config does not care where the clone lives.
+mkdir -p ~/.claude
+ln -sfn $(pwd)/AI/claude-settings.json ~/.claude/settings.json && echo "Linked claude settings"
+ln -sfn $(pwd)/AI/AGENTS.md ~/.claude/CLAUDE.md && echo "Linked claude AGENTS.md"
+ln -sfn $(pwd)/AI/claude-assets ~/.claude/assets && echo "Linked claude assets"
+ln -sfn $(pwd)/AI/claude-assets/agents ~/.claude/agents && echo "Linked claude agents"
+ln -sfn $(pwd)/AI/commands ~/.claude/commands && echo "Linked claude commands"
+ln -sfn $(pwd)/AI/skills ~/.claude/skills && echo "Linked claude skills"
+
 CURSOR_PATH="~/Library/Application\ Support/Cursor/User"
 rm -f $CURSOR_PATH/settings.json
 rm -f $CURSOR_PATH/keybindings.json
