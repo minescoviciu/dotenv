@@ -8,6 +8,8 @@
     "deny": [],
     "defaultMode": "auto"
   },
+  "model": "opus[1m]",
+  "disableClaudeAiConnectors": true,
   "hooks": {
     "Stop": [
       {
@@ -59,13 +61,11 @@
   "tui": "fullscreen",
   "theme": "dark",
   "autoCompactEnabled": false,
+  "showTurnDuration": true,
+  "showMessageTimestamps": true,
   "remoteControlAtStartup": false,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
   "voiceEnabled": false,
-  "showMessageTimestamps": true,
-  "showTurnDuration": true,
-  "mcpServers": {},
-  "disableClaudeAiConnectors": true,
-  "model": "opus[1m]"
+  "mcpServers": {}
 }
